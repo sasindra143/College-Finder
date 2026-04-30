@@ -1,75 +1,76 @@
 'use client';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { api, College } from '@/lib/api';
+import CollegeCard from '@/components/CollegeCard';
 import styles from './Management.module.css';
+import Link from 'next/link';
 
 export default function ManagementPage() {
-  const categories = [
-    {
-      title: 'IIMs & Premier Govt B-Schools',
-      desc: 'Access official data for Indian Institutes of Management and top government business schools across India.',
-      icon: '🏛️',
-      path: '/colleges?ownership=Government',
-      color: 'from-blue-600 to-blue-800'
-    },
-    {
-      title: 'Top Ranked Private B-Schools',
-      desc: 'Explore XLRI, ISB, SPJIMR and other leading private management institutions with verified placement stats.',
-      icon: '💼',
-      path: '/colleges?ownership=Private',
-      color: 'from-orange-500 to-orange-700'
-    },
-    {
-      title: 'Specialized PGDM Programs',
-      desc: 'Discover industry-aligned PGDM courses offering specialization in FinTech, Data Science, and AI.',
-      icon: '📊',
-      path: '/colleges?search=PGDM',
-      color: 'from-emerald-500 to-emerald-700'
-    },
-    {
-      title: 'Undergraduate BBA/BMS',
-      desc: 'Find the best foundation for your business career with top-rated undergraduate management colleges.',
-      icon: '🎓',
-      path: '/colleges?search=BBA',
-      color: 'from-purple-600 to-purple-800'
-    }
-  ];
+  const [colleges, setColleges] = useState<College[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchColleges = async () => {
+      try {
+        const res = await api.getColleges({ limit: 50, sortBy: 'rating' });
+        const managementColleges = res.colleges.filter(c => 
+          c.name.toLowerCase().includes('management') || 
+          c.name.toLowerCase().includes('business') ||
+          c.name.toLowerCase().includes('iim') ||
+          c.name.toLowerCase().includes('mba') ||
+          (c.degrees && c.degrees.some(d => d.toLowerCase().includes('mba') || d.toLowerCase().includes('bba') || d.toLowerCase().includes('pgdm')))
+        );
+        setColleges(managementColleges);
+        setError(null);
+      } catch (err) {
+        console.error('Failed to load management colleges:', err);
+        setError('Could not connect to the database. Please ensure the backend server is running.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchColleges();
+  }, []);
 
   return (
-    <div className={styles.pageContainer}>
-      <div className={styles.headerSection}>
-        <div className={styles.categoryBadge}>Management Category</div>
-        <h1 className={styles.mainTitle}>Master Your <span className="text-brand-600">Business Future</span></h1>
-        <p className={styles.mainSubtitle}>
-          Compare the best MBA and PGDM programs in India. We provide verified data on CAT/XAT cutoffs, fee structures, and audited placement reports.
-        </p>
-      </div>
-
-      <div className={styles.grid}>
-        {categories.map((cat, i) => (
-          <Link key={i} href={cat.path} className={styles.card}>
-            <div className={`${styles.cardIcon} bg-gradient-to-br ${cat.color}`}>
-              {cat.icon}
-            </div>
-            <div className={styles.cardContent}>
-              <h2 className={styles.cardTitle}>{cat.title}</h2>
-              <p className={styles.cardDesc}>{cat.desc}</p>
-              <div className={styles.cardFooter}>
-                <span className={styles.viewLink}>Explore Colleges →</span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <section className={styles.infoSection}>
-        <div className={styles.infoCard}>
-          <div className={styles.infoIcon}>💡</div>
-          <div>
-            <h3 className="font-bold text-gray-900 mb-1">Pro Tip for MBA Aspirants</h3>
-            <p className="text-sm text-gray-600">Don't just look at the average package. Check the median package and the list of recruiting companies to understand the real ROI of your management degree.</p>
-          </div>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.breadcrumb}>
+          <Link href="/">Home</Link> / <span>Management</span>
         </div>
-      </section>
+        <h1 className={styles.title}>Top Management Colleges in India</h1>
+        <p className={styles.subtitle}>Discover premier IIMs and B-Schools offering MBA, PGDM, and BBA programs with high placement records.</p>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+          {[1,2,3,4,5,6].map(i => (
+            <div key={i} className="h-[400px] bg-gray-100 rounded-3xl animate-pulse"></div>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="bg-white p-12 rounded-3xl text-center border border-gray-100 shadow-sm mt-12">
+          <div className="text-5xl mb-4">⚠️</div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Connection Error</h3>
+          <p className="text-gray-500 font-medium mb-6">{error}</p>
+          <button onClick={() => window.location.reload()} className="px-6 py-3 rounded-xl bg-brand-600 text-white font-bold transition-all hover:shadow-md">
+            Try Again
+          </button>
+        </div>
+      ) : colleges.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+          {colleges.map(college => (
+            <CollegeCard key={college.id} college={college} />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20">
+          <h3 className="text-xl font-bold text-gray-900">No management colleges found.</h3>
+          <Link href="/colleges" className="text-brand-600 font-bold hover:underline mt-4 inline-block">View all colleges instead</Link>
+        </div>
+      )}
     </div>
   );
 }

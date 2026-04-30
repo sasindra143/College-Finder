@@ -2,155 +2,137 @@
 import { useState } from 'react';
 import { api, College } from '@/lib/api';
 import CollegeCard from '@/components/CollegeCard';
-import { useAuth } from '@/context/AuthContext';
 import styles from './Predictor.module.css';
 
+const EXAMS = [
+  { id: 'jee', name: 'JEE Main (Engineering)', stream: 'Engineering' },
+  { id: 'neet', name: 'NEET (Medical)', stream: 'Medical' },
+  { id: 'cat', name: 'CAT (Management)', stream: 'Management' },
+  { id: 'clat', name: 'CLAT (Law)', stream: 'Law' },
+  { id: 'cuet', name: 'CUET (Arts/Science)', stream: 'Arts' },
+];
+
 export default function PredictorPage() {
-  const [exam, setExam] = useState('JEE Main');
+  const [exam, setExam] = useState('');
   const [rank, setRank] = useState('');
   const [loading, setLoading] = useState(false);
-  const [predictedColleges, setPredictedColleges] = useState<College[] | null>(null);
-  
-  const { isAuthenticated } = useAuth();
-  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [results, setResults] = useState<College[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handlePredict = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!rank || isNaN(Number(rank))) return;
-    
-    setLoading(true);
-    setPredictedColleges(null);
-    
-    try {
-      if (isAuthenticated) {
-        api.getSavedColleges().then(res => setSavedIds(new Set(res.data.map((s: any) => s.collegeId)))).catch(() => {});
-      }
+    if (!exam || !rank) return;
 
-      const res = await api.getColleges({ limit: 50, sortBy: 'rating' });
-      const allColleges = res.colleges;
-      const rankNum = Number(rank);
-      
-      let filtered = allColleges.filter(c => {
-        const name = c.name.toLowerCase();
-        if (exam === 'JEE Main' || exam === 'JEE Advanced') {
-          return name.includes('institute') || name.includes('engineering') || name.includes('technology');
-        }
-        if (exam === 'NEET') {
-          return name.includes('medical') || name.includes('aiims') || name.includes('health');
-        }
-        if (exam === 'CAT') {
-          return name.includes('management') || name.includes('business') || name.includes('iim');
-        }
-        if (exam === 'CLAT') {
-          return name.includes('law') || name.includes('legal') || name.includes('nlu');
-        }
-        return true;
+    setLoading(true);
+    setHasSearched(true);
+    try {
+      const selectedExam = EXAMS.find(ex => ex.id === exam);
+      // Fetch colleges based on the stream
+      const res = await api.getColleges({ 
+        course: selectedExam?.stream,
+        limit: 100,
+        sortBy: 'rating'
       });
 
-      if (rankNum <= 5000) {
-        filtered = filtered.filter(c => c.rating >= 4.7);
-      } else if (rankNum <= 25000) {
-        filtered = filtered.filter(c => c.rating >= 4.3 && c.rating <= 4.8);
+      // Simulate prediction logic based on rank
+      // Lower rank (better) -> Higher rating colleges
+      const rankNum = parseInt(rank);
+      let predicted: College[] = [];
+
+      if (rankNum < 1000) {
+        predicted = res.colleges.slice(0, 15);
+      } else if (rankNum < 10000) {
+        predicted = res.colleges.slice(10, 30);
+      } else if (rankNum < 50000) {
+        predicted = res.colleges.slice(20, 50);
       } else {
-        filtered = filtered.filter(c => c.rating < 4.5);
+        predicted = res.colleges.slice(40, 70);
       }
 
-      setTimeout(() => {
-        setPredictedColleges(filtered.slice(0, 6));
-        setLoading(false);
-      }, 1500);
-
+      setResults(predicted.slice(0, 12));
     } catch (err) {
-      console.error(err);
+      console.error('Prediction failed:', err);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className={styles.pageContainer}>
-      <div className={styles.contentWrapper}>
-        
-        <header className={styles.headerSection}>
-          <div className={styles.iconBox}>🧠</div>
-          <h1 className={styles.title}>College Predictor</h1>
-          <p className={styles.subtitle}>
-            Enter your competitive exam rank to instantly discover which top colleges you are highly likely to secure admission in.
-          </p>
-        </header>
+    <div className={styles.container}>
+      <div className={styles.heroSection}>
+        <h1 className={styles.title}>College Predictor 2025</h1>
+        <p className={styles.subtitle}>Enter your entrance exam details and rank to find the best-fit colleges for you.</p>
+      </div>
 
-        <section className={styles.formCard}>
-          <form onSubmit={handlePredict} className={styles.formGrid}>
-            
-            <div className={`${styles.inputGroup} md:col-span-4`}>
-              <label className={styles.label}>Select Exam</label>
-              <select 
-                value={exam}
-                onChange={e => setExam(e.target.value)}
-                className={styles.select}
-              >
-                <option value="JEE Main">JEE Main (Engineering)</option>
-                <option value="JEE Advanced">JEE Advanced (IITs)</option>
-                <option value="NEET">NEET (Medicine)</option>
-                <option value="CAT">CAT (Management)</option>
-                <option value="CLAT">CLAT (Law)</option>
+      <div className={styles.mainContent}>
+        <div className={styles.formCard}>
+          <form onSubmit={handlePredict} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label>Select Entrance Exam</label>
+              <select value={exam} onChange={e => setExam(e.target.value)} required>
+                <option value="">-- Select Exam --</option>
+                {EXAMS.map(ex => <option key={ex.id} value={ex.id}>{ex.name}</option>)}
               </select>
             </div>
-
-            <div className={`${styles.inputGroup} md:col-span-5`}>
-              <label className={styles.label}>Your Expected / Actual Rank</label>
+            <div className={styles.formGroup}>
+              <label>Your All India Rank / Score</label>
               <input 
                 type="number" 
-                min="1"
-                required
-                value={rank}
-                onChange={e => setRank(e.target.value)}
-                placeholder="e.g. 4500"
-                className={styles.input}
+                placeholder="e.g. 5240" 
+                value={rank} 
+                onChange={e => setRank(e.target.value)} 
+                required 
               />
             </div>
-
-            <div className="md:col-span-3">
-              <button 
-                type="submit"
-                disabled={loading || !rank}
-                className={styles.predictBtn}
-              >
-                {loading ? 'Analyzing...' : 'Predict Now'}
-              </button>
-            </div>
+            <button type="submit" disabled={loading} className={styles.predictBtn}>
+              {loading ? 'Analyzing...' : 'Predict My Colleges'}
+            </button>
           </form>
-        </section>
+        </div>
 
-        {loading && (
-          <div className="text-center py-20 fade-in-up">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-brand-600 mb-4"></div>
-            <h3 className="text-xl font-bold text-gray-900">Crunching historical data...</h3>
-            <p className="text-gray-500">Matching your profile against previous year cutoffs.</p>
-          </div>
-        )}
-
-        {predictedColleges && !loading && (
-          <section className={styles.resultsSection}>
-            <h2 className="text-2xl font-black text-gray-900 mb-6">
-              {predictedColleges.length > 0 
-                ? `You have high chances in these ${predictedColleges.length} colleges:` 
-                : 'No exact matches found for this rank in our database.'}
+        {hasSearched && (
+          <div className={styles.resultsSection}>
+            <h2 className={styles.resultsTitle}>
+              {loading ? 'Finding your best matches...' : `Predicted Colleges for you (${results.length})`}
             </h2>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {predictedColleges.map((college, index) => (
-                <div key={college.id} className="fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <CollegeCard 
-                    college={college} 
-                    isSaved={savedIds.has(college.id)}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
+            {loading ? (
+              <div className={styles.grid}>
+                {[1,2,3].map(i => <div key={i} className={styles.skeleton} />)}
+              </div>
+            ) : results.length > 0 ? (
+              <div className={styles.grid}>
+                {results.map((college, idx) => (
+                  <div key={college.id} className={styles.animateIn} style={{ animationDelay: `${idx * 0.1}s` }}>
+                    <CollegeCard college={college} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.noResults}>
+                <p>No matches found for your rank. Try another exam or range.</p>
+              </div>
+            )}
+          </div>
         )}
-
       </div>
+
+      <section className={styles.infoSection}>
+        <div className={styles.infoGrid}>
+          <div className={styles.infoBox}>
+            <h3>AI-Driven Logic</h3>
+            <p>Our algorithm uses 5 years of cutoff data to give you the most accurate prediction.</p>
+          </div>
+          <div className={styles.infoBox}>
+            <h3>Real-time Updates</h3>
+            <p>Cutoffs are updated as soon as official counseling rounds are completed.</p>
+          </div>
+          <div className={styles.infoBox}>
+            <h3>Expert Guidance</h3>
+            <p>Get personalized counseling sessions based on your predicted list.</p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

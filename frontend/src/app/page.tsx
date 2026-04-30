@@ -79,7 +79,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className={styles.heroSection}>
         <div className={styles.heroBackground}>
-          <img src="/hero_campus.png" alt="Campus" className={styles.heroBackgroundImage} />
+          <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070" alt="Campus" className={styles.heroBackgroundImage} />
           <div className={styles.heroOverlay}></div>
         </div>
 

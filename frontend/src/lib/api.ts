@@ -1,5 +1,5 @@
 const IS_PROD = process.env.NODE_ENV === 'production';
-let BASE_URL = process.env.NEXT_PUBLIC_API_URL || (IS_PROD ? 'https://college-finder-hu2a.onrender.com/api' : 'http://localhost:5000/api');
+let BASE_URL = process.env.NEXT_PUBLIC_API_URL || (IS_PROD ? 'https://college-finder-hu2a.onrender.com/api' : 'http://127.0.0.1:5000/api');
 
 // Ensure the URL ends with /api
 if (!BASE_URL.endsWith('/api')) {
@@ -137,16 +137,22 @@ export interface CollegeFilters {
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const res = await fetch(`${API_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...options,
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.message || 'Something went wrong');
-  return data;
+  const fullUrl = `${API_URL}${path}`;
+  try {
+    const res = await fetch(fullUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      ...options,
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Something went wrong');
+    return data;
+  } catch (err: any) {
+    console.error(`Fetch failed for ${fullUrl}:`, err);
+    throw err;
+  }
 }
 
 export const api = {

@@ -19,6 +19,20 @@ const CAMPUS_IMAGES = [
   'https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?w=800&q=80',
   'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&q=80',
   'https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&q=80',
+  'https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&q=80',
+  'https://images.unsplash.com/photo-1525921429624-479b6a29d84c?w=800&q=80',
+  'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80',
+  'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',
+  'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?w=800&q=80',
+  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80',
+  'https://images.unsplash.com/photo-1544148103-0773bf10d330?w=800&q=80',
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80',
+  'https://images.unsplash.com/photo-1523580494863-6f30312245d4?w=800&q=80',
+  'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=80',
+  'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80',
+  'https://images.unsplash.com/photo-1576495199011-eb94736d05d6?w=800&q=80',
+  'https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=800&q=80',
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
 ];
 
 // deterministic image based on college name so it's consistent
@@ -98,8 +112,18 @@ export default function CollegeCard({ college, isSaved = false, onSaveToggle }: 
 
         {/* Image */}
         <div className={styles.imageSection}>
-          <img src={image} alt={college.name} className={styles.collegeImage}
-            onError={(e) => { (e.target as HTMLImageElement).src = CAMPUS_IMAGES[0]; }} />
+          <img 
+            src={image} 
+            alt={college.name} 
+            className={styles.collegeImage}
+            loading="lazy"
+            onError={(e) => { 
+              const target = e.target as HTMLImageElement;
+              if (target.src !== CAMPUS_IMAGES[0]) {
+                target.src = CAMPUS_IMAGES[0];
+              }
+            }} 
+          />
           <div className={styles.imageOverlay} />
           <div className={styles.badgeContainer}>
             {college.nirfRank && <span className={`${styles.badge} ${styles.badgeNirf}`}>NIRF #{college.nirfRank}</span>}

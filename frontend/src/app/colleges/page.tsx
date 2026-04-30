@@ -17,14 +17,13 @@ const INDIAN_STATES = [
 const POPULAR_COURSES = [
   { label: 'B.Tech / Engineering', value: 'Engineering' },
   { label: 'MBA / Management', value: 'Management' },
-  { label: 'MBBS / Medical', value: 'Medicine' },
-  { label: 'BCA / MCA', value: 'Computer' },
-  { label: 'B.Sc / Science', value: 'Science' },
-  { label: 'B.Com / Commerce', value: 'Commerce' },
-  { label: 'LLB / Law', value: 'Law' },
-  { label: 'B.Design', value: 'Design' },
-  { label: 'B.Arch', value: 'Architecture' },
+  { label: 'MBBS / Medical', value: 'Medical' },
   { label: 'Pharmacy', value: 'Pharmacy' },
+  { label: 'Law / LLB', value: 'Law' },
+  { label: 'Education / B.Ed', value: 'Education' },
+  { label: 'Arts & Humanities', value: 'Arts' },
+  { label: 'Commerce', value: 'Commerce' },
+  { label: 'Science', value: 'Science' },
 ];
 
 function CollegesList() {
@@ -32,6 +31,7 @@ function CollegesList() {
   const router = useRouter();
   const [colleges, setColleges] = useState<College[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -63,8 +63,10 @@ function CollegesList() {
       });
       setColleges(res.colleges);
       setPagination(res.pagination);
+      setError(null);
     } catch (err) {
       console.error('Failed to load colleges:', err);
+      setError('Could not connect to the database. Please ensure the backend server is running.');
     } finally {
       setLoading(false);
     }
@@ -115,6 +117,7 @@ function CollegesList() {
             onChange={e => { setSearch(e.target.value); setFilters(f => ({ ...f, page: 1 })); }}
             placeholder="College name, city..."
             className={styles.filterInputWithIcon}
+            suppressHydrationWarning
           />
         </div>
       </div>
@@ -200,6 +203,7 @@ function CollegesList() {
           value={filters.maxFees || 3000000}
           onChange={e => updateFilter('maxFees', e.target.value)}
           className={styles.rangeInput}
+          suppressHydrationWarning
         />
         <div className={styles.rangeLabels}>
           <span>₹50K</span><span>₹30L</span>
@@ -229,7 +233,7 @@ function CollegesList() {
               : 'Top Colleges in India 2025'}
           </h1>
           <p className={styles.pageSubtitle}>
-            Explore {pagination?.total?.toLocaleString() || '37,000+'} verified institutions across India
+            Explore {pagination?.total?.toLocaleString() || '37,701+'} verified institutions across India
           </p>
 
           {/* Active Filter Chips */}
@@ -357,6 +361,20 @@ function CollegesList() {
                     </div>
                   </div>
                 ))}
+              </div>
+            ) : error ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyIcon} style={{color: '#ef4444'}}>⚠️</div>
+                <h3 className={styles.emptyTitle}>Connection Error</h3>
+                <p className={styles.emptyText}>{error}</p>
+                <div className="flex gap-4 mt-6">
+                  <button onClick={fetchColleges} className={styles.emptyBtn}>
+                    Try Again
+                  </button>
+                  <button onClick={clearAll} className={styles.emptyBtn} style={{backgroundColor:'#f1f5f9', color:'#64748b', border:'1px solid #e2e8f0'}}>
+                    Reset Filters
+                  </button>
+                </div>
               </div>
             ) : colleges.length > 0 ? (
               <>

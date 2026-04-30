@@ -133,6 +133,7 @@ export function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.length > 1 && setShowDropdown(true)}
+              suppressHydrationWarning
             />
           </form>
 

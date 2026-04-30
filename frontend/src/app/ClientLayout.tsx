@@ -9,7 +9,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
       <Navbar />
-      <main className="flex-1 w-full bg-gray-50 pt-[90px] md:pt-[200px]">{children}</main>
+      <main className="flex-1 w-full bg-gray-50" style={{ paddingTop: '160px' }}>{children}</main>
       <Footer />
     </Providers>
   );

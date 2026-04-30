@@ -62,10 +62,12 @@ export const getColleges = async (filters: CollegeFilters) => {
   if (ownership) where.ownership = { contains: ownership, mode: 'insensitive' };
   if (minRating !== undefined) where.rating = { gte: minRating };
   if (course) {
+    const courseTerm = course.toLowerCase();
     (where.AND as Prisma.CollegeWhereInput[]).push({
       OR: [
-        { degrees: { array_contains: [course] } as any },
-        { affiliation: { contains: course, mode: 'insensitive' } },
+        { degrees: { hasSome: [course] } },
+        { name: { contains: course, mode: 'insensitive' } },
+        { description: { contains: course, mode: 'insensitive' } },
       ]
     });
   }
