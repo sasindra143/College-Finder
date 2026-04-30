@@ -70,7 +70,7 @@ async function main() {
   
   // Launch Puppeteer (Headless mode false if you want to see it work and bypass captchas manually)
   const browser = await puppeteer.launch({ 
-    headless: "new",
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   
