@@ -3,9 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
-import { AuthProvider } from '@/context/AuthContext';
-import { CompareProvider } from '@/context/CompareContext';
-import { Toaster } from '@/components/ui/Toaster';
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -24,14 +22,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
       <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col antialiased">
-        <AuthProvider>
-          <CompareProvider>
-            <Navbar />
-            <main className="flex-1 w-full bg-gray-50">{children}</main>
-            <Footer />
-            <Toaster />
-          </CompareProvider>
-        </AuthProvider>
+        <Providers>
+          <Navbar />
+          <main className="flex-1 w-full bg-gray-50">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
