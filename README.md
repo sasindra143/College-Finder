@@ -8,6 +8,8 @@
 
 CareerCampus is a high-fidelity, production-grade College Discovery and Decision platform. Built to industry standards (comparable to Careers360 or CollegeDunia), it allows students to seamlessly search, compare, and discover the best educational institutions based on real data, advanced filters, and intelligent ranking logic.
 
+**🌍 Live Link:** [colleges-finder-apllication.netlify.app](https://colleges-finder-apllication.netlify.app/)
+
 ---
 
 ## ✨ Key Features
@@ -24,22 +26,13 @@ CareerCampus is a high-fidelity, production-grade College Discovery and Decision
 ## 📸 Screenshots
 
 ### 1. Homepage & Live Search
-> *(Add your screenshot here: e.g., `![Homepage](./screenshots/home.png)`)*
+![Homepage](./screenshots/homepage.png)
 
 ### 2. College Listing & Filters
-> *(Add your screenshot here: e.g., `![Listing](./screenshots/listing.png)`)*
+![Listing](./screenshots/colleges_list.png)
 
-### 3. College Detail Page
-> *(Add your screenshot here: e.g., `![Details](./screenshots/details.png)`)*
-
-### 4. Comparison Engine
-> *(Add your screenshot here: e.g., `![Compare](./screenshots/compare.png)`)*
-
-### 5. Smart Predictor Tool
-> *(Add your screenshot here: e.g., `![Predictor](./screenshots/predictor.png)`)*
-
-### 6. User Dashboard (Saved Items)
-> *(Add your screenshot here: e.g., `![Dashboard](./screenshots/dashboard.png)`)*
+### 3. Comparison Engine
+![Compare](./screenshots/compare.png)
 
 ---
 
@@ -127,6 +120,16 @@ This platform is 100% ready for production deployment.
    - Import the `frontend` folder to Vercel.
    - Set the `NEXT_PUBLIC_API_URL` to your newly deployed backend URL.
    - Deploy!
+
+---
+
+## 🏗️ Post-Deployment Configuration (Critical)
+
+To make the live site functional with your data, you must:
+1. Deploy your **Backend** (on Railway/Render).
+2. Go to your **Netlify Dashboard** > **Site Configuration** > **Environment Variables**.
+3. Add a new variable: `NEXT_PUBLIC_API_URL` and set its value to your **Live Backend URL** (e.g., `https://your-backend.railway.app/api`).
+4. Trigger a new deploy on Netlify.
 
 ---
 
