@@ -19,7 +19,7 @@ CareerCampus is a high-fidelity, production-grade College Discovery and Decision
 - **⚖️ College Comparison Engine:** Side-by-side comparative analysis of up to 3 colleges, automatically highlighting the "Top Value" metrics for Fees, Ratings, and Placements.
 - **🧠 Smart Predictor Tool:** A rule-based engine predicting highly-likely college targets based on specific competitive exam inputs (JEE Main, NEET, CAT, CLAT) and expected rank.
 - **💬 Q&A Discussion Forum:** A community-driven forum where students can ask queries and share advice regarding college admissions.
-- **🔐 Secure Authentication & Dashboard:** JWT-based user authentication system allowing students to save favorite colleges and personalized comparison lists to a dedicated User Dashboard.
+- **🔐 Secure Authentication & Dashboard:** JWT-based user authentication system with **Google OAuth 2.0 Integration**, allowing students to save favorite colleges and personalized comparison lists to a dedicated User Dashboard.
 
 ---
 
@@ -47,8 +47,8 @@ CareerCampus is a high-fidelity, production-grade College Discovery and Decision
 **Backend:**
 - Node.js & Express.js
 - TypeScript
-- Prisma ORM
-- PostgreSQL
+- Prisma ORM (PostgreSQL)
+- Passport.js (Google OAuth 2.0)
 - JWT & bcryptjs (Security)
 
 ---
