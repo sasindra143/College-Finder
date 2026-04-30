@@ -126,9 +126,9 @@ This platform is 100% ready for production deployment.
 ## 🏗️ Post-Deployment Configuration (Critical)
 
 To make the live site functional with your data, you must:
-1. Deploy your **Backend** (on Railway/Render).
+1. Ensure your **Backend** is live on Render: [college-finder-911y.onrender.com](https://college-finder-911y.onrender.com/)
 2. Go to your **Netlify Dashboard** > **Site Configuration** > **Environment Variables**.
-3. Add a new variable: `NEXT_PUBLIC_API_URL` and set its value to your **Live Backend URL** (e.g., `https://your-backend.railway.app/api`).
+3. Add a new variable: `NEXT_PUBLIC_API_URL` and set its value to: `https://college-finder-911y.onrender.com/api`
 4. Trigger a new deploy on Netlify.
 
 ---
