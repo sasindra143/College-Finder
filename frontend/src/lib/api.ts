@@ -1,4 +1,5 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || (IS_PROD ? 'https://college-finder-911y.onrender.com/api' : 'http://localhost:5000/api');
 
 export interface College {
   id: string;
