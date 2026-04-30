@@ -45,3 +45,9 @@ export const getMe = async (userId: string) => {
   if (!user) throw createError('User not found', 404);
   return user;
 };
+
+export const generateTokenForUser = async (user: any) => {
+  const token = generateToken(user.id);
+  const { password: _pw, ...safeUser } = user;
+  return { user: safeUser, token };
+};

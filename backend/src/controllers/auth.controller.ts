@@ -30,3 +30,14 @@ export const getMe = async (req: AuthRequest, res: Response, next: NextFunction)
     next(err);
   }
 };
+
+export const googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const user = req.user as any;
+    const result = await authService.generateTokenForUser(user);
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    res.redirect(`${frontendUrl}/auth/callback?token=${result.token}&user=${encodeURIComponent(JSON.stringify(result.user))}`);
+  } catch (err) {
+    next(err);
+  }
+};

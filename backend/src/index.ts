@@ -7,6 +7,7 @@ import { authRoutes } from './routes/auth.routes';
 import { savedRoutes } from './routes/saved.routes';
 import qaRoutes from './routes/qa.routes';
 import { errorHandler } from './middleware/error.middleware';
+import passport from './lib/passport';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
 // Health check
 app.get('/health', (_req, res) => {
