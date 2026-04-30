@@ -35,9 +35,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-// Health check
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/', (_req, res) => {
+  res.send('CareerCampus API Running 🚀');
 });
 
 // Routes
