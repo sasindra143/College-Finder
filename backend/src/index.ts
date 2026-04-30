@@ -8,6 +8,8 @@ import { savedRoutes } from './routes/saved.routes';
 import qaRoutes from './routes/qa.routes';
 import { errorHandler } from './middleware/error.middleware';
 import passport from './lib/passport';
+import { prisma } from './lib/prisma';
+import { MASTER_COLLEGES } from '../prisma/seed_data'; // We'll create this file
 
 dotenv.config();
 
@@ -64,8 +66,37 @@ app.use((_req, res) => {
 // Error handler
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  
+  // Auto-seed if database is empty
+  try {
+    const collegeCount = await prisma.college.count();
+    if (collegeCount === 0) {
+      console.log('📭 Database is empty. Seeding initial data...');
+      for (const c of MASTER_COLLEGES) {
+        await prisma.college.upsert({
+          where: { slug: c.slug },
+          update: {},
+          create: {
+            ...c,
+            location: `${c.city}, ${c.state}`,
+            imageUrl: `https://images.unsplash.com/photo-1562774053-701939374585?w=800`,
+            courses: {
+              create: [
+                { name: (c.degrees[0] || 'Bachelor') + ' Course', duration: '3-4 Years', fees: c.fees, seats: 120, eligibility: '12th Grade' }
+              ]
+            }
+          }
+        });
+      }
+      console.log('✅ Auto-seeding complete!');
+    } else {
+      console.log(`📊 Database has ${collegeCount} colleges.`);
+    }
+  } catch (err) {
+    console.error('❌ Auto-seeding failed:', err);
+  }
 });
 
 export default app;
