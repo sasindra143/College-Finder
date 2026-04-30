@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
-import { Providers } from './providers';
+
+import { ClientLayout } from './ClientLayout';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -22,11 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={inter.variable} data-scroll-behavior="smooth">
       <body className="bg-gray-950 text-gray-100 min-h-screen flex flex-col antialiased">
-        <Providers>
-          <Navbar />
-          <main className="flex-1 w-full bg-gray-50">{children}</main>
-          <Footer />
-        </Providers>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
