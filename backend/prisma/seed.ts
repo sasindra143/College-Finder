@@ -1,0 +1,149 @@
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+const MASTER_COLLEGES = [
+  { 
+    name: 'University of Delhi (DU)', 
+    city: 'New Delhi', 
+    state: 'Delhi', 
+    ownership: 'Public/Government', 
+    established: 1922, 
+    fees: 12000, 
+    rating: 4.7, 
+    placementPercent: 82, 
+    avgPackage: 8.5, 
+    exams: ['CUET'],
+    degrees: ['B.A', 'B.Sc', 'B.Com', 'M.A'],
+    description: 'Premier central university known for its high academic standards and diverse cultural environment.',
+    slug: 'university-of-delhi',
+    website: 'https://www.du.ac.in'
+  },
+  { 
+    name: 'Anna University', 
+    city: 'Chennai', 
+    state: 'Tamil Nadu', 
+    ownership: 'Public/Government', 
+    established: 1978, 
+    fees: 55000, 
+    rating: 4.5, 
+    placementPercent: 90, 
+    avgPackage: 7.2, 
+    exams: ['TNEA'],
+    degrees: ['B.Tech', 'M.Tech', 'MBA'],
+    description: 'Leading technical university in South India, known for its strong engineering programs.',
+    slug: 'anna-university-chennai',
+    website: 'https://www.annauniv.edu'
+  },
+  { 
+    name: 'Banaras Hindu University (BHU)', 
+    city: 'Varanasi', 
+    state: 'Uttar Pradesh', 
+    ownership: 'Public/Government', 
+    established: 1916, 
+    fees: 8000, 
+    rating: 4.6, 
+    placementPercent: 78, 
+    avgPackage: 6.5, 
+    exams: ['CUET'],
+    degrees: ['B.A', 'B.Sc', 'M.A', 'MBBS'],
+    description: 'One of the largest residential universities in Asia, offering a wide range of courses.',
+    slug: 'banaras-hindu-university',
+    website: 'https://www.bhu.ac.in'
+  },
+  { 
+    name: 'Jamia Millia Islamia', 
+    city: 'New Delhi', 
+    state: 'Delhi', 
+    ownership: 'Public/Government', 
+    established: 1920, 
+    fees: 15000, 
+    rating: 4.6, 
+    placementPercent: 88, 
+    avgPackage: 10.5, 
+    exams: ['JEE Main', 'JMI Entrance'],
+    degrees: ['B.Tech', 'B.Arch', 'M.A', 'M.Sc'],
+    description: 'A central university in New Delhi, historically established during the Khilafat and Non-Cooperation Movement.',
+    slug: 'jamia-millia-islamia-new-delhi',
+    website: 'https://www.jmi.ac.in'
+  },
+  { 
+    name: 'Krishna Chaitanya Institute of Technology and Sciences', 
+    city: 'Markapur', 
+    state: 'Andhra Pradesh', 
+    ownership: 'Private', 
+    established: 2008, 
+    fees: 45000, 
+    rating: 3.9, 
+    placementPercent: 72, 
+    avgPackage: 4.5, 
+    exams: ['AP EAMCET'],
+    degrees: ['B.Tech'],
+    description: 'Prominent engineering college in the Prakasam district offering specialized technical education.',
+    slug: 'krishna-chaitanya-institute-of-technology-and-sciences-markapur',
+    website: 'http://www.kits-markapur.ac.in'
+  },
+  { 
+    name: 'IIT Tirupati', 
+    city: 'Tirupati', 
+    state: 'Andhra Pradesh', 
+    ownership: 'Public/Government', 
+    established: 2015, 
+    fees: 215000, 
+    rating: 4.8, 
+    placementPercent: 85, 
+    avgPackage: 15.5, 
+    exams: ['JEE Advanced', 'GATE'],
+    degrees: ['B.Tech', 'M.Tech'],
+    description: 'Third-generation IIT established by the Ministry of Education, Govt of India.',
+    slug: 'iit-tirupati',
+    website: 'https://iittp.ac.in'
+  }
+];
+
+async function main() {
+  console.log('🚀 Seeding comprehensive verified college dataset...');
+  
+  for (const c of MASTER_COLLEGES) {
+    const slug = c.slug;
+    
+    await prisma.college.upsert({
+      where: { slug },
+      update: {},
+      create: {
+        name: c.name,
+        slug,
+        location: `${c.city}, ${c.state}`,
+        city: c.city,
+        state: c.state,
+        ownership: c.ownership,
+        established: c.established,
+        fees: c.fees,
+        rating: c.rating,
+        placementPercent: c.placementPercent,
+        avgPackage: c.avgPackage,
+        exams: c.exams,
+        degrees: c.degrees,
+        description: c.description,
+        imageUrl: `https://images.unsplash.com/photo-1562774053-701939374585?w=800`,
+        courses: {
+          create: [
+            { name: (c.degrees[0] || 'Bachelor') + ' Course', duration: '3-4 Years', fees: c.fees, seats: 120, eligibility: '12th Grade' }
+          ]
+        },
+        reviews: {
+          create: [
+            { authorName: 'Verified Student', rating: Math.floor(c.rating), comment: 'Quality education and excellent environment.', year: 2023 }
+          ]
+        }
+      }
+    });
+    console.log(`✅ Seeded: ${c.name}`);
+  }
+
+  console.log('🎉 Seeding complete!');
+}
+
+main()
+  .catch(e => { console.error(e); process.exit(1); })
+  .finally(() => prisma.$disconnect());

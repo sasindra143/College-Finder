@@ -1,0 +1,161 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String            @id @default(cuid())
+  name             String
+  email            String            @unique
+  password         String
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  savedColleges    SavedCollege[]
+  savedComparisons SavedComparison[]
+  questions        Question[]
+  answers          Answer[]
+
+  @@map("users")
+}
+
+model College {
+  id               String         @id @default(cuid())
+  name             String
+  slug             String         @unique
+  location         String
+  city             String
+  state            String
+  ownership        String         // Public/Private/Deemed
+  established      Int
+  fees             Float
+  rating           Float          @default(0)
+  totalReviews     Int            @default(0)
+  placementPercent Float          @default(0)
+  avgPackage       Float          @default(0)
+  description      String
+  imageUrl         String?
+  website          String?
+  affiliation      String?
+  phone            String?
+  email            String?
+  address          String?
+  accreditation    String?
+  naacGrade        String?
+  nirfRank         Int?
+  exams            String[]       @default([])
+  degrees          String[]       @default([])
+  courses          Course[]
+  reviews          Review[]
+  savedBy          SavedCollege[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@map("colleges")
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  name        String
+  duration    String
+  fees        Float
+  seats       Int
+  eligibility String
+  collegeId   String
+  college     College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@map("courses")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  authorName String
+  rating     Float
+  comment    String
+  year       Int
+  collegeId  String
+  college    College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@map("reviews")
+}
+
+model SavedCollege {
+  id        String   @id @default(cuid())
+  userId    String
+  collegeId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  college   College  @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, collegeId])
+  @@map("saved_colleges")
+}
+
+model SavedComparison {
+  id         String   @id @default(cuid())
+  userId     String
+  name       String
+  collegeIds String[]
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("saved_comparisons")
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  answers   Answer[]
+  createdAt DateTime @default(now())
+
+  @@map("questions")
+}
+
+model Answer {
+  id         String   @id @default(cuid())
+  body       String
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  authorId   String
+  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@map("answers")
+}
+
+model Exam {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  category    String     // Engineering, Medical, etc.
+  description String
+  content     String     @db.Text
+  eligibility String?    @db.Text
+  syllabus    String?    @db.Text
+  dates       ExamDate[]
+  imageUrl    String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("exams")
+}
+
+model ExamDate {
+  id        String   @id @default(cuid())
+  event     String   // e.g. "Registration Start"
+  date      String   // e.g. "January 2025"
+  examId    String
+  exam      Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("exam_dates")
+}
