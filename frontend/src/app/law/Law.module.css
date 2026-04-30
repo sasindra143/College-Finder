@@ -1,0 +1,73 @@
+.container {
+  min-height: 80vh;
+  padding: 180px 1.5rem 5rem 1.5rem;
+  background-color: #fefce8; /* Soft yellow tint for Law/Gold */
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: #ca8a04;
+}
+
+.icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  background-color: #fefce8;
+  width: 5rem;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+}
+
+.actionBtn {
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #ca8a04;
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  width: 100%;
+}

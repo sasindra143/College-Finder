@@ -1,0 +1,123 @@
+.footerContainer {
+  background-color: #111111;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  margin-top: auto;
+  width: 100%;
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.topBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 40px;
+  margin-bottom: 60px;
+  width: 100%;
+  gap: 30px;
+}
+
+@media (min-width: 1024px) {
+  .topBar {
+    flex-direction: row;
+  }
+}
+
+.horizontalLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  font-size: 15px;
+  font-weight: 500;
+  color: white;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 16px;
+}
+
+.columnsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 60px;
+  column-gap: 40px;
+  width: 100%;
+  justify-items: center;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .columnsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .columnsGrid {
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center; /* Keep columns centered on large screens too */
+    text-align: left;
+  }
+}
+
+.columnHeader {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.linkList {
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* Significantly increased space between links */
+}
+
+.linkItem {
+  color: #9ca3af;
+  font-size: 15px;
+  transition: color 0.3s ease;
+  display: block;
+}
+
+.linkItem:hover {
+  color: white;
+}
+
+.bottomBar {
+  margin-top: 80px;
+  padding-top: 30px;
+  border-top: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+@media (min-width: 768px) {
+  .bottomBar {
+    flex-direction: row;
+  }
+}
+
+.bottomLinks {
+  display: flex;
+  gap: 32px;
+}
