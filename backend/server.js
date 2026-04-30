@@ -3,15 +3,39 @@ const cors = require('cors');
 
 const app = express();
 
-app.use(cors());
+/* ✅ STEP 1 — CORS (PUT THIS FIRST) */
+app.use(cors({
+  origin: [
+    "http://localhost:3000",
+    "https://career-campus.netlify.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
+/* ✅ STEP 2 — EXTRA HEADERS (PUT AFTER CORS) */
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://career-campus.netlify.app");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  next();
+});
+
+/* ✅ STEP 3 — BODY PARSER */
 app.use(express.json());
 
-// 🔴 IMPORTANT: connect your real routes here
+/* ✅ STEP 4 — ROUTES */
 // Example:
 // const collegeRoutes = require('./routes/collegeRoutes');
 // app.use('/api/colleges', collegeRoutes);
 
-// Temporary test route
+/* ✅ TEST ROUTE */
 app.get('/', (req, res) => {
   res.send('Backend running 🚀');
 });
