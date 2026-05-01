@@ -523,6 +523,7 @@
   
   .pageTitle {
     font-size: 1.75rem;
+  }
 }
 
 @media (max-width: 640px) {
