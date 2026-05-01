@@ -15,6 +15,40 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState<College[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [typingText, setTypingText] = useState('');
+  const [wordIndex, setWordIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const words = ['Dream College', 'Future Career', 'Top University'];
+
+  // Typing Effect Logic
+  useEffect(() => {
+    const currentWord = words[wordIndex];
+    let typingSpeed = isDeleting ? 50 : 100;
+
+    if (!isDeleting && typingText === currentWord) {
+      typingSpeed = 2000; // Pause before deleting
+      setTimeout(() => setIsDeleting(true), typingSpeed);
+      return;
+    }
+
+    if (isDeleting && typingText === '') {
+      setIsDeleting(false);
+      setWordIndex((prev) => (prev + 1) % words.length);
+      typingSpeed = 500; // Pause before typing next word
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setTypingText(
+        isDeleting
+          ? currentWord.substring(0, typingText.length - 1)
+          : currentWord.substring(0, typingText.length + 1)
+      );
+    }, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [typingText, isDeleting, wordIndex, words]);
 
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -109,7 +143,7 @@ export default function Home() {
 
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            Find Your <span className={styles.highlightText}>Dream College</span>
+            Find Your <span className={styles.highlightText}>{typingText}</span><span className={styles.cursor}>|</span>
           </h1>
 
           <p className={styles.heroSubtitle}>

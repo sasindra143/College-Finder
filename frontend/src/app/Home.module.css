@@ -53,6 +53,18 @@
   -webkit-text-fill-color: transparent;
 }
 
+.cursor {
+  color: #f97316;
+  font-weight: 300;
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  from, to { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 .heroSubtitle {
   font-size: 1.4rem;
   color: rgba(255, 255, 255, 0.7);
@@ -374,4 +386,36 @@
   .counsellingContainer { grid-template-columns: 1fr; gap: 4rem; }
   .featuresGrid { grid-template-columns: 1fr; }
   .statsContainer { gap: 2rem; flex-wrap: wrap; }
+}
+
+@media (max-width: 768px) {
+  .heroTitle { font-size: 2.2rem; }
+  .heroSubtitle { font-size: 1.1rem; padding: 0 1rem; }
+  .searchBox {
+    flex-direction: column;
+    border-radius: 1rem;
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  .searchTypeSelect, .heroSearchInput, .searchBtn {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 0.75rem;
+  }
+  .searchBtn {
+    margin-top: 0.5rem;
+  }
+  .streamsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .statsContainer {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .streamsGrid {
+    grid-template-columns: 1fr;
+  }
 }
