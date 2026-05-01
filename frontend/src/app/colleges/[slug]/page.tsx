@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
-import { api, College } from '@/lib/api';
+import { api } from '@/lib/api';
+import type { College } from '@/lib/types';
 import { useCompare } from '@/context/CompareContext';
 import { toast } from '@/components/ui/Toaster';
 import Link from 'next/link';
