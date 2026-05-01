@@ -12,7 +12,7 @@ export default function EngineeringCollegesPage() {
 
   useEffect(() => {
     api.getColleges({ limit: 10, sortBy: 'nirfRank', sortOrder: 'asc' })
-      .then(res => setColleges(res.colleges))
+     .then(res => setColleges(res.data))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
