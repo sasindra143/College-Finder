@@ -131,6 +131,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
 
       {/* HERO */}
+      {/* HERO SECTION */}
       <section className={styles.heroSection}>
         <div className={styles.heroBackground}>
           <img
@@ -150,9 +151,7 @@ export default function Home() {
             Explore top colleges across India with real data.
           </p>
 
-          {/* SEARCH */}
           <div ref={searchRef} className="relative w-full max-w-3xl mx-auto">
-
             <form onSubmit={handleSearch} className={styles.searchBox}>
               <select
                 className={styles.searchTypeSelect}
@@ -177,45 +176,140 @@ export default function Home() {
               </button>
             </form>
 
-            {/* DROPDOWN */}
             {showDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white shadow-lg z-50 rounded-md overflow-hidden">
-
-                {isSearching && (
-                  <div className="p-3 text-center text-gray-500">
-                    Searching...
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white shadow-lg z-50 rounded-2xl overflow-hidden text-left">
+                {isSearching && <div className="p-4 text-center text-gray-500">Searching...</div>}
+                {!isSearching && suggestions.length === 0 && <div className="p-4 text-center text-gray-400">No results found</div>}
+                {!isSearching && suggestions.map((college) => (
+                  <div
+                    key={college.id}
+                    className="p-4 border-b border-gray-50 cursor-pointer hover:bg-orange-50 transition-colors"
+                    onClick={() => handleSuggestionClick(college.slug || college.id)}
+                  >
+                    <div className="font-bold text-gray-900">{college.name}</div>
+                    <div className="text-sm text-gray-500">{college.city}, {college.state}</div>
                   </div>
-                )}
-
-                {!isSearching && suggestions.length === 0 && (
-                  <div className="p-3 text-center text-gray-400">
-                    No results found
-                  </div>
-                )}
-
-                {!isSearching &&
-                  suggestions.map((college) => (
-                    <div
-                      key={college.id}
-                      className="p-3 border-b cursor-pointer hover:bg-gray-100 transition"
-                      onClick={() =>
-                        handleSuggestionClick(college.slug || college.id)
-                      }
-                    >
-                      <div className="font-semibold">
-                        {college.name}
-                      </div>
-                      <div className="text-sm text-gray-500">
-                        {college.city}, {college.state}
-                      </div>
-                    </div>
-                  ))}
+                ))}
               </div>
             )}
           </div>
         </div>
       </section>
 
+      {/* STREAMS SECTION */}
+      <section className={styles.streamsSection}>
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className={styles.sectionTitle}>Explore by <span className={styles.highlightText}>Stream</span></h2>
+            <p className={styles.sectionSubtitle}>Choose your career path from top academic disciplines</p>
+          </div>
+          
+          <div className={styles.streamsGrid}>
+            {[
+              { name: 'Engineering', icon: '⚙️', color: '#eff6ff', path: '/engineering' },
+              { name: 'Management', icon: '💼', color: '#fff7ed', path: '/management' },
+              { name: 'Medical', icon: '🩺', color: '#f0fdf4', path: '/medicine' },
+              { name: 'Law', icon: '⚖️', color: '#fef2f2', path: '/law' },
+              { name: 'Design', icon: '🎨', color: '#faf5ff', path: '/design' },
+              { name: 'Pharmacy', icon: '💊', color: '#f0f9ff', path: '/pharmacy' },
+              { name: 'Architecture', icon: '🏛️', color: '#fff1f2', path: '/architecture' },
+              { name: 'Science', icon: '🔬', color: '#f0fdfa', path: '/science' }
+            ].map((stream) => (
+              <a key={stream.name} href={stream.path} className={styles.streamCard}>
+                <div className={styles.streamIcon} style={{ backgroundColor: stream.color }}>{stream.icon}</div>
+                <span className={styles.streamName}>{stream.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* COUNSELLING SECTION */}
+      <section className={styles.counsellingSection}>
+        <div className={styles.counsellingContainer}>
+          <div className={styles.counsellingText}>
+            <h2>Confused about <span className={styles.highlightText}>Admissions?</span></h2>
+            <p>Get expert guidance on college selection, application processes, and career mapping from India's top education consultants.</p>
+            <a href="/counselling" className={styles.counsellingBtn}>Book Free Session</a>
+          </div>
+          <div className={styles.counsellingImageWrapper}>
+            <img 
+              src="https://images.unsplash.com/photo-1523240715640-69143501114f?q=80&w=800" 
+              alt="Counselling" 
+              className={styles.counsellingImage}
+            />
+            <div className={styles.counsellingBadge}>
+              <div className="text-3xl">🎯</div>
+              <div>
+                <div className="font-bold text-gray-900">10k+ Students</div>
+                <div className="text-sm text-gray-500">Counselled Successfully</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURES SECTION */}
+      <section className={styles.featuresSection}>
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className={styles.sectionTitle}>Everything You Need in <span className={styles.highlightText}>One Place</span></h2>
+          <p className={styles.sectionSubtitle}>We help you make the most important decision of your academic life.</p>
+          
+          <div className={styles.featuresGrid}>
+            <div className={styles.featureCard}>
+              <div className={styles.featureIcon} style={{background: '#eff6ff'}}>🎓</div>
+              <h3>37,000+ Colleges</h3>
+              <p>Explore detailed information about thousands of verified institutions across India.</p>
+            </div>
+            <div className={styles.featureCard}>
+              <div className={styles.featureIcon} style={{background: '#f0fdf4'}}>📝</div>
+              <h3>Entrance Exams</h3>
+              <p>Get latest updates, patterns, and preparation tips for over 500+ entrance exams.</p>
+            </div>
+            <div className={styles.featureCard}>
+              <div className={styles.featureIcon} style={{background: '#fff7ed'}}>📊</div>
+              <h3>College Predictor</h3>
+              <p>Predict your chances of getting into your dream college based on your exam scores.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS SECTION */}
+      <section className={styles.testimonialsSection}>
+        <div className="text-center mb-8">
+          <h2 className={styles.sectionTitle}>What <span className={styles.highlightText}>Students</span> Say</h2>
+        </div>
+        
+        <div className={styles.marqueeContainer}>
+          <div className={styles.marqueeTrack}>
+            {[
+              { name: 'Rahul Sharma', college: 'IIT Bombay', text: 'CareerCampus helped me find the perfect B.Tech program. The data is incredibly accurate and up-to-date.' },
+              { name: 'Ananya Iyer', college: 'IIM Ahmedabad', text: 'The comparison tool is a lifesaver. It made my decision-making process so much easier and faster.' },
+              { name: 'Vikram Singh', college: 'NLSIU Bangalore', text: 'Best platform for law aspirants. The entrance exam section provides everything you need to know.' },
+              { name: 'Priya Verma', college: 'AIIMS Delhi', text: 'I found my dream medical college through the detailed listings here. Highly recommended!' },
+              // Duplicate for seamless marquee
+              { name: 'Rahul Sharma', college: 'IIT Bombay', text: 'CareerCampus helped me find the perfect B.Tech program. The data is incredibly accurate and up-to-date.' },
+              { name: 'Ananya Iyer', college: 'IIM Ahmedabad', text: 'The comparison tool is a lifesaver. It made my decision-making process so much easier and faster.' },
+              { name: 'Vikram Singh', college: 'NLSIU Bangalore', text: 'Best platform for law aspirants. The entrance exam section provides everything you need to know.' },
+              { name: 'Priya Verma', college: 'AIIMS Delhi', text: 'I found my dream medical college through the detailed listings here. Highly recommended!' }
+            ].map((t, i) => (
+              <div key={i} className={styles.testimonialCard}>
+                <p className={styles.testimonialText}>"{t.text}"</p>
+                <div className={styles.testimonialAuthor}>
+                  <div className={styles.authorAvatar} style={{ background: i % 2 === 0 ? '#f97316' : '#2563eb' }}>
+                    {t.name.charAt(0)}
+                  </div>
+                  <div className={styles.authorInfo}>
+                    <h4>{t.name}</h4>
+                    <p>{t.college}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

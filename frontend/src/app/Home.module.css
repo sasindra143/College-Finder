@@ -412,10 +412,17 @@
     flex-direction: column;
     gap: 2rem;
   }
+  .testimonialCard {
+    width: 300px;
+    padding: 1.5rem;
+  }
 }
 
 @media (max-width: 480px) {
   .streamsGrid {
     grid-template-columns: 1fr;
+  }
+  .testimonialCard {
+    width: 260px;
   }
 }
