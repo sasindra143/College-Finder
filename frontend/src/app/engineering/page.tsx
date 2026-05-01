@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { api, College } from '@/lib/api';
+import { api } from '@/lib/api';
+import type { College } from '@/lib/types';
 import CollegeCard from '@/components/CollegeCard';
 import styles from './Engineering.module.css';
 import Link from 'next/link';
