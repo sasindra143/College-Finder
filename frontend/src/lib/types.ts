@@ -3,15 +3,24 @@ export interface College {
   name: string;
   slug: string;
 
+  location?: string;
   city?: string;
   state?: string;
 
-  rating?: number;
-  fees?: number;
   ownership?: string;
+  established?: number;
+
+  fees?: number;
+  rating?: number;
+
+  placementPercent?: number;
+  avgPackage?: number;
+
+  exams?: string[];
+  degrees?: string[];
 
   description?: string;
+  imageUrl?: string;
 
-  // ✅ ADD THIS LINE
   affiliation?: string;
 }
