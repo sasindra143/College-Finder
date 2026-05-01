@@ -135,7 +135,7 @@ export default function Home() {
       <section className={styles.heroSection}>
         <div className={styles.heroBackground}>
           <img
-            src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070"
+            src="/images/hero_bg.png"
             alt="Campus"
             className={styles.heroBackgroundImage}
           />
@@ -234,7 +234,7 @@ export default function Home() {
           </div>
           <div className={styles.counsellingImageWrapper}>
             <img 
-              src="https://images.unsplash.com/photo-1523240715640-69143501114f?q=80&w=800" 
+              src="/images/counselling.png" 
               alt="Counselling" 
               className={styles.counsellingImage}
             />
