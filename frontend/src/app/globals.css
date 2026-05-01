@@ -13,6 +13,21 @@
   --color-accent-500: #f97316;
 
   --font-inter: 'Inter', sans-serif;
+  
+  --nav-height-desktop: 160px;
+  --nav-height-mobile: 76px;
+}
+
+main {
+  padding-top: var(--nav-height-mobile);
+  min-height: calc(100vh - var(--nav-height-mobile));
+}
+
+@media (min-width: 769px) {
+  main {
+    padding-top: var(--nav-height-desktop);
+    min-height: calc(100vh - var(--nav-height-desktop));
+  }
 }
 
 * {
@@ -23,6 +38,13 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-height-desktop);
+}
+
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: var(--nav-height-mobile);
+  }
 }
 
 body {

@@ -227,7 +227,7 @@
 
 .stickyTabs {
   position: sticky;
-  top: 76px;
+  top: var(--nav-height-mobile);
   z-index: 30;
   background-color: white;
   border-bottom: 2px solid #f3f4f6;
@@ -236,7 +236,7 @@
 
 @media (min-width: 1024px) {
   .stickyTabs {
-    top: 160px;
+    top: var(--nav-height-desktop);
   }
 }
 

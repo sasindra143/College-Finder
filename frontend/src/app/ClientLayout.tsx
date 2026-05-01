@@ -9,7 +9,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <Providers>
       <Navbar />
-      <main className="flex-1 w-full bg-gray-50 pt-[76px] md:pt-[160px]">{children}</main>
+      <main className="flex-1 w-full bg-gray-50">{children}</main>
       <Footer />
     </Providers>
   );

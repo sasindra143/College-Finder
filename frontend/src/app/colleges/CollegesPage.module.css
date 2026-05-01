@@ -110,7 +110,7 @@
 /* ── Sidebar ── */
 .sidebar {
   position: sticky;
-  top: 100px;
+  top: calc(var(--nav-height-desktop) + 24px);
 }
 
 .filterCard {
@@ -191,6 +191,8 @@
   background-color: white;
   box-shadow: 0 0 0 4px rgba(255, 122, 26, 0.1);
 }
+
+
 
 .courseChips {
   display: flex;
@@ -536,7 +538,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.5);
-  z-index: 1000;
+  z-index: 11000;
   display: flex;
   justify-content: flex-end;
 }
