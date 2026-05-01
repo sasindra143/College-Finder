@@ -29,6 +29,10 @@ export type { College, Exam };
 export interface ApiResponse<T> {
   success: boolean;
   data: T;
+  colleges?: T;
+  college?: T;
+  exam?: T;
+  comparisons?: T;
   message?: string;
   pagination?: {
     page: number;
