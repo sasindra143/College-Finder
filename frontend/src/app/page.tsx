@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import styles from './Home.module.css';
 import Link from 'next/link';
 import { useEffect, useRef } from 'react';
-import { api, College } from '@/lib/api';
-
+import { api } from '@/lib/api'
+import type { College } from '@/lib/types'
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchType, setSearchType] = useState('college');
