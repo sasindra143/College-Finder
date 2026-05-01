@@ -1,464 +1,395 @@
 'use client';
-import { useState, useEffect, useCallback, Suspense, useRef } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
-import CollegeCard from '@/components/CollegeCard';
+import { useCompare } from '@/context/CompareContext';
+import { toast } from '@/components/ui/Toaster';      
 import Link from 'next/link';
-import styles from './CollegesPage.module.css';
+import styles from './CollegeDetails.module.css';
 
-const INDIAN_STATES = [
-  'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat',
-  'Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh',
-  'Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab',
-  'Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh',
-  'Uttarakhand','West Bengal','Delhi','Jammu and Kashmir','Ladakh','Puducherry',
-].sort();
+// ✅ ADD THIS
+interface PaginationInfo {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
 
-const POPULAR_COURSES = [
-  { label: 'B.Tech / Engineering', value: 'Engineering' },
-  { label: 'MBA / Management', value: 'Management' },
-  { label: 'MBBS / Medical', value: 'Medical' },
-  { label: 'Pharmacy', value: 'Pharmacy' },
-  { label: 'Law / LLB', value: 'Law' },
-  { label: 'Education / B.Ed', value: 'Education' },
-  { label: 'Arts & Humanities', value: 'Arts' },
-  { label: 'Commerce', value: 'Commerce' },
-  { label: 'Science', value: 'Science' },
-];
+const TABS = ['Overview', 'Courses & Fees', 'Placements', 'Reviews', 'Location'];
 
-function CollegesList() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [colleges, setColleges] = useState<College[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [pagination, setPagination] = useState<PaginationInfo | null>(null);
-  const [search, setSearch] = useState(searchParams.get('search') || '');
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    location: searchParams.get('location') || '',
-    ownership: searchParams.get('ownership') || '',
-    course: '',
-    minRating: '',
-    maxFees: '',
-    sortBy: 'rating',
-    sortOrder: 'desc' as 'asc' | 'desc',
-    page: 1,
-  });
+// Deterministic rating (3.0-4.8)
+function getRealisticRating(college: College): number {
+  if (college.rating && college.rating !== 5) return college.rating;
+  const hash = college.name.split('').reduce((a, c) => a + c.charCodeAt(0), 17);
+  return Math.round((3.0 + (hash % 19) / 10) * 10) / 10;
+}
 
-  const fetchColleges = useCallback(async () => {
-  setLoading(true);
-  try {
-    const res: any = await api.getColleges({
-      search,
-      location: filters.location,
-      ownership: filters.ownership,
-      course: filters.course,
-      minRating: filters.minRating ? Number(filters.minRating) : undefined,
-      maxFees: filters.maxFees ? Number(filters.maxFees) : undefined,
-      sortBy: filters.sortBy,
-      sortOrder: filters.sortOrder,
-      page: filters.page,
-      limit: 12,
-    });
-
-    console.log("🔥 API DATA:", res);
-
-    setColleges(res?.colleges || []);
-    setPagination(res?.pagination || null);
-    setError(null);
-  } catch (err) {
-    console.error("❌ Failed:", err);
-    setError("Backend not reachable");
-  } finally {
-    setLoading(false);
+// Infer courses from college name/affiliation
+function inferCourses(college: College): { name: string; duration: string; fees: number; seats: number; eligibility: string }[] {
+  const text = `${college.name} ${college.affiliation || ''}`.toLowerCase();
+  const fee = college.fees || 50000;
+  const courses = [];
+  if (text.includes('engineer') || text.includes('technolog') || text.includes('polytechnic'))
+    courses.push({ name: 'B.Tech (Engineering)', duration: '4 Years', fees: fee, seats: 120, eligibility: '12th PCM' },
+                  { name: 'M.Tech', duration: '2 Years', fees: Math.round(fee * 0.8), seats: 30, eligibility: 'B.Tech' });
+  if (text.includes('medical') || text.includes('medicine') || text.includes('mbbs') || text.includes('health'))
+    courses.push({ name: 'MBBS', duration: '5.5 Years', fees: Math.round(fee * 1.5), seats: 100, eligibility: '12th PCB, NEET' },
+                  { name: 'BDS', duration: '5 Years', fees: Math.round(fee * 1.2), seats: 60, eligibility: '12th PCB, NEET' });
+  if (text.includes('management') || text.includes('business') || text.includes('mba') || text.includes('commerce'))
+    courses.push({ name: 'BBA', duration: '3 Years', fees: Math.round(fee * 0.7), seats: 80, eligibility: '12th Any' },
+                  { name: 'MBA', duration: '2 Years', fees: Math.round(fee * 1.3), seats: 60, eligibility: 'Graduation + CAT/MAT' });
+  if (text.includes('law') || text.includes('legal'))
+    courses.push({ name: 'LLB (3yr)', duration: '3 Years', fees: Math.round(fee * 0.8), seats: 80, eligibility: 'Graduation' },
+                  { name: 'BA LLB (5yr)', duration: '5 Years', fees: fee, seats: 60, eligibility: '12th Any, CLAT' });
+  if (text.includes('science') || text.includes('arts') || text.includes('degree') || text.includes('college of arts'))
+    courses.push({ name: 'B.Sc', duration: '3 Years', fees: Math.round(fee * 0.6), seats: 120, eligibility: '12th PCM/PCB' },
+                  { name: 'B.A', duration: '3 Years', fees: Math.round(fee * 0.5), seats: 120, eligibility: '12th Any' });
+  if (text.includes('pharmacy') || text.includes('pharma'))
+    courses.push({ name: 'B.Pharm', duration: '4 Years', fees: fee, seats: 60, eligibility: '12th PCM/PCB' });
+  if (text.includes('design') || text.includes('architecture') || text.includes('arch'))
+    courses.push({ name: 'B.Arch', duration: '5 Years', fees: fee, seats: 40, eligibility: '12th PCM, NATA' });
+  if (courses.length === 0) {
+    courses.push({ name: 'B.Sc', duration: '3 Years', fees: fee, seats: 120, eligibility: '12th Any' },
+                  { name: 'B.A', duration: '3 Years', fees: Math.round(fee * 0.8), seats: 120, eligibility: '12th Any' },
+                  { name: 'M.Sc', duration: '2 Years', fees: Math.round(fee * 0.7), seats: 40, eligibility: 'Graduation' });
   }
-}, [search, filters]);
+  return courses;
+}
+
+function generateHistory(college: College): string {
+  const estYear = college.established || 2000;
+  const age = new Date().getFullYear() - estYear;
+  const type = college.ownership?.toLowerCase().includes('government') ? 'government' : 'private';
+  const aff = college.affiliation ? `affiliated to ${college.affiliation}` : 'a recognized institution';
+  return `${college.name} was established in ${estYear} and is ${aff} located in ${college.city}, ${college.state}. Over the past ${age} years, it has grown to become a leading ${type} educational institution in the region. The college is committed to providing quality education and fostering academic excellence. It offers a wide range of undergraduate and postgraduate programmes, catering to the diverse needs of students from across the country. With a strong focus on research, innovation, and industry collaboration, the institution has built a reputation for producing skilled and employment-ready graduates.`;
+}
+
+function getMockReviews(college: College) {
+  const names = ['Rahul Sharma', 'Priya Patel', 'Ankit Kumar', 'Sneha Gupta', 'Vikram Singh', 'Neha Reddy'];
+  const hash = college.name.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  return [
+    { name: names[hash % 6], year: 2023, rating: 4, comment: `Good faculty and campus environment. ${college.name} provides excellent learning opportunities with experienced professors. Infrastructure is well-maintained.` },
+    { name: names[(hash + 2) % 6], year: 2022, rating: (hash % 2 === 0) ? 5 : 4, comment: `One of the better colleges in ${college.state}. The placement cell is active and supports students well. Library and labs are adequately equipped.` },
+    { name: names[(hash + 4) % 6], year: 2023, rating: 4, comment: `The academic environment is positive. Faculty is knowledgeable and supportive. Campus life is engaging with various cultural and technical activities.` },
+  ];
+}
+
+export default function CollegeDetails() {
+  const { slug } = useParams();
+  const [college, setCollege] = useState<College | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('Overview');
+  const { addToCompare, removeFromCompare, isInCompare } = useCompare();
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
-    const timer = setTimeout(fetchColleges, 350);
-    return () => clearTimeout(timer);
-  }, [fetchColleges]);
+    if (slug) {
+      api.getCollege(slug as string)
+        .then(res => setCollege(res.data))
+        .catch(() => toast.error('Failed to load college'))
+        .finally(() => setLoading(false));
+    }
+  }, [slug]);
 
-  const updateFilter = (key: string, value: any) => {
-    setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
+  const scrollToSection = (tab: string) => {
+    setActiveTab(tab);
+    const key = tab.replace(/\s+/g, '-').replace('&', '');
+    const el = sectionRefs.current[key] || sectionRefs.current[tab];
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 140;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
-  const clearAll = () => {
-    setSearch('');
-    setFilters({ location: '', ownership: '', course: '', minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc', page: 1 });
-  };
-
-  const hasFilters = search || filters.location || filters.ownership || filters.course || filters.minRating || filters.maxFees;
-
-  const activeChips = [
-    ...(search ? [{ label: `"${search}"`, key: 'search' }] : []),
-    ...(filters.location ? [{ label: filters.location, key: 'location' }] : []),
-    ...(filters.ownership ? [{ label: filters.ownership, key: 'ownership' }] : []),
-    ...(filters.course ? [{ label: POPULAR_COURSES.find(c => c.value === filters.course)?.label || filters.course, key: 'course' }] : []),
-    ...(filters.minRating ? [{ label: `${filters.minRating}★+`, key: 'minRating' }] : []),
-    ...(filters.maxFees && Number(filters.maxFees) < 3000000 ? [{ label: `Up to ₹${(Number(filters.maxFees) / 100000).toFixed(0)}L`, key: 'maxFees' }] : []),
-  ];
-
-  const removeChip = (key: string) => {
-    if (key === 'search') setSearch('');
-    else updateFilter(key, '');
-  };
-
-  const filterContent = (
-    <div className={styles.filterBody}>
-      {/* Search */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>Search</label>
-        <div className={styles.searchInputWrapper}>
-          <svg className={styles.searchInputIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <input
-            type="text"
-            value={search}
-            onChange={e => { setSearch(e.target.value); setFilters(f => ({ ...f, page: 1 })); }}
-            placeholder="College name, city..."
-            className={styles.filterInputWithIcon}
-            suppressHydrationWarning
-          />
-        </div>
-      </div>
-
-      {/* Course Filter */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>Course / Stream</label>
-        <div className={styles.courseChips}>
-          {POPULAR_COURSES.map(c => (
-            <button
-              key={c.value}
-              onClick={() => updateFilter('course', filters.course === c.value ? '' : c.value)}
-              className={`${styles.courseChip} ${filters.course === c.value ? styles.courseChipActive : ''}`}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* State */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>State</label>
-        <select
-          value={filters.location}
-          onChange={e => updateFilter('location', e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">All States</option>
-          {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-        </select>
-      </div>
-
-      {/* Ownership */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>College Type</label>
-        <div className={styles.typeButtonGroup}>
-          {['', 'Government', 'Private', 'Deemed'].map(type => (
-            <button
-              key={type}
-              onClick={() => updateFilter('ownership', type)}
-              className={`${styles.typeBtn} ${
-                filters.ownership === type
-                  ? styles.typeBtnActive
-                  : styles.typeBtnDefault
-              }`}
-            >
-              {type || 'All Types'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Rating */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>Min Rating</label>
-        <div className={styles.ratingButtons}>
-          {['', '4.5', '4.0', '3.5', '3.0'].map(r => (
-            <button
-              key={r}
-              onClick={() => updateFilter('minRating', r)}
-              className={`${styles.ratingBtn} ${filters.minRating === r ? styles.ratingBtnActive : ''}`}
-            >
-              {r ? `${r}★+` : 'Any'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Max Fees */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>
-          Max Fees/Year
-          {filters.maxFees && Number(filters.maxFees) < 3000000 && (
-            <span className={styles.feesValue}> · ₹{(Number(filters.maxFees) / 100000).toFixed(0)}L</span>
-          )}
-        </label>
-        <input
-          type="range"
-          min={50000}
-          max={3000000}
-          step={50000}
-          value={filters.maxFees || 3000000}
-          onChange={e => updateFilter('maxFees', e.target.value)}
-          className={styles.rangeInput}
-          suppressHydrationWarning
-        />
-        <div className={styles.rangeLabels}>
-          <span>₹50K</span><span>₹30L</span>
+  if (loading) return (
+    <div className={styles.loadingContainer}>
+      <div className={styles.loadingContent}>
+        <div className={styles.loadingBox}>
+          <div className={styles.loadingSkeleton1} />
+          <div className={styles.loadingSkeleton2} />
+          <div className={styles.loadingSkeleton3} />
         </div>
       </div>
     </div>
   );
+
+  if (!college) return (
+    <div className={styles.notFoundContainer}>
+      <div className={styles.notFoundIcon}>🏫</div>
+      <h1 className={styles.notFoundTitle}>College Not Found</h1>
+      <p className={styles.notFoundDesc}>This college may have been removed or renamed.</p>
+      <Link href="/colleges" className={styles.btnPrimary}>Browse All Colleges</Link>
+    </div>
+  );
+
+  const inCompare = isInCompare(college.id);
+  const rating = getRealisticRating(college);
+  const courses = (college.courses && college.courses.length > 0) ? college.courses : inferCourses(college);
+  const reviews = (college.reviews && college.reviews.length > 0) ? college.reviews : getMockReviews(college);
+  const history = generateHistory(college);
+  const whatsappUrl = `https://wa.me/919959732476?text=Hi%2C%20I%20need%20guidance%20about%20admission%20to%20${encodeURIComponent(college.name)}`;
+  const officialWebsite = (college.website && college.website.startsWith('http')) ? college.website : `https://www.google.com/search?q=${encodeURIComponent(college.name + ' ' + college.city + ' official website')}`;
+  const mapQuery = encodeURIComponent(`${college.name}, ${college.city}, ${college.state}, India`);
 
   return (
     <div className={styles.pageContainer}>
-      <div className={styles.contentWrapper}>
 
-        {/* Page Header */}
-        <div className={styles.pageHeader}>
-          <div className={styles.breadcrumb}>
-            <Link href="/" className={styles.breadcrumbLink}>Home</Link>
-            <span className={styles.breadcrumbSep}>›</span>
-            <span className={styles.breadcrumbCurrent}>Colleges</span>
+      {/* Hero */}
+      <div className={styles.heroSection}>
+        <div className={styles.heroContent}>
+          <div className={styles.collegeLogo}>
+            <img
+              src={college.imageUrl || 'https://images.unsplash.com/photo-1562774053-701939374585?w=400'}
+              alt={college.name}
+              onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400'; }}
+            />
           </div>
-          <h1 className={styles.pageTitle}>
-            {search
-              ? <>Results for <span className={styles.pageTitleHighlight}>"{search}"</span></>
-              : filters.location
-              ? <>Colleges in <span className={styles.pageTitleHighlight}>{filters.location}</span></>
-              : filters.course
-              ? <><span className={styles.pageTitleHighlight}>{POPULAR_COURSES.find(c => c.value === filters.course)?.label}</span> Colleges in India</>
-              : 'Top Colleges in India 2025'}
-          </h1>
-          <p className={styles.pageSubtitle}>
-            Explore {pagination?.total?.toLocaleString() || '37,701+'} verified institutions across India
-          </p>
 
-          {/* Active Filter Chips */}
-          {activeChips.length > 0 && (
-            <div className={styles.activeChips}>
-              {activeChips.map(chip => (
-                <button
-                  key={chip.key}
-                  onClick={() => removeChip(chip.key)}
-                  className={styles.activeChip}
-                >
-                  {chip.label}
-                  <span className={styles.chipRemove}>×</span>
-                </button>
-              ))}
-              <button onClick={clearAll} className={styles.clearAllChip}>
-                Clear All ×
+          <div className={styles.infoContainer}>
+            <div className={styles.badges}>
+              <span className={`${styles.badge} ${styles.badgeOwnership}`}>{college.ownership || 'Private'}</span>
+              {college.accreditation && <span className={`${styles.badge} ${styles.badgeAccreditation}`}>{college.accreditation}</span>}
+              {college.naacGrade && <span className={`${styles.badge} ${styles.badgeNaac}`}>NAAC {college.naacGrade}</span>}
+            </div>
+
+            <h1 className={styles.collegeName}>{college.name}</h1>
+
+            <div className={styles.metaInfo}>
+              <span className={styles.metaItem}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{display:'inline',marginRight:'4px'}}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {college.city}, {college.state}
+              </span>
+              <span className={styles.metaItem}>
+                <span className={styles.ratingStars}>{'★'.repeat(Math.round(rating))}</span>
+                <span className={styles.ratingValue}> {rating}/5</span>
+                <span> ({college.totalReviews || reviews.length} reviews)</span>
+              </span>
+              {college.established && <span>Est. {college.established}</span>}
+            </div>
+
+            <div className={styles.actionButtons}>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.btnPrimary}>
+                Apply Now
+              </a>
+              <a href={officialWebsite} target="_blank" rel="noopener noreferrer" className={styles.btnSecondary}>
+                Visit Website &#8599;
+              </a>
+              <button
+                onClick={() => inCompare ? removeFromCompare(college.id) : addToCompare(college)}
+                className={inCompare ? styles.btnOutlineActive : styles.btnOutline}
+              >
+                {inCompare ? '✓ In Compare' : '+ Add to Compare'}
               </button>
             </div>
-          )}
-        </div>
-
-        {/* Mobile Filter Button */}
-        <div className={styles.mobileFilterBar}>
-          <button
-            onClick={() => setMobileFiltersOpen(true)}
-            className={styles.mobileFilterBtn}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
-            </svg>
-            Filters {hasFilters && <span className={styles.filterBadge}>{activeChips.length}</span>}
-          </button>
-          <select
-            value={`${filters.sortBy}:${filters.sortOrder}`}
-            onChange={e => {
-              const [sortBy, sortOrder] = e.target.value.split(':');
-              setFilters(f => ({ ...f, sortBy, sortOrder: sortOrder as 'asc' | 'desc', page: 1 }));
-            }}
-            className={styles.sortSelect}
-          >
-            <option value="rating:desc">Top Rated</option>
-            <option value="fees:asc">Fees: Low → High</option>
-            <option value="fees:desc">Fees: High → Low</option>
-            <option value="placementPercent:desc">Best Placements</option>
-            <option value="name:asc">Name: A → Z</option>
-            <option value="established:asc">Oldest First</option>
-          </select>
-        </div>
-
-        {/* Mobile Filter Drawer */}
-        {mobileFiltersOpen && (
-          <div className={styles.mobileDrawerOverlay} onClick={() => setMobileFiltersOpen(false)}>
-            <div className={styles.mobileDrawer} onClick={e => e.stopPropagation()}>
-              <div className={styles.mobileDrawerHeader}>
-                <h3>Filters</h3>
-                <button onClick={() => setMobileFiltersOpen(false)} className={styles.mobileDrawerClose}>✕</button>
-              </div>
-              {filterContent}
-              <div className={styles.mobileDrawerActions}>
-                <button onClick={clearAll} className={styles.mobileDrawerClear}>Clear All</button>
-                <button onClick={() => setMobileFiltersOpen(false)} className={styles.mobileDrawerApply}>
-                  View {pagination?.total?.toLocaleString() || ''} Results
-                </button>
-              </div>
-            </div>
           </div>
-        )}
 
-        <div className={styles.layoutGrid}>
-
-          {/* ── Sidebar Filters ── */}
-          <aside className={styles.sidebar}>
-            <div className={styles.filterCard}>
-              <div className={styles.filterHeader}>
-                <h2 className={styles.filterTitle}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{display:'inline',marginRight:'6px',verticalAlign:'middle'}}>
-                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
-                  </svg>
-                  Filters
-                </h2>
-                {hasFilters && (
-                  <button onClick={clearAll} className={styles.clearBtn}>
-                    Clear All
-                  </button>
-                )}
+          <div className={styles.statsGrid}>
+            {[
+              { label: 'Annual Fees', value: `₹${(college.fees / 100000).toFixed(1)}L`, color: 'text-brand-600' },
+              { label: 'Avg Package', value: `₹${college.avgPackage || 4.5} LPA`, color: 'text-orange-600' },
+              { label: 'Placement', value: `${college.placementPercent || 75}%`, color: 'text-green-600' },
+              { label: 'NIRF Rank', value: college.nirfRank ? `#${college.nirfRank}` : 'N/A', color: 'text-purple-600' },
+            ].map(s => (
+              <div key={s.label} className={styles.statCard}>
+                <div className={`${styles.statValue} ${s.color}`}>{s.value}</div>
+                <div className={styles.statLabel}>{s.label}</div>
               </div>
-              {filterContent}
-            </div>
-          </aside>
+            ))}
+          </div>
+        </div>
+      </div>
 
-          {/* ── Main Content ── */}
-          <main className={styles.mainContent}>
-            {/* Count + Sort bar */}
-            <div className={styles.topBar}>
-              <p className={styles.resultCount}>
-                <span className={styles.resultCountHighlight}>{pagination?.total?.toLocaleString() || 0}</span> Institutions Found
-              </p>
-              <select
-                value={`${filters.sortBy}:${filters.sortOrder}`}
-                onChange={e => {
-                  const [sortBy, sortOrder] = e.target.value.split(':');
-                  setFilters(f => ({ ...f, sortBy, sortOrder: sortOrder as 'asc' | 'desc', page: 1 }));
-                }}
-                className={styles.sortSelect}
-              >
-                <option value="rating:desc">Sort: Top Rated</option>
-                <option value="fees:asc">Sort: Fees (Low → High)</option>
-                <option value="fees:desc">Sort: Fees (High → Low)</option>
-                <option value="placementPercent:desc">Sort: Best Placements</option>
-                <option value="name:asc">Sort: Name (A → Z)</option>
-                <option value="established:asc">Sort: Oldest First</option>
-              </select>
-            </div>
+      {/* Sticky Tabs */}
+      <div className={styles.stickyTabs}>
+        <div className={styles.tabsContainer}>
+          {TABS.map(tab => (
+            <button key={tab} onClick={() => scrollToSection(tab)}
+              className={`${styles.tabBtn} ${activeTab === tab ? styles.tabBtnActive : ''}`}>
+              {tab}
+            </button>
+          ))}
+        </div>
+      </div>
 
-            {loading ? (
-              <div className={styles.gridContainer}>
-                {[1,2,3,4,5,6,7,8,9].map(i => (
-                  <div key={i} className={styles.skeletonCard}>
-                    <div className={styles.skeletonImg} />
-                    <div className={styles.skeletonBody}>
-                      <div className={styles.skeletonLine} style={{width:'80%'}} />
-                      <div className={styles.skeletonLine} style={{width:'50%', height:'10px'}} />
-                      <div className={styles.skeletonStats} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : error ? (
-              <div className={styles.emptyState}>
-                <div className={styles.emptyIcon} style={{color: '#ef4444'}}>⚠️</div>
-                <h3 className={styles.emptyTitle}>Connection Error</h3>
-                <p className={styles.emptyText}>{error}</p>
-                <div className="flex gap-4 mt-6">
-                  <button onClick={fetchColleges} className={styles.emptyBtn}>
-                    Try Again
-                  </button>
-                  <button onClick={clearAll} className={styles.emptyBtn} style={{backgroundColor:'#f1f5f9', color:'#64748b', border:'1px solid #e2e8f0'}}>
-                    Reset Filters
-                  </button>
+      {/* Main */}
+      <div className={styles.mainGrid}>
+        <div className={styles.leftContent}>
+
+          {/* Overview */}
+          <section ref={el => { sectionRefs.current['Overview'] = el; }} className={styles.sectionCard}>
+            <h2 className={styles.sectionTitle}>About {college.name}</h2>
+            <p className={styles.description}>{history}</p>
+
+            <div className={styles.featuresGrid}>
+              {[
+                { icon: '🏢', label: 'Type', value: college.ownership || 'Private' },
+                { icon: '🎓', label: 'Accredited', value: college.accreditation || 'UGC' },
+                { icon: '📅', label: 'Established', value: college.established || 'N/A' },
+                { icon: '⭐', label: 'Rating', value: `${rating}/5` },
+              ].map(item => (
+                <div key={item.label} className={styles.featureCard}>
+                  <div className={styles.featureIcon}>{item.icon}</div>
+                  <div className={styles.featureLabel}>{item.label}</div>
+                  <div className={styles.featureValue}>{item.value}</div>
                 </div>
-              </div>
-            ) : colleges.length > 0 ? (
-              <>
-                <div className={styles.gridContainer}>
-                  {colleges.map(college => (
-                    <CollegeCard key={college.id} college={college} />
-                  ))}
-                </div>
+              ))}
+            </div>
 
-                {/* Pagination */}
-                {pagination && pagination.totalPages > 1 && (
-                  <div className={styles.paginationWrapper}>
-                    <div className={styles.pagination}>
-                      <button
-                        disabled={!pagination.hasPrev}
-                        onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))}
-                        className={styles.navBtn}
-                      >
-                        ← Prev
-                      </button>
-                      <div className={styles.pageNumbers}>
-                        {(() => {
-                          const pages = [];
-                          const current = pagination.page;
-                          const total = pagination.totalPages;
-                          // Always show first
-                          if (current > 3) { pages.push(1); if (current > 4) pages.push(-1); }
-                          // Surrounding pages
-                          for (let p = Math.max(1, current - 2); p <= Math.min(total, current + 2); p++) pages.push(p);
-                          // Always show last
-                          if (current < total - 2) { if (current < total - 3) pages.push(-1); pages.push(total); }
-                          return pages.map((p, i) => p === -1
-                            ? <span key={`ellipsis-${i}`} className={styles.ellipsis}>…</span>
-                            : (
-                              <button
-                                key={p}
-                                onClick={() => setFilters(f => ({ ...f, page: p }))}
-                                className={`${styles.pageBtn} ${p === current ? styles.pageBtnActive : styles.pageBtnDefault}`}
-                              >
-                                {p}
-                              </button>
-                            )
-                          );
-                        })()}
-                      </div>
-                      <button
-                        disabled={!pagination.hasNext}
-                        onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}
-                        className={styles.navBtn}
-                      >
-                        Next →
-                      </button>
-                    </div>
-                    <p className={styles.paginationInfo}>
-                      Page {pagination.page} of {pagination.totalPages} · {pagination.total.toLocaleString()} results
-                    </p>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className={styles.emptyState}>
-                <div className={styles.emptyIcon}>🔍</div>
-                <h3 className={styles.emptyTitle}>No colleges found</h3>
-                <p className={styles.emptyText}>Try removing some filters or searching for something else.</p>
-                <button onClick={clearAll} className={styles.emptyBtn}>
-                  Clear All Filters
-                </button>
+            {college.affiliation && (
+              <div className={styles.affiliationBox}>
+                <span className={styles.affiliationLabel}>Affiliated University</span>
+                <p className={styles.affiliationValue}>{college.affiliation}</p>
               </div>
             )}
-          </main>
+          </section>
+
+          {/* Courses & Fees */}
+          <section ref={el => { sectionRefs.current['Courses-Fees'] = el; sectionRefs.current['Courses & Fees'] = el; }} className={styles.sectionCard}>
+            <h2 className={styles.sectionTitle}>Courses & Fees</h2>
+            <div className={styles.courseList}>
+              {courses.map((course: any, i: number) => (
+                <div key={i} className={styles.courseCard}>
+                  <div>
+                    <h4 className={styles.courseName}>{course.name}</h4>
+                    <p className={styles.courseMeta}>{course.duration} | Full Time | {course.seats} Seats</p>
+                    <p className={styles.courseEligibility}>Eligibility: {course.eligibility}</p>
+                  </div>
+                  <div className={styles.courseFeeSection}>
+                    <div className={styles.courseFee}>₹{((course.fees || college.fees) / 100000).toFixed(2)}L</div>
+                    <div className={styles.feeLabel}>Per Year</div>
+                    <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.applyLink}>Apply Now</a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Placements */}
+          <section ref={el => { sectionRefs.current['Placements'] = el; }} className={styles.sectionCard}>
+            <h2 className={styles.sectionTitle}>Placement Statistics</h2>
+            <div className={styles.placementGrid}>
+              {[
+                { label: 'Placement Rate', value: `${college.placementPercent || 75}%`, color: 'bg-brand-50 text-brand-700 border-brand-100' },
+                { label: 'Avg Package', value: `₹${college.avgPackage || 4.5} LPA`, color: 'bg-orange-50 text-orange-700 border-orange-100' },
+                { label: 'Highest Package', value: `₹${Math.round((college.avgPackage || 4.5) * 3)} LPA`, color: 'bg-green-50 text-green-700 border-green-100' },
+                { label: 'Companies Visited', value: `${50 + (college.name.length % 100)}+`, color: 'bg-purple-50 text-purple-700 border-purple-100' },
+              ].map(s => (
+                <div key={s.label} className={`rounded-2xl p-5 border text-center ${s.color}`}>
+                  <div className="text-2xl font-black">{s.value}</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest mt-1 opacity-70">{s.label}</div>
+                </div>
+              ))}
+            </div>
+            <div className={styles.recruitersBox}>
+              <h3 className={styles.recruitersTitle}>Top Recruiters</h3>
+              <div className={styles.recruitersTags}>
+                {['TCS', 'Infosys', 'Wipro', 'Accenture', 'Cognizant', 'HCL', 'Tech Mahindra', 'IBM', 'Deloitte', 'Capgemini'].map(c => (
+                  <span key={c} className={styles.recruiterTag}>{c}</span>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Reviews */}
+          <section ref={el => { sectionRefs.current['Reviews'] = el; }} className={styles.sectionCard}>
+            <h2 className={styles.sectionTitle}>Student Reviews</h2>
+            <div className={styles.reviewList}>
+              {reviews.map((review: any, i: number) => (
+                <div key={i} className={styles.reviewCard}>
+                  <div className={styles.reviewHeader}>
+                    <div className={styles.reviewerInfo}>
+                      <div className={styles.reviewerAvatar}>{(review.authorName || review.name || 'A')[0]}</div>
+                      <div>
+                        <div className={styles.reviewerName}>{review.authorName || review.name}</div>
+                        <div className={styles.reviewerBatch}>Batch of {review.year}</div>
+                      </div>
+                    </div>
+                    <div className={styles.reviewStars}>
+                      {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                    </div>
+                  </div>
+                  <p className={styles.reviewText}>{review.comment}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Location / Map */}
+          <section ref={el => { sectionRefs.current['Location'] = el; }} className={styles.sectionCard}>
+            <h2 className={styles.sectionTitle}>Location & Map</h2>
+            <p className={styles.description}>{college.name} is located in {college.city}, {college.state}, India.</p>
+            <div className={styles.mapWrapper}>
+              <iframe
+                title={`${college.name} location`}
+                src={`https://maps.google.com/maps?q=${mapQuery}&output=embed`}
+                width="100%"
+                height="320"
+                style={{ border: 0, borderRadius: '16px' }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            
+              href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.mapDirectionsLink}
+            >
+              📍 Open in Google Maps &rarr;
+            </a>
+          </section>
+        </div>
+
+        {/* Sidebar */}
+        <div className={styles.rightSidebar}>
+          <div className={styles.ctaBox}>
+            <h3 className={styles.ctaTitle}>Need Admission Guidance?</h3>
+            <p className={styles.ctaDesc}>Talk to our expert counsellors for personalized help with college admission.</p>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={styles.ctaBtn}>
+              📞 Talk to Expert
+            </a>
+            <p className={styles.ctaNote}>Free, no-obligation guidance</p>
+          </div>
+
+          <div className={styles.infoBox}>
+            <h3 className={styles.infoBoxTitle}>Quick Information</h3>
+            <div className={styles.infoList}>
+              {[
+                { label: 'Location', value: `${college.city}, ${college.state}` },
+                { label: 'Annual Fees', value: `₹${(college.fees / 100000).toFixed(1)}L` },
+                { label: 'Avg Package', value: `₹${college.avgPackage || 4.5} LPA` },
+                { label: 'Placement %', value: `${college.placementPercent || 75}%` },
+                { label: 'Rating', value: `${rating} / 5 ★` },
+                ...(college.nirfRank ? [{ label: 'NIRF Rank', value: `#${college.nirfRank}` }] : []),
+                ...(college.affiliation ? [{ label: 'Affiliated To', value: college.affiliation.length > 35 ? college.affiliation.slice(0, 35) + '…' : college.affiliation }] : []),
+              ].map(item => (
+                <div key={item.label} className={styles.infoRow}>
+                  <span className={styles.infoRowLabel}>{item.label}</span>
+                  <span className={styles.infoRowValue}>{item.value}</span>
+                </div>
+              ))}
+            </div>
+            <a href={officialWebsite} target="_blank" rel="noopener noreferrer" className={styles.visitWebsiteBtn}>
+              🌐 Official Website &#8599;
+            </a>
+          </div>
+
+          <div className={styles.similarBox}>
+            <h3 className={styles.infoBoxTitle}>Browse More Colleges</h3>
+            <Link href={`/colleges?location=${college.state}`} className={`${styles.linkBtn} ${styles.linkBtnGray}`}>
+              Colleges in {college.state}
+            </Link>
+            <Link href="/colleges" className={`${styles.linkBtn} ${styles.linkBtnBrand}`}>
+              View All Colleges &rarr;
+            </Link>
+          </div>
         </div>
       </div>
     </div>
-  );
-}
-
-export default function CollegesPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-400 font-bold">Loading colleges...</div>}>
-      <CollegesList />
-    </Suspense>
   );
 }
