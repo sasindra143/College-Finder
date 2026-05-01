@@ -23,6 +23,8 @@ if (typeof window !== "undefined") {
 
 // ================= TYPES =================
 import type { College, Exam } from "@/lib/types";
+export type { College, Exam };
+
 
 export interface ApiResponse<T> {
   success: boolean;
