@@ -115,8 +115,8 @@ export const api = {
     }),
 
   // ===== COMPARISONS =====
-  getSavedComparisons: () =>
-    request<ApiResponse<any[]>>(`/saved/comparisons`),
+  getSavedColleges: () =>
+  request<ApiResponse<{ id: string; college: College }[]>>(`/saved`),
 
   saveComparison: (name: string, collegeIds: string[]) =>
     request<ApiResponse<any>>(`/saved/comparisons`, {
