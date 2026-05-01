@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect, useCallback, Suspense, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { api, College, PaginationInfo } from '@/lib/api';
+import { api } from '@/lib/api';
+import type { College } from '@/lib/types';
 import CollegeCard from '@/components/CollegeCard';
 import Link from 'next/link';
 import styles from './CollegesPage.module.css';
