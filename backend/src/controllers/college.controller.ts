@@ -58,7 +58,8 @@ export const listColleges = async (
 
     res.json({
       success: true,
-      ...result,
+      data: result.colleges,
+      pagination: result.pagination,
     });
   } catch (err) {
     next(err);
