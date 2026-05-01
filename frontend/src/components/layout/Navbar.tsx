@@ -145,7 +145,7 @@ export function Navbar() {
                   <div 
                     key={college.id} 
                     className={styles.suggestionItem}
-                    onClick={() => handleSuggestionClick(college.slug)}
+                    onClick={() => handleSuggestionClick(college.slug || college.id)}
                   >
                     <div className={styles.suggestionInfo}>
                       <div className={styles.suggestionName}>{college.name}</div>
