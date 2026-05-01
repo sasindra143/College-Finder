@@ -1,30 +1,31 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { createError } from './error.middleware';
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
 
-export interface AuthRequest extends Request {
-  userId?: string;
-}
-
-export const authenticate = (req: AuthRequest, _res: Response, next: NextFunction): void => {
+export const authenticate = (
+  req: Request,
+  _res: Response,
+  next: NextFunction
+): void => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw createError('No token provided', 401);
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      throw new Error("No token provided");
     }
 
-    const token = authHeader.split(' ')[1];
+    const token = authHeader.split(" ")[1];
+
     const secret = process.env.JWT_SECRET;
-    if (!secret) throw createError('JWT secret not configured', 500);
+    if (!secret) {
+      throw new Error("JWT secret not configured");
+    }
 
     const decoded = jwt.verify(token, secret) as { userId: string };
+
     req.userId = decoded.userId;
+
     next();
   } catch (err) {
-    if (err instanceof jwt.JsonWebTokenError) {
-      next(createError('Invalid or expired token', 401));
-    } else {
-      next(err);
-    }
+    next(err);
   }
 };
