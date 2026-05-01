@@ -26,16 +26,16 @@ export default function Dashboard() {
         api.getSavedColleges(),
         api.getSavedComparisons()
       ])
-     .then(([collegesRes, compRes]) => {
-  // ✅ FIX HERE
-  const formatted = collegesRes.data.map((c: any) => ({
-    id: c.id || c.college?.id || crypto.randomUUID(),
-    college: c.college || c
-  }));
+      .then(([collegesRes, compRes]) => {
+        const rawColleges = collegesRes?.data || collegesRes?.colleges || [];
+        const formatted = rawColleges.map((c: any) => ({
+          id: c.id || c.college?.id || crypto.randomUUID(),
+          college: c.college || c
+        }));
 
-  setSavedColleges(formatted);
-  setComparisons(compRes.data);
-})
+        setSavedColleges(formatted);
+        setComparisons(compRes?.data || compRes?.comparisons || []);
+      })
       .finally(() => setLoading(false));
     }
   }, [isAuthenticated]);
@@ -49,7 +49,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12" style={{ paddingTop: '180px' }}>
+    <div className="bg-gray-50 min-h-screen pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8 fade-in-up">

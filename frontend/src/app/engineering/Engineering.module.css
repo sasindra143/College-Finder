@@ -14,8 +14,6 @@
   display: flex;
   align-items: center;
   color: white;
-  padding-top: 160px;
-  margin-top: -160px;
 }
 
 .heroOverlay {

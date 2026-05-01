@@ -20,7 +20,7 @@ export default function LawPage() {
           limit: 12, 
           sortBy: 'rating' 
         });
-        setColleges(res.data);
+        setColleges(res?.data || res?.colleges || []);
         setError(null);
       } catch (err) {
         console.error('Failed to load law colleges:', err);

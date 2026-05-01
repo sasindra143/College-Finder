@@ -21,7 +21,7 @@ export default function MedicinePage() {
           limit: 12, 
           sortBy: 'rating' 
         });
-        setColleges(res.data);
+        setColleges(res?.data || res?.colleges || []);
         setError(null);
       } catch (err) {
         console.error('Failed to load medical colleges:', err);

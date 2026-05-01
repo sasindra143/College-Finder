@@ -16,7 +16,7 @@ export default function ExamDetail() {
   useEffect(() => {
     if (slug) {
       api.getExam(slug as string)
-        .then(res => setExam(res.data))
+        .then(res => setExam(res?.data || res?.exam))
         .catch(() => toast.error('Failed to load exam details'))
         .finally(() => setLoading(false));
     }

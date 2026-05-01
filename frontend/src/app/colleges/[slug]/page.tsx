@@ -83,7 +83,7 @@ export default function CollegeDetails() {
   useEffect(() => {
     if (slug) {
       api.getCollege(slug as string)
-        .then(res => setCollege(res.data))
+        .then(res => setCollege(res?.data || res?.college))
         .catch(() => toast.error('Failed to load college'))
         .finally(() => setLoading(false));
     }
