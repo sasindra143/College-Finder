@@ -20,7 +20,7 @@ export default function EngineeringPage() {
           limit: 12, 
           sortBy: 'rating' 
         });
-        setColleges(res.colleges);
+        setColleges(res.data);
         setError(null);
       } catch (err) {
         console.error('Failed to load engineering colleges:', err);
