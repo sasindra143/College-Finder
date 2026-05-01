@@ -14,8 +14,9 @@ export default function ManagementPage() {
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const res = await api.getColleges({ limit: 50, sortBy: 'rating' });
-        const managementColleges = res.data.filter(c => 
+        const res: any = await api.getColleges({ limit: 50, sortBy: 'rating' });
+        const allColleges: College[] = res?.data || res?.colleges || [];
+        const managementColleges = allColleges.filter(c => 
           c.name.toLowerCase().includes('management') || 
           c.name.toLowerCase().includes('business') ||
           c.name.toLowerCase().includes('iim') ||
