@@ -1,42 +1,103 @@
-import { Request, Response, NextFunction } from 'express';
-import * as authService from '../services/auth.service';
-import { AuthRequest } from '../middleware/auth.middleware';
+import { Request, Response, NextFunction } from "express";
+import * as authService from "../services/auth.service";
 
-export const signup = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+/**
+ * Signup
+ */
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { name, email, password } = req.body;
+
     const result = await authService.signup(name, email, password);
-    res.status(201).json({ success: true, message: 'Account created successfully', ...result });
+
+    res.status(201).json({
+      success: true,
+      message: "Account created successfully",
+      ...result,
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+/**
+ * Login
+ */
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const { email, password } = req.body;
+
     const result = await authService.login(email, password);
-    res.json({ success: true, message: 'Login successful', ...result });
+
+    res.json({
+      success: true,
+      message: "Login successful",
+      ...result,
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export const getMe = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+/**
+ * Get current user
+ */
+export const getMe = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
-    const user = await authService.getMe(req.userId!);
-    res.json({ success: true, data: user });
+    const userId = req.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+      return;
+    }
+
+    const user = await authService.getMe(userId);
+
+    res.json({
+      success: true,
+      data: user,
+    });
   } catch (err) {
     next(err);
   }
 };
 
-export const googleCallback = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+/**
+ * Google OAuth callback
+ */
+export const googleCallback = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const user = req.user as any;
+
     const result = await authService.generateTokenForUser(user);
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-    res.redirect(`${frontendUrl}/auth/callback?token=${result.token}&user=${encodeURIComponent(JSON.stringify(result.user))}`);
+
+    const frontendUrl =
+      process.env.FRONTEND_URL || "http://localhost:3000";
+
+    res.redirect(
+      `${frontendUrl}/auth/callback?token=${result.token}&user=${encodeURIComponent(
+        JSON.stringify(result.user)
+      )}`
+    );
   } catch (err) {
     next(err);
   }
