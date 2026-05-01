@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
-import type { College } from '@/lib/types';
+import type { Exam } from '@/lib/types';
 import { toast } from '@/components/ui/Toaster';
 import styles from './Exams.module.css';
 

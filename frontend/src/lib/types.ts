@@ -50,3 +50,13 @@ export interface College {
   courses?: Course[];
   reviews?: Review[];
 }
+
+export interface Exam {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  date?: string;
+  eligibility?: string;
+  syllabus?: string;
+}
