@@ -44,11 +44,11 @@ function CollegesList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
-  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [search, setSearch] = useState(searchParams?.get('search') || '');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
-    location: searchParams.get('location') || '',
-    ownership: searchParams.get('ownership') || '',
+    location: searchParams?.get('location') || '',
+    ownership: searchParams?.get('ownership') || '',
     course: '',
     minRating: '',
     maxFees: '',

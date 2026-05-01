@@ -8,8 +8,8 @@ function CallbackHandler() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    const userStr = searchParams.get('user');
+    const token = searchParams?.get('token');
+    const userStr = searchParams?.get('user');
 
     if (token && userStr) {
       try {
