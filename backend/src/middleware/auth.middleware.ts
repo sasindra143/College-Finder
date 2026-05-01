@@ -1,6 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
+/**
+ * Extend Request locally (safe fix)
+ */
+interface AuthRequest extends Request {
+  userId?: string;
+}
+
 export const authenticate = (
   req: Request,
   res: Response,
@@ -30,7 +37,8 @@ export const authenticate = (
 
     const decoded = jwt.verify(token, secret) as { userId: string };
 
-    req.userId = decoded.userId;
+    // ✅ FIX HERE (cast req safely)
+    (req as AuthRequest).userId = decoded.userId;
 
     next();
   } catch (err) {

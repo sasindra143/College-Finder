@@ -2,6 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/auth.service";
 
 /**
+ * Extend Request locally (safe fix)
+ */
+interface AuthRequest extends Request {
+  userId?: string;
+}
+
+/**
  * Signup
  */
 export const signup = async (
@@ -13,7 +20,10 @@ export const signup = async (
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
-      res.status(400).json({ success: false, message: "All fields are required" });
+      res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
       return;
     }
 
@@ -41,7 +51,10 @@ export const login = async (
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ success: false, message: "Email and password required" });
+      res.status(400).json({
+        success: false,
+        message: "Email and password required",
+      });
       return;
     }
 
@@ -61,7 +74,7 @@ export const login = async (
  * Get current logged-in user
  */
 export const getMe = async (
-  req: Request,
+  req: AuthRequest,   // ✅ FIXED HERE
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -99,7 +112,10 @@ export const googleCallback = async (
     const user = req.user as any;
 
     if (!user) {
-      res.status(401).json({ success: false, message: "Google auth failed" });
+      res.status(401).json({
+        success: false,
+        message: "Google auth failed",
+      });
       return;
     }
 

@@ -2,7 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import * as savedService from "../services/saved.service";
 
 /**
- * Helper: safely convert req.params value to string
+ * Extend Request locally
+ */
+interface AuthRequest extends Request {
+  userId?: string;
+}
+
+/**
+ * Helper for params
  */
 const toStringParam = (val: string | string[] | undefined): string | null => {
   if (!val) return null;
@@ -10,7 +17,7 @@ const toStringParam = (val: string | string[] | undefined): string | null => {
 };
 
 /**
- * Save a college
+ * Save college
  */
 export const saveCollege = async (
   req: Request,
@@ -19,7 +26,7 @@ export const saveCollege = async (
 ): Promise<void> => {
   try {
     const { collegeId } = req.body;
-    const userId = req.userId;
+    const userId = (req as AuthRequest).userId;
 
     if (!userId || !collegeId) {
       res.status(400).json({ message: "Invalid request" });
@@ -39,7 +46,7 @@ export const saveCollege = async (
 };
 
 /**
- * Remove saved college
+ * Unsave college
  */
 export const unsaveCollege = async (
   req: Request,
@@ -47,7 +54,7 @@ export const unsaveCollege = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as AuthRequest).userId;
     const collegeId = toStringParam(req.params.collegeId);
 
     if (!userId || !collegeId) {
@@ -75,7 +82,7 @@ export const getSavedColleges = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as AuthRequest).userId;
 
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
@@ -103,7 +110,7 @@ export const saveComparison = async (
 ): Promise<void> => {
   try {
     const { name, collegeIds } = req.body;
-    const userId = req.userId;
+    const userId = (req as AuthRequest).userId;
 
     if (!userId || !name || !collegeIds) {
       res.status(400).json({ message: "Invalid request" });
@@ -135,7 +142,7 @@ export const getSavedComparisons = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as AuthRequest).userId;
 
     if (!userId) {
       res.status(401).json({ message: "Unauthorized" });
@@ -162,7 +169,7 @@ export const deleteComparison = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const userId = req.userId;
+    const userId = (req as AuthRequest).userId;
     const id = toStringParam(req.params.id);
 
     if (!userId || !id) {

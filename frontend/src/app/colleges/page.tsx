@@ -47,30 +47,33 @@ function CollegesList() {
   });
 
   const fetchColleges = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await api.getColleges({
-        search,
-        location: filters.location,
-        ownership: filters.ownership,
-        course: filters.course,
-        minRating: filters.minRating ? Number(filters.minRating) : undefined,
-        maxFees: filters.maxFees ? Number(filters.maxFees) : undefined,
-        sortBy: filters.sortBy,
-        sortOrder: filters.sortOrder,
-        page: filters.page,
-        limit: 12,
-      });
-      setColleges(res.colleges);
-      setPagination(res.pagination);
-      setError(null);
-    } catch (err) {
-      console.error('Failed to load colleges:', err);
-      setError('Could not connect to the database. Please ensure the backend server is running.');
-    } finally {
-      setLoading(false);
-    }
-  }, [search, filters]);
+  setLoading(true);
+  try {
+    const res: any = await api.getColleges({
+      search,
+      location: filters.location,
+      ownership: filters.ownership,
+      course: filters.course,
+      minRating: filters.minRating ? Number(filters.minRating) : undefined,
+      maxFees: filters.maxFees ? Number(filters.maxFees) : undefined,
+      sortBy: filters.sortBy,
+      sortOrder: filters.sortOrder,
+      page: filters.page,
+      limit: 12,
+    });
+
+    console.log("🔥 API DATA:", res);
+
+    setColleges(res?.colleges || []);
+    setPagination(res?.pagination || null);
+    setError(null);
+  } catch (err) {
+    console.error("❌ Failed:", err);
+    setError("Backend not reachable");
+  } finally {
+    setLoading(false);
+  }
+}, [search, filters]);
 
   useEffect(() => {
     const timer = setTimeout(fetchColleges, 350);
