@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { api, College } from '@/lib/api';
+import { api } from '@/lib/api';
+import type { College } from '@/lib/types';
 import CollegeCard from '@/components/CollegeCard';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
