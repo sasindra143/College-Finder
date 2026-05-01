@@ -63,7 +63,7 @@ export default function TestimonialsPage() {
   if (!mounted) return null;
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen pt-40 pb-20">
+    <div className="bg-[#f8fafc] min-h-screen pt-12 md:pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
