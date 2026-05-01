@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
+import type { College } from '@/lib/types';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from '@/components/ui/Toaster';
 import styles from './QAForum.module.css';

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { api, College } from '@/lib/api';
+import { api } from '@/lib/api';
+import type { College } from '@/lib/types';
 import CollegeCard from '@/components/CollegeCard';
 import styles from './Predictor.module.css';
 
