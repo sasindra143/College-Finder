@@ -47,7 +47,7 @@ export function Navbar() {
         setIsSearching(true);
         try {
           const res = await api.getColleges({ search: searchQuery, limit: 6 });
-          setSuggestions(res.data);
+          setSuggestions(res?.data || res?.colleges || []);
           setShowDropdown(true);
         } catch (err) {
           console.error('Search failed:', err);
@@ -140,7 +140,7 @@ export function Navbar() {
           {/* Suggestions Dropdown */}
           {showDropdown && (
             <div className={styles.suggestionsDropdown}>
-              {suggestions.length > 0 ? (
+              {(suggestions || []).length > 0 ? (
                 suggestions.map((college) => (
                   <div 
                     key={college.id} 
