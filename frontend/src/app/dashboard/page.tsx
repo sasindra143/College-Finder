@@ -26,10 +26,16 @@ export default function Dashboard() {
         api.getSavedColleges(),
         api.getSavedComparisons()
       ])
-      .then(([collegesRes, compRes]) => {
-        setSavedColleges(collegesRes.data);
-        setComparisons(compRes.data);
-      })
+     .then(([collegesRes, compRes]) => {
+  // ✅ FIX HERE
+  const formatted = collegesRes.data.map((c: any) => ({
+    id: c.id || c.college?.id || crypto.randomUUID(),
+    college: c.college || c
+  }));
+
+  setSavedColleges(formatted);
+  setComparisons(compRes.data);
+})
       .finally(() => setLoading(false));
     }
   }, [isAuthenticated]);
