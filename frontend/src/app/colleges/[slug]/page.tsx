@@ -4,11 +4,13 @@ import { useParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
 import { useCompare } from '@/context/CompareContext';
-import { toast } from '@/components/ui/Toaster';
+import { toast } from '@/components/ui/Toaster';      
 import Link from 'next/link';
 import styles from './CollegeDetails.module.css';
 
 const TABS = ['Overview', 'Courses & Fees', 'Placements', 'Reviews', 'Location'];
+
+
 
 // Deterministic rating (3.0-4.8)
 function getRealisticRating(college: College): number {
