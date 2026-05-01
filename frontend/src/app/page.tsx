@@ -52,7 +52,7 @@ export default function Home() {
             limit: 5,
           });
 
-          setSuggestions(res?.data || []);
+          setSuggestions(res?.data || res?.colleges || []);
           setShowDropdown(true);
         } catch (err) {
           console.error('❌ Search failed:', err);

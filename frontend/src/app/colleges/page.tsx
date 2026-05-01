@@ -75,7 +75,7 @@ function CollegesList() {
 
       console.log("🔥 API DATA:", res);
 
-      setColleges(res?.data || []);
+      setColleges(res?.data || res?.colleges || []);
       setPagination(res?.pagination || null);
       setError(null);
     } catch (err) {
