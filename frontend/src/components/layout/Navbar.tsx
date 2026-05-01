@@ -47,7 +47,7 @@ export function Navbar() {
         setIsSearching(true);
         try {
           const res = await api.getColleges({ search: searchQuery, limit: 6 });
-          setSuggestions(res.colleges);
+          setSuggestions(res.data);
           setShowDropdown(true);
         } catch (err) {
           console.error('Search failed:', err);

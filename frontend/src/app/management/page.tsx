@@ -15,7 +15,7 @@ export default function ManagementPage() {
     const fetchColleges = async () => {
       try {
         const res = await api.getColleges({ limit: 50, sortBy: 'rating' });
-        const managementColleges = res.colleges.filter(c => 
+        const managementColleges = res.data.filter(c => 
           c.name.toLowerCase().includes('management') || 
           c.name.toLowerCase().includes('business') ||
           c.name.toLowerCase().includes('iim') ||

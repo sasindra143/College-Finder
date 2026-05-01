@@ -41,13 +41,13 @@ export default function PredictorPage() {
       let predicted: College[] = [];
 
       if (rankNum < 1000) {
-        predicted = res.colleges.slice(0, 15);
+        predicted = res.data.slice(0, 15);
       } else if (rankNum < 10000) {
-        predicted = res.colleges.slice(10, 30);
+        predicted = res.data.slice(10, 30);
       } else if (rankNum < 50000) {
-        predicted = res.colleges.slice(20, 50);
+        predicted = res.data.slice(20, 50);
       } else {
-        predicted = res.colleges.slice(40, 70);
+        predicted = res.data.slice(40, 70);
       }
 
       setResults(predicted.slice(0, 12));
