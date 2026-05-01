@@ -1,16 +1,32 @@
+export interface Course {
+  name: string;
+  duration: string;
+  fees: number;
+  seats: number;
+  eligibility: string;
+}
+
+export interface Review {
+  authorName?: string;
+  name?: string;
+  rating: number;
+  comment: string;
+  year: number;
+}
+
 export interface College {
   id: string;
   name: string;
-  slug: string;
+  slug?: string;
 
+  city: string;
+  state: string;
   location?: string;
-  city?: string;
-  state?: string;
 
   ownership?: string;
   established?: number;
 
-  fees?: number;
+  fees: number;
   rating?: number;
 
   placementPercent?: number;
@@ -22,5 +38,15 @@ export interface College {
   description?: string;
   imageUrl?: string;
 
+  accreditation?: string;
+  naacGrade?: string;
+  nirfRank?: number;
   affiliation?: string;
+  website?: string;
+
+  totalReviews?: number;
+
+  // ✅ IMPORTANT FIX
+  courses?: Course[];
+  reviews?: Review[];
 }
