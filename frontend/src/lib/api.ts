@@ -1,6 +1,6 @@
 const IS_PROD = process.env.NODE_ENV === "production";
 
-// Base URL
+// ================= BASE URL =================
 let BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   (IS_PROD
@@ -22,7 +22,7 @@ if (typeof window !== "undefined") {
 }
 
 // ================= TYPES =================
-import type { College } from "@/lib/types";
+import type { College, Exam } from "@/lib/types";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -99,6 +99,10 @@ export const api = {
   getLocations: () =>
     request<ApiResponse<string[]>>(`/colleges/locations`),
 
+  // ===== EXAMS =====
+  getExam: (slug: string) =>
+    request<ApiResponse<Exam>>(`/exams/${slug}`),
+
   // ===== SAVED COLLEGES =====
   getSavedColleges: () =>
     request<ApiResponse<College[]>>(`/saved`),
@@ -113,22 +117,19 @@ export const api = {
     request<ApiResponse<any>>(`/saved/${collegeId}`, {
       method: "DELETE",
     }),
-// ===== COMPARISONS =====
 
-// list saved comparisons
-getSavedComparisons: () =>
-  request<ApiResponse<any[]>>(`/saved/comparisons`),
+  // ===== COMPARISONS =====
+  getSavedComparisons: () =>
+    request<ApiResponse<any[]>>(`/saved/comparisons`),
 
-// create comparison
-saveComparison: (name: string, collegeIds: string[]) =>
-  request<ApiResponse<any>>(`/saved/comparisons`, {
-    method: "POST",
-    body: JSON.stringify({ name, collegeIds }),
-  }),
+  saveComparison: (name: string, collegeIds: string[]) =>
+    request<ApiResponse<any>>(`/saved/comparisons`, {
+      method: "POST",
+      body: JSON.stringify({ name, collegeIds }),
+    }),
 
-// delete comparison
-deleteComparison: (id: string) =>
-  request<ApiResponse<any>>(`/saved/comparisons/${id}`, {
-    method: "DELETE",
-  }),
+  deleteComparison: (id: string) =>
+    request<ApiResponse<any>>(`/saved/comparisons/${id}`, {
+      method: "DELETE",
+    }),
 };
