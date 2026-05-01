@@ -64,15 +64,18 @@ export interface Exam {
   name: string;
   slug: string;
 
-  // ✅ REQUIRED FIX (your current error)
+  // ✅ already used in UI
   category?: string;
+
+  // ✅ FIX THIS ERROR
+  content?: string;
 
   description?: string;
   date?: string;
   eligibility?: string;
   syllabus?: string;
 
-  // ✅ EXTRA SAFE FIELDS (future-proof)
+  // extra safe fields
   duration?: string;
   level?: string;
   conductingBody?: string;
