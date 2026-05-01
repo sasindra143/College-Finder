@@ -132,32 +132,79 @@ export function Navbar() {
               placeholder="Search Colleges, Courses & more..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => searchQuery.length > 1 && setShowDropdown(true)}
+              onClick={() => setShowDropdown(true)}
               suppressHydrationWarning
+              readOnly // Make the navbar input just a trigger for the modal
             />
           </form>
 
-          {/* Suggestions Dropdown */}
+          {/* Careers360-style Full Screen Search Modal */}
           {showDropdown && (
-            <div className={styles.suggestionsDropdown}>
-              {(suggestions || []).length > 0 ? (
-                suggestions.map((college) => (
-                  <div 
-                    key={college.id} 
-                    className={styles.suggestionItem}
-                    onClick={() => handleSuggestionClick(college.slug || college.id)}
-                  >
-                    <div className={styles.suggestionInfo}>
-                      <div className={styles.suggestionName}>{college.name}</div>
-                      <div className={styles.suggestionMeta}>{college.city}, {college.state}</div>
-                    </div>
-                    <div className={styles.suggestionType}>{college.ownership}</div>
+            <div className={styles.searchModalOverlay}>
+              <div className={styles.searchModalContainer}>
+                {/* Search Header */}
+                <div className={styles.searchModalHeader}>
+                  <form onSubmit={handleSearch} className={styles.searchModalForm}>
+                    <svg className={styles.searchModalIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input 
+                      type="text" 
+                      className={styles.searchModalInput} 
+                      placeholder="Search for Colleges, Exams, Courses..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      autoFocus
+                      suppressHydrationWarning
+                    />
+                  </form>
+                  <button onClick={() => setShowDropdown(false)} className={styles.searchModalClose}>
+                    ✕
+                  </button>
+                </div>
+
+                {/* Search Body (2 columns: Results | Banner) */}
+                <div className={styles.searchModalBody}>
+                  
+                  {/* Left Column: Results List */}
+                  <div className={styles.searchModalResults}>
+                    {(suggestions || []).length > 0 ? (
+                      suggestions.map((college) => (
+                        <div 
+                          key={college.id} 
+                          className={styles.searchResultItem}
+                          onClick={() => handleSuggestionClick(college.slug || college.id)}
+                        >
+                          <div className={styles.searchResultName}>{college.name}, {college.city}</div>
+                          <div className={styles.searchResultType}>COLLEGE</div>
+                        </div>
+                      ))
+                    ) : !isSearching && searchQuery.length > 1 ? (
+                      <div className={styles.noResultsModal}>No colleges found matching "{searchQuery}"</div>
+                    ) : null}
+                    
+                    {isSearching && <div className={styles.noResultsModal}>Searching...</div>}
+                    {!searchQuery && (
+                      <div className={styles.searchPromptModal}>
+                        Start typing to search for top colleges, courses, and exams.
+                      </div>
+                    )}
                   </div>
-                ))
-              ) : !isSearching && (
-                <div className={styles.noResults}>No colleges found matching "{searchQuery}"</div>
-              )}
-              {isSearching && <div className={styles.noResults}>Searching...</div>}
+
+                  {/* Right Column: Promotional Banner */}
+                  <div className={styles.searchModalPromo}>
+                    <div className={styles.promoBox}>
+                      <h3 className={styles.promoTitle}>Scan and Download the App!</h3>
+                      <p className={styles.promoSubtitle}>Search Faster, Smarter, Better</p>
+                      <div className={styles.promoQrPlaceholder}>
+                        <div className={styles.qrIcon}>📱</div>
+                      </div>
+                      <div className={styles.promoRating}>
+                        Rated <strong>4.8★</strong> by 1M+ students
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </div>
           )}
         </div>

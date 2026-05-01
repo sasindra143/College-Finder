@@ -340,79 +340,210 @@
   .logoIcon { width: 38px; height: 38px; font-size: 18px; }
 }
 
-/* Suggestion Dropdown */
-.suggestionsDropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
-  border: 1px solid #f1f5f9;
+/* Careers360-style Search Modal */
+.searchModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5vh;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.searchModalContainer {
+  background: #ffffff;
+  width: 90%;
+  max-width: 1100px;
+  height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
-  z-index: 1100;
-  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideDownModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes slideDownModal {
+  from { transform: translateY(-20px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
-.suggestionItem {
+/* Modal Header */
+.searchModalHeader {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.searchModalForm {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchModalIcon {
+  color: #f97316;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+}
+
+.searchModalInput {
+  flex: 1;
+  border: none;
+  font-size: 20px;
+  color: #0f172a;
+  outline: none;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.searchModalInput::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.searchModalClose {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #64748b;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 16px;
+  transition: color 0.2s;
+}
+
+.searchModalClose:hover {
+  color: #ef4444;
+}
+
+/* Modal Body */
+.searchModalBody {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+/* Left Column: Results */
+.searchModalResults {
+  flex: 1;
+  overflow-y: auto;
+  background: #ffffff;
+  padding: 12px 0;
+}
+
+.searchResultItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
-  border-bottom: 1px solid #f8fafc;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
   cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
+  transition: background 0.2s;
 }
 
-.suggestionItem:last-child {
-  border-bottom: none;
+.searchResultItem:hover {
+  background: #f8fafc;
 }
 
-.suggestionItem:hover {
-  background-color: #f8fafc;
-}
-
-.suggestionInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.suggestionName {
-  font-weight: 700;
-  color: #0f172a;
-  font-size: 14px;
-}
-
-.suggestionMeta {
-  font-size: 12px;
-  color: #64748b;
+.searchResultName {
+  font-size: 15px;
+  color: #334155;
   font-weight: 500;
 }
 
-.suggestionType {
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: #94a3b8;
+.searchResultType {
+  font-size: 12px;
+  color: #cbd5e1;
+  font-weight: 700;
   letter-spacing: 0.05em;
-  padding: 4px 8px;
-  background: #f1f5f9;
-  border-radius: 6px;
 }
 
-.noResults {
-  padding: 20px;
+.noResultsModal, .searchPromptModal {
+  padding: 40px 24px;
   text-align: center;
   color: #94a3b8;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
 }
 
+/* Right Column: Promo Banner */
+.searchModalPromo {
+  width: 320px;
+  background: #f8fafc;
+  border-left: 1px solid #e2e8f0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.promoBox {
+  background: #2e2854;
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 10px 25px rgba(46, 40, 84, 0.2);
+}
+
+.promoTitle {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.promoSubtitle {
+  font-size: 14px;
+  color: #a5a2b8;
+  margin-bottom: 24px;
+}
+
+.promoQrPlaceholder {
+  width: 120px;
+  height: 120px;
+  background: white;
+  margin: 0 auto 24px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qrIcon {
+  font-size: 48px;
+}
+
+.promoRating {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.promoRating strong {
+  color: #fbbf24;
+}
+
+@media (max-width: 768px) {
+  .searchModalContainer {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    margin-top: -5vh; /* counteract the wrapper padding */
+  }
+  .searchModalPromo {
+    display: none;
+  }
+}
