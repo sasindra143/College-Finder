@@ -73,6 +73,22 @@ async function request<T>(
 
 // ================= API METHODS =================
 export const api = {
+  // ===== AUTH =====
+  login: (body: { email: string; password: string }) =>
+    request<any>(`/auth/login`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  signup: (body: { name: string; email: string; password: string }) =>
+    request<any>(`/auth/signup`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  getMe: () =>
+    request<ApiResponse<any>>(`/auth/me`),
+
   // ===== COLLEGES =====
   getColleges: (filters: any = {}) => {
     const params = new URLSearchParams();
@@ -131,5 +147,24 @@ export const api = {
   deleteComparison: (id: string) =>
     request<ApiResponse<any>>(`/saved/comparisons/${id}`, {
       method: "DELETE",
+    }),
+
+  // ===== Q&A =====
+  getQuestions: () =>
+    request<ApiResponse<any[]>>(`/qa`),
+
+  getQuestion: (id: string) =>
+    request<ApiResponse<any>>(`/qa/${id}`),
+
+  askQuestion: (body: { title: string; body: string }) =>
+    request<ApiResponse<any>>(`/qa`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  answerQuestion: (questionId: string, body: { body: string }) =>
+    request<ApiResponse<any>>(`/qa/${questionId}/answers`, {
+      method: "POST",
+      body: JSON.stringify(body),
     }),
 };
