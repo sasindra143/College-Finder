@@ -1,3 +1,4 @@
+// ================= COURSE =================
 export interface Course {
   name: string;
   duration: string;
@@ -6,6 +7,7 @@ export interface Course {
   eligibility: string;
 }
 
+// ================= REVIEW =================
 export interface Review {
   authorName?: string;
   name?: string;
@@ -14,6 +16,7 @@ export interface Review {
   year: number;
 }
 
+// ================= COLLEGE =================
 export interface College {
   id: string;
   name: string;
@@ -46,17 +49,33 @@ export interface College {
 
   totalReviews?: number;
 
-  // ✅ IMPORTANT FIX
+  // ✅ FIXED (used in UI)
   courses?: Course[];
   reviews?: Review[];
+
+  // ✅ EXTRA SAFE FIELDS (prevent future errors)
+  category?: string;
+  highlights?: string[];
 }
 
+// ================= EXAM =================
 export interface Exam {
   id: string;
   name: string;
   slug: string;
+
+  // ✅ REQUIRED FIX (your current error)
+  category?: string;
+
   description?: string;
   date?: string;
   eligibility?: string;
   syllabus?: string;
+
+  // ✅ EXTRA SAFE FIELDS (future-proof)
+  duration?: string;
+  level?: string;
+  conductingBody?: string;
+  applicationMode?: string;
+  officialWebsite?: string;
 }
