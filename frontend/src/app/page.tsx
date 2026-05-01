@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import styles from './Home.module.css';
+
+
 
 import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
@@ -18,23 +19,23 @@ export default function Home() {
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  /**
-   * Close dropdown when clicking outside
-   */
+  // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () =>
+      document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  /**
-   * Debounced search
-   */
+  // ✅ Debounced search
   useEffect(() => {
     if (searchType !== 'college') {
       setShowDropdown(false);
@@ -44,17 +45,19 @@ export default function Home() {
     const timer = setTimeout(async () => {
       if (searchQuery.length > 1) {
         setIsSearching(true);
+
         try {
-          const res = await api.getColleges({
+          const res: any = await api.getColleges({
             search: searchQuery,
             limit: 5,
           });
 
-          setSuggestions(res.colleges || []);
+          setSuggestions(res?.colleges || []);
           setShowDropdown(true);
         } catch (err) {
           console.error('❌ Search failed:', err);
           setSuggestions([]);
+          setShowDropdown(false);
         } finally {
           setIsSearching(false);
         }
@@ -67,18 +70,14 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [searchQuery, searchType]);
 
-  /**
-   * Handle click on suggestion
-   */
+  // ✅ Handle suggestion click
   const handleSuggestionClick = (slug: string) => {
     router.push(`/colleges/${slug}`);
     setSearchQuery('');
     setShowDropdown(false);
   };
 
-  /**
-   * Handle form submit
-   */
+  // ✅ Handle search submit
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -117,7 +116,7 @@ export default function Home() {
             Explore top colleges across India with real data.
           </p>
 
-          {/* SEARCH BOX */}
+          {/* SEARCH */}
           <div ref={searchRef} className="relative w-full max-w-3xl mx-auto">
 
             <form onSubmit={handleSearch} className={styles.searchBox}>
@@ -146,30 +145,37 @@ export default function Home() {
 
             {/* DROPDOWN */}
             {showDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white shadow-lg z-50">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white shadow-lg z-50 rounded-md overflow-hidden">
 
                 {isSearching && (
-                  <div className="p-3 text-center">Searching...</div>
+                  <div className="p-3 text-center text-gray-500">
+                    Searching...
+                  </div>
                 )}
 
                 {!isSearching && suggestions.length === 0 && (
-                  <div className="p-3 text-center text-gray-500">
+                  <div className="p-3 text-center text-gray-400">
                     No results found
                   </div>
                 )}
 
-                {suggestions.map((college) => (
-                  <div
-                    key={college.id}
-                    className="p-3 border-b cursor-pointer hover:bg-gray-100"
-                    onClick={() => handleSuggestionClick(college.slug)}
-                  >
-                    <div className="font-semibold">{college.name}</div>
-                    <div className="text-sm text-gray-500">
-                      {college.city}, {college.state}
+                {!isSearching &&
+                  suggestions.map((college) => (
+                    <div
+                      key={college.id}
+                      className="p-3 border-b cursor-pointer hover:bg-gray-100 transition"
+                      onClick={() =>
+                        handleSuggestionClick(college.slug)
+                      }
+                    >
+                      <div className="font-semibold">
+                        {college.name}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        {college.city}, {college.state}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             )}
           </div>
