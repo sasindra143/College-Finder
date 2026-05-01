@@ -12,6 +12,11 @@ export const signup = async (
   try {
     const { name, email, password } = req.body;
 
+    if (!name || !email || !password) {
+      res.status(400).json({ success: false, message: "All fields are required" });
+      return;
+    }
+
     const result = await authService.signup(name, email, password);
 
     res.status(201).json({
@@ -35,6 +40,11 @@ export const login = async (
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      res.status(400).json({ success: false, message: "Email and password required" });
+      return;
+    }
+
     const result = await authService.login(email, password);
 
     res.json({
@@ -48,7 +58,7 @@ export const login = async (
 };
 
 /**
- * Get current user
+ * Get current logged-in user
  */
 export const getMe = async (
   req: Request,
@@ -87,6 +97,11 @@ export const googleCallback = async (
 ): Promise<void> => {
   try {
     const user = req.user as any;
+
+    if (!user) {
+      res.status(401).json({ success: false, message: "Google auth failed" });
+      return;
+    }
 
     const result = await authService.generateTokenForUser(user);
 

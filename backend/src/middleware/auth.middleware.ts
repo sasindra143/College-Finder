@@ -3,21 +3,29 @@ import jwt from "jsonwebtoken";
 
 export const authenticate = (
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ): void => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new Error("No token provided");
+      res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
+      return;
     }
 
     const token = authHeader.split(" ")[1];
 
     const secret = process.env.JWT_SECRET;
     if (!secret) {
-      throw new Error("JWT secret not configured");
+      res.status(500).json({
+        success: false,
+        message: "JWT secret not configured",
+      });
+      return;
     }
 
     const decoded = jwt.verify(token, secret) as { userId: string };
@@ -26,6 +34,9 @@ export const authenticate = (
 
     next();
   } catch (err) {
-    next(err);
+    res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
 };
