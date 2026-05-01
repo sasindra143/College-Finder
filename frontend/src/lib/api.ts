@@ -113,19 +113,22 @@ export const api = {
     request<ApiResponse<any>>(`/saved/${collegeId}`, {
       method: "DELETE",
     }),
+// ===== COMPARISONS =====
 
-  // ===== COMPARISONS =====
-  getSavedColleges: () =>
-  request<ApiResponse<{ id: string; college: College }[]>>(`/saved`),
+// list saved comparisons
+getSavedComparisons: () =>
+  request<ApiResponse<any[]>>(`/saved/comparisons`),
 
-  saveComparison: (name: string, collegeIds: string[]) =>
-    request<ApiResponse<any>>(`/saved/comparisons`, {
-      method: "POST",
-      body: JSON.stringify({ name, collegeIds }),
-    }),
+// create comparison
+saveComparison: (name: string, collegeIds: string[]) =>
+  request<ApiResponse<any>>(`/saved/comparisons`, {
+    method: "POST",
+    body: JSON.stringify({ name, collegeIds }),
+  }),
 
-  deleteComparison: (id: string) =>
-    request<ApiResponse<any>>(`/saved/comparisons/${id}`, {
-      method: "DELETE",
-    }),
+// delete comparison
+deleteComparison: (id: string) =>
+  request<ApiResponse<any>>(`/saved/comparisons/${id}`, {
+    method: "DELETE",
+  }),
 };
