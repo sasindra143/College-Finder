@@ -52,7 +52,7 @@ export default function Home() {
             limit: 5,
           });
 
-          setSuggestions(res?.colleges || []);
+          setSuggestions(res?.data || []);
           setShowDropdown(true);
         } catch (err) {
           console.error('❌ Search failed:', err);
@@ -165,7 +165,7 @@ export default function Home() {
                       key={college.id}
                       className="p-3 border-b cursor-pointer hover:bg-gray-100 transition"
                       onClick={() =>
-                        handleSuggestionClick(college.slug)
+                        handleSuggestionClick(college.slug || college.id)
                       }
                     >
                       <div className="font-semibold">
