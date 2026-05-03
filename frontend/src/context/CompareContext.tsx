@@ -41,15 +41,19 @@ export function CompareProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useCompare = () => {
-  const ctx = useContext(CompareContext);
-  // Default fallback for SSR/Prerender safety
-  if (!ctx) return {
-    compareList: [],
-    addToCompare: () => {},
-    removeFromCompare: () => {},
-    clearCompare: () => {},
-    isInCompare: () => false,
-    canAdd: true
-  };
-  return ctx;
+  try {
+    const ctx = useContext(CompareContext);
+    if (!ctx) throw new Error('No CompareContext');
+    return ctx;
+  } catch (e) {
+    // Default fallback for SSR/Prerender safety
+    return {
+      compareList: [],
+      addToCompare: () => {},
+      removeFromCompare: () => {},
+      clearCompare: () => {},
+      isInCompare: () => false,
+      canAdd: true
+    };
+  }
 };

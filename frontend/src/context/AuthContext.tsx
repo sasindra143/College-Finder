@@ -61,16 +61,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useAuth = () => {
-  const ctx = useContext(AuthContext);
-  // Fallback for SSR/Prerender safety
-  if (!ctx) return {
-    user: null,
-    token: null,
-    loading: true,
-    login: async () => {},
-    signup: async () => {},
-    logout: () => {},
-    isAuthenticated: false
-  };
-  return ctx;
+  try {
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error('No AuthContext');
+    return ctx;
+  } catch (e) {
+    // Fallback for SSR/Prerender safety
+    return {
+      user: null,
+      token: null,
+      loading: false,
+      login: async () => {},
+      signup: async () => {},
+      logout: () => {},
+      isAuthenticated: false
+    };
+  }
 };
