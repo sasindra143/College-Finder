@@ -1,8 +1,15 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import dynamic from 'next/dynamic';
 
-import { ClientLayout } from './ClientLayout';
+// Dynamic import with ssr: false prevents ALL client context hooks (useAuth, useCompare, etc.)
+// from running during build-time static generation, which was the root cause of the
+// "Cannot read properties of null (reading 'useContext')" prerender failures.
+const ClientLayout = dynamic(() => import('./ClientLayout').then(mod => ({ default: mod.ClientLayout })), {
+  ssr: false,
+  loading: () => null,
+});
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
