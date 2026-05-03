@@ -46,14 +46,23 @@ function CollegesList() {
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   const [search, setSearch] = useState(searchParams?.get('search') || '');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [filters, setFilters] = useState({
-    location: searchParams?.get('location') || '',
-    ownership: searchParams?.get('ownership') || '',
-    course: '',
+  const [filters, setFilters] = useState<{
+    location: string[];
+    ownership: string[];
+    course: string[];
+    minRating: string;
+    maxFees: string;
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+    page: number;
+  }>({
+    location: searchParams?.get('location') ? searchParams.get('location')!.split(',') : [],
+    ownership: searchParams?.get('ownership') ? searchParams.get('ownership')!.split(',') : [],
+    course: [],
     minRating: '',
     maxFees: '',
     sortBy: 'rating',
-    sortOrder: 'desc' as 'asc' | 'desc',
+    sortOrder: 'desc',
     page: 1,
   });
 
@@ -62,9 +71,9 @@ function CollegesList() {
     try {
       const res: any = await api.getColleges({
         search,
-        location: filters.location,
-        ownership: filters.ownership,
-        course: filters.course,
+        location: filters.location.join(','),
+        ownership: filters.ownership.join(','),
+        course: filters.course.join(','),
         minRating: filters.minRating ? Number(filters.minRating) : undefined,
         maxFees: filters.maxFees ? Number(filters.maxFees) : undefined,
         sortBy: filters.sortBy,
@@ -95,25 +104,36 @@ function CollegesList() {
     setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
   };
 
-  const clearAll = () => {
-    setSearch('');
-    setFilters({ location: '', ownership: '', course: '', minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc', page: 1 });
+  const toggleArrayFilter = (key: 'location' | 'ownership' | 'course', value: string) => {
+    setFilters(prev => {
+      const current = prev[key] as string[];
+      const updated = current.includes(value) 
+        ? current.filter(item => item !== value)
+        : [...current, value];
+      return { ...prev, [key]: updated, page: 1 };
+    });
   };
 
-  const hasFilters = search || filters.location || filters.ownership || filters.course || filters.minRating || filters.maxFees;
+  const clearAll = () => {
+    setSearch('');
+    setFilters({ location: [], ownership: [], course: [], minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc', page: 1 });
+  };
+
+  const hasFilters = search || filters.location.length > 0 || filters.ownership.length > 0 || filters.course.length > 0 || filters.minRating || filters.maxFees;
 
   const activeChips = [
-    ...(search ? [{ label: `"${search}"`, key: 'search' }] : []),
-    ...(filters.location ? [{ label: filters.location, key: 'location' }] : []),
-    ...(filters.ownership ? [{ label: filters.ownership, key: 'ownership' }] : []),
-    ...(filters.course ? [{ label: POPULAR_COURSES.find(c => c.value === filters.course)?.label || filters.course, key: 'course' }] : []),
-    ...(filters.minRating ? [{ label: `${filters.minRating}★+`, key: 'minRating' }] : []),
-    ...(filters.maxFees && Number(filters.maxFees) < 3000000 ? [{ label: `Up to ₹${(Number(filters.maxFees) / 100000).toFixed(0)}L`, key: 'maxFees' }] : []),
+    ...(search ? [{ label: `"${search}"`, type: 'search', value: search }] : []),
+    ...(filters.location.map(loc => ({ label: loc, type: 'location', value: loc }))),
+    ...(filters.ownership.map(own => ({ label: own, type: 'ownership', value: own }))),
+    ...(filters.course.map(c => ({ label: POPULAR_COURSES.find(pc => pc.value === c)?.label || c, type: 'course', value: c }))),
+    ...(filters.minRating ? [{ label: `${filters.minRating}★+`, type: 'minRating', value: filters.minRating }] : []),
+    ...(filters.maxFees && Number(filters.maxFees) < 3000000 ? [{ label: `Up to ₹${(Number(filters.maxFees) / 100000).toFixed(0)}L`, type: 'maxFees', value: filters.maxFees }] : []),
   ];
 
-  const removeChip = (key: string) => {
-    if (key === 'search') setSearch('');
-    else updateFilter(key, '');
+  const removeChip = (chip: any) => {
+    if (chip.type === 'search') setSearch('');
+    else if (['location', 'ownership', 'course'].includes(chip.type)) toggleArrayFilter(chip.type as any, chip.value);
+    else updateFilter(chip.type, '');
   };
 
   const filterContent = (
@@ -143,8 +163,8 @@ function CollegesList() {
           {POPULAR_COURSES.map(c => (
             <button
               key={c.value}
-              onClick={() => updateFilter('course', filters.course === c.value ? '' : c.value)}
-              className={`${styles.courseChip} ${filters.course === c.value ? styles.courseChipActive : ''}`}
+              onClick={() => toggleArrayFilter('course', c.value)}
+              className={`${styles.courseChip} ${filters.course.includes(c.value) ? styles.courseChipActive : ''}`}
             >
               {c.label}
             </button>
@@ -156,30 +176,41 @@ function CollegesList() {
       <div className={styles.filterGroup}>
         <label className={styles.filterLabel}>State</label>
         <select
-          value={filters.location}
-          onChange={e => updateFilter('location', e.target.value)}
+          value=""
+          onChange={e => {
+            if (e.target.value && !filters.location.includes(e.target.value)) {
+              toggleArrayFilter('location', e.target.value);
+            }
+          }}
           className={styles.filterSelect}
         >
-          <option value="">All States</option>
-          {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+          <option value="">Select States...</option>
+          {INDIAN_STATES.filter(s => !filters.location.includes(s)).map(s => <option key={s} value={s}>{s}</option>)}
         </select>
+        <div className={styles.courseChips} style={{marginTop: '8px'}}>
+          {filters.location.map(loc => (
+            <button key={loc} onClick={() => toggleArrayFilter('location', loc)} className={`${styles.courseChip} ${styles.courseChipActive}`}>
+              {loc} ×
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Ownership */}
       <div className={styles.filterGroup}>
         <label className={styles.filterLabel}>College Type</label>
         <div className={styles.typeButtonGroup}>
-          {['', 'Government', 'Private', 'Deemed'].map(type => (
+          {['Government', 'Private', 'Deemed'].map(type => (
             <button
               key={type}
-              onClick={() => updateFilter('ownership', type)}
+              onClick={() => toggleArrayFilter('ownership', type)}
               className={`${styles.typeBtn} ${
-                filters.ownership === type
+                filters.ownership.includes(type)
                   ? styles.typeBtnActive
                   : styles.typeBtnDefault
               }`}
             >
-              {type || 'All Types'}
+              {type}
             </button>
           ))}
         </div>
@@ -240,10 +271,10 @@ function CollegesList() {
           <h1 className={styles.pageTitle}>
             {search
               ? <>Results for <span className={styles.pageTitleHighlight}>"{search}"</span></>
-              : filters.location
-              ? <>Colleges in <span className={styles.pageTitleHighlight}>{filters.location}</span></>
-              : filters.course
-              ? <><span className={styles.pageTitleHighlight}>{POPULAR_COURSES.find(c => c.value === filters.course)?.label}</span> Colleges in India</>
+              : filters.location.length > 0
+              ? <>Colleges in <span className={styles.pageTitleHighlight}>{filters.location.join(', ')}</span></>
+              : filters.course.length > 0
+              ? <><span className={styles.pageTitleHighlight}>{filters.course.map(course => POPULAR_COURSES.find(c => c.value === course)?.label || course).join(', ')}</span> Colleges in India</>
               : 'Top Colleges in India 2025'}
           </h1>
           <p className={styles.pageSubtitle}>
@@ -253,10 +284,10 @@ function CollegesList() {
           {/* Active Filter Chips */}
           {activeChips.length > 0 && (
             <div className={styles.activeChips}>
-              {activeChips.map(chip => (
+              {activeChips.map((chip, idx) => (
                 <button
-                  key={chip.key}
-                  onClick={() => removeChip(chip.key)}
+                  key={`${chip.type}-${chip.value}-${idx}`}
+                  onClick={() => removeChip(chip)}
                   className={styles.activeChip}
                 >
                   {chip.label}
