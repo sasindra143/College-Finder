@@ -3,6 +3,10 @@ import './globals.css';
 import { ClientLayout } from './ClientLayout';
 import { metadata } from './metadata';
 
+// Force dynamic rendering — prevents the static generation phase where
+// client hooks fail with 'Cannot read properties of null (reading useContext)' on Netlify.
+export const dynamic = 'force-dynamic';
+
 export { metadata };
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
