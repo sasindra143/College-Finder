@@ -17,8 +17,17 @@ export default function PredictorPage() {
   const [exam, setExam] = useState('');
   const [rank, setRank] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState('Analyzing...');
   const [results, setResults] = useState<College[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+
+  const loadingMessages = [
+    'Scanning 100,000+ institution records...',
+    'Analyzing historical cutoff trends...',
+    'Calculating your eligibility...',
+    'Finding best-fit matches for you...',
+    'Finalizing results...'
+  ];
 
   const handlePredict = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,34 +35,41 @@ export default function PredictorPage() {
 
     setLoading(true);
     setHasSearched(true);
+    
+    // Cycle through loading messages
+    let msgIdx = 0;
+    const msgInterval = setInterval(() => {
+      msgIdx = (msgIdx + 1) % loadingMessages.length;
+      setLoadingMessage(loadingMessages[msgIdx]);
+    }, 1500);
+
     try {
       const selectedExam = EXAMS.find(ex => ex.id === exam);
-      // Fetch colleges based on the stream
+      
+      // Map exam IDs to actual names used in DB
+      const examNameMap: Record<string, string> = {
+        'jee': 'JEE Main',
+        'neet': 'NEET',
+        'cat': 'CAT',
+        'clat': 'CLAT',
+        'cuet': 'CUET'
+      };
+
+      // Fetch colleges based on the exam and rank
       const res = await api.getColleges({ 
-        course: selectedExam?.stream,
-        limit: 100,
+        exam: examNameMap[exam] || selectedExam?.name,
+        rank: parseInt(rank),
+        limit: 12,
         sortBy: 'rating'
       });
 
-      // Simulate prediction logic based on rank
-      // Lower rank (better) -> Higher rating colleges
-      const rankNum = parseInt(rank);
-      let predicted: College[] = [];
-
-      if (rankNum < 1000) {
-        predicted = res.data.slice(0, 15);
-      } else if (rankNum < 10000) {
-        predicted = res.data.slice(10, 30);
-      } else if (rankNum < 50000) {
-        predicted = res.data.slice(20, 50);
-      } else {
-        predicted = res.data.slice(40, 70);
-      }
-
-      setResults(predicted.slice(0, 12));
+      // The backend returns results in res.data
+      setResults(res.data);
     } catch (err) {
       console.error('Prediction failed:', err);
+      setResults([]);
     } finally {
+      clearInterval(msgInterval);
       setLoading(false);
     }
   };
@@ -62,7 +78,7 @@ export default function PredictorPage() {
     <div className={styles.container}>
       <div className={styles.heroSection}>
         <h1 className={styles.title}>College Predictor 2025</h1>
-        <p className={styles.subtitle}>Enter your entrance exam details and rank to find the best-fit colleges for you.</p>
+        <p className={styles.subtitle}>Our AI-powered engine analyzes your rank against millions of data points to find your perfect institution.</p>
       </div>
 
       <div className={styles.mainContent}>
@@ -86,7 +102,12 @@ export default function PredictorPage() {
               />
             </div>
             <button type="submit" disabled={loading} className={styles.predictBtn}>
-              {loading ? 'Analyzing...' : 'Predict My Colleges'}
+              {loading ? (
+                <>
+                  <span className={styles.spinner}></span>
+                  {loadingMessage}
+                </>
+              ) : 'Predict My Colleges'}
             </button>
           </form>
         </div>
@@ -94,12 +115,12 @@ export default function PredictorPage() {
         {hasSearched && (
           <div className={styles.resultsSection}>
             <h2 className={styles.resultsTitle}>
-              {loading ? 'Finding your best matches...' : `Predicted Colleges for you (${results.length})`}
+              {loading ? loadingMessage : `Your Recommended Colleges (${results.length})`}
             </h2>
             
             {loading ? (
               <div className={styles.grid}>
-                {[1,2,3].map(i => <div key={i} className={styles.skeleton} />)}
+                {[1,2,3,4,5,6].map(i => <div key={i} className={styles.skeleton} />)}
               </div>
             ) : results.length > 0 ? (
               <div className={styles.grid}>

@@ -34,6 +34,8 @@ export const listColleges = async (
       ownership,
       minRating,
       course,
+      exam,
+      rank,
       page,
       limit,
       sortBy,
@@ -48,6 +50,8 @@ export const listColleges = async (
       ownership: ownership?.toString(),
       minRating: toNumber(minRating),
       course: course?.toString(),
+      exam: exam?.toString(),
+      rank: toNumber(rank),
 
       page: toNumber(page, 1) || 1,
       limit: Math.min(toNumber(limit, 12) || 12, 50),

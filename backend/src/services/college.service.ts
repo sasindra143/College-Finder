@@ -9,6 +9,8 @@ interface CollegeFilters {
   ownership?: string;
   minRating?: number;
   course?: string;
+  exam?: string;
+  rank?: number;
   page?: number;
   limit?: number;
   sortBy?: string;
@@ -24,6 +26,8 @@ export const getColleges = async (filters: CollegeFilters) => {
     ownership,
     minRating,
     course,
+    exam,
+    rank,
     page = 1,
     limit = 12,
     sortBy = 'rating',
@@ -61,8 +65,29 @@ export const getColleges = async (filters: CollegeFilters) => {
 
   if (ownership) where.ownership = { contains: ownership, mode: 'insensitive' };
   if (minRating !== undefined) where.rating = { gte: minRating };
+  
+  // Rank-based filtering heuristic (since we lack actual cutoff data)
+  if (rank !== undefined && rank > 0) {
+    if (rank <= 1000) {
+      where.rating = { gte: 4.5 };
+    } else if (rank <= 5000) {
+      where.rating = { gte: 4.0, lte: 4.7 };
+    } else if (rank <= 20000) {
+      where.rating = { gte: 3.5, lte: 4.2 };
+    } else if (rank <= 50000) {
+      where.rating = { gte: 3.0, lte: 3.8 };
+    } else {
+      where.rating = { lte: 3.5 };
+    }
+  }
+
+  if (exam) {
+    (where.AND as Prisma.CollegeWhereInput[]).push({
+      exams: { hasSome: [exam] }
+    });
+  }
+
   if (course) {
-    const courseTerm = course.toLowerCase();
     (where.AND as Prisma.CollegeWhereInput[]).push({
       OR: [
         { degrees: { hasSome: [course] } },
