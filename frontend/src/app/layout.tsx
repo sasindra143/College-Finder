@@ -2,6 +2,8 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { ClientLayout } from './ClientLayout';
 
+import { Toaster } from '@/components/ui/Toaster';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
