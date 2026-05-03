@@ -6,7 +6,7 @@ import styles from './Footer.module.css';
 export function Footer() {
   const pathname = usePathname();
 
-  if (pathname.startsWith('/auth')) return null;
+  if (pathname?.startsWith('/auth')) return null;
 
   return (
     <footer className={styles.footerContainer}>

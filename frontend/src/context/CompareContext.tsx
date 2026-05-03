@@ -42,6 +42,14 @@ export function CompareProvider({ children }: { children: React.ReactNode }) {
 
 export const useCompare = () => {
   const ctx = useContext(CompareContext);
-  if (!ctx) throw new Error('useCompare must be used inside CompareProvider');
+  // Default fallback for SSR/Prerender safety
+  if (!ctx) return {
+    compareList: [],
+    addToCompare: () => {},
+    removeFromCompare: () => {},
+    clearCompare: () => {},
+    isInCompare: () => false,
+    canAdd: true
+  };
   return ctx;
 };

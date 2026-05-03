@@ -99,7 +99,7 @@ export function Navbar() {
     setShowDropdown(false);
   };
 
-  if (pathname.startsWith('/auth')) return null;
+  if (pathname?.startsWith('/auth')) return null;
 
   return (
     <header className={styles.headerContainer}>

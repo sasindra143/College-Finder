@@ -58,7 +58,7 @@ export default function PredictorPage() {
       // Fetch colleges based on the exam and rank
       const res = await api.getColleges({ 
         exam: examNameMap[exam] || selectedExam?.name,
-        rank: parseInt(rank),
+        rank: rank ? parseInt(rank) : 0,
         limit: 12,
         sortBy: 'rating'
       });
