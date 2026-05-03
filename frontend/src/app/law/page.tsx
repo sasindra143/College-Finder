@@ -101,7 +101,7 @@ export default function LawPage() {
       <section className={styles.quickLinks}>
         <h2 className={styles.qTitle}>Popular Law Programs</h2>
         <div className={styles.qGrid}>
-          {['BA LLB (Integrated)', 'BBA LLB', '3-Year LLB', 'LLM', 'PhD in Law', 'Cyber Law'].map(spec => (
+          {['LLB', 'BA LLB', 'LLM', 'Law', 'Legal', 'Jurisprudence'].map(spec => (
             <Link key={spec} href={`/colleges?search=${spec}`} className={styles.qCard}>
               {spec}
             </Link>

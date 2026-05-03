@@ -103,7 +103,7 @@ export default function MedicinePage() {
       <section className={styles.quickLinks}>
         <h2 className={styles.qTitle}>Popular Medical Specializations</h2>
         <div className={styles.qGrid}>
-          {['MBBS', 'BDS', 'B.Sc Nursing', 'B.Pharm', 'BPT (Physiotherapy)', 'B.V.Sc'].map(spec => (
+          {['MBBS', 'BDS', 'B.Sc Nursing', 'Medical', 'Health', 'Surgery'].map(spec => (
             <Link key={spec} href={`/colleges?search=${spec}`} className={styles.qCard}>
               {spec}
             </Link>

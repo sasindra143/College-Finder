@@ -1,28 +1,80 @@
+const fs = require("fs");
+const path = require("path");
 
-const fs = require('fs');
-const path = require('path');
+const ROOT_DIR = "C:\\Data\\College\\frontend";
 
+// folders to ignore
+const IGNORE_FOLDERS = ["node_modules", ".next", ".git", "dist", "build"];
+
+// extensions to scan
+const VALID_EXT = [".js", ".jsx", ".ts", ".tsx"];
+
+// check file extension
+function isValidFile(file) {
+  return VALID_EXT.includes(path.extname(file));
+}
+
+// scan directory
 function scan(dir) {
-  const files = fs.readdirSync(dir);
-  files.forEach(file => {
+  let files;
+
+  try {
+    files = fs.readdirSync(dir);
+  } catch (err) {
+    return;
+  }
+
+  files.forEach((file) => {
     const filePath = path.join(dir, file);
-    if (file === 'node_modules' || file === '.next' || file === '.git') return;
-    const stat = fs.statSync(filePath);
+
+    // skip unwanted folders
+    if (IGNORE_FOLDERS.includes(file)) return;
+
+    let stat;
+    try {
+      stat = fs.statSync(filePath);
+    } catch (err) {
+      return;
+    }
+
     if (stat.isDirectory()) {
       scan(filePath);
     } else {
-      const content = fs.readFileSync(filePath, 'utf8');
-      if (content.includes('next/document')) {
-        console.log('FOUND next/document in:', filePath);
+      if (!isValidFile(file)) return;
+
+      let content;
+      try {
+        content = fs.readFileSync(filePath, "utf8");
+      } catch (err) {
+        return;
       }
-      if (content.includes('<Html') || content.includes('<Head') || content.includes('<NextScript')) {
-         // Some of these might be legitimate lowercase <html> tags, so check for uppercase
-         if (content.includes('<Html') || content.includes('<NextScript')) {
-            console.log('FOUND forbidden tag in:', filePath);
-         }
-      }
+
+      const lines = content.split("\n");
+
+      lines.forEach((line, index) => {
+        const lineNum = index + 1;
+
+        // ❌ wrong import
+        if (line.includes("next/document")) {
+          console.log(`❌ INVALID IMPORT → ${filePath}:${lineNum}`);
+          console.log(`   ${line.trim()}`);
+        }
+
+        // ❌ forbidden tags
+        if (
+          line.includes("<Html") ||
+          line.includes("<Head") ||
+          line.includes("<NextScript")
+        ) {
+          console.log(`🚫 FORBIDDEN TAG → ${filePath}:${lineNum}`);
+          console.log(`   ${line.trim()}`);
+        }
+      });
     }
   });
 }
 
-scan('c:\\Data\\College\\frontend');
+// run scan
+console.log("🔍 Scanning project for Next.js errors...\n");
+scan(ROOT_DIR);
+console.log("\n✅ Scan completed.");

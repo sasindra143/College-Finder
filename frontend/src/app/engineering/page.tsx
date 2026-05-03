@@ -98,7 +98,7 @@ export default function EngineeringPage() {
       <section className={styles.quickLinks}>
         <h2 className={styles.qTitle}>Popular Engineering Branches</h2>
         <div className={styles.qGrid}>
-          {['Computer Science', 'Mechanical', 'Electrical', 'Civil', 'Electronics', 'Chemical'].map(spec => (
+          {['B.Tech', 'M.Tech', 'Diploma', 'Engineering', 'Technology', 'Polytechnic'].map(spec => (
             <Link key={spec} href={`/colleges?search=${spec}`} className={styles.qCard}>
               {spec}
             </Link>

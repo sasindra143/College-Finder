@@ -44,6 +44,8 @@ export const getColleges = async (filters: CollegeFilters) => {
         { name: { contains: search, mode: 'insensitive' } },
         { city: { contains: search, mode: 'insensitive' } },
         { state: { contains: search, mode: 'insensitive' } },
+        { courses: { some: { name: { contains: search, mode: 'insensitive' } } } },
+        { degrees: { hasSome: [search] } },
       ]
     });
   }
@@ -88,13 +90,22 @@ export const getColleges = async (filters: CollegeFilters) => {
   }
 
   if (course) {
-    (where.AND as Prisma.CollegeWhereInput[]).push({
-      OR: [
-        { degrees: { hasSome: [course] } },
-        { name: { contains: course, mode: 'insensitive' } },
-        { description: { contains: course, mode: 'insensitive' } },
-      ]
+    let courseKeywords = [course];
+    if (course.toLowerCase() === 'engineering') courseKeywords.push('b.tech', 'm.tech', 'technology');
+    if (course.toLowerCase() === 'medical') courseKeywords.push('mbbs', 'bds', 'nursing', 'health');
+    if (course.toLowerCase() === 'management') courseKeywords.push('mba', 'bba', 'business', 'pgdm');
+    if (course.toLowerCase() === 'law') courseKeywords.push('llb', 'llm', 'legal');
+
+    const courseOrs: Prisma.CollegeWhereInput[] = [];
+    
+    courseKeywords.forEach(kw => {
+      courseOrs.push({ degrees: { hasSome: [kw] } });
+      courseOrs.push({ name: { contains: kw, mode: 'insensitive' } });
+      courseOrs.push({ description: { contains: kw, mode: 'insensitive' } });
+      courseOrs.push({ courses: { some: { name: { contains: kw, mode: 'insensitive' } } } });
     });
+
+    (where.AND as Prisma.CollegeWhereInput[]).push({ OR: courseOrs });
   }
 
   const validSortFields = ['rating', 'fees', 'nirfRank', 'name', 'established', 'placementPercent'];

@@ -14,16 +14,8 @@ export default function ManagementPage() {
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const res: any = await api.getColleges({ limit: 50, sortBy: 'rating' });
-        const allColleges: College[] = res?.data || res?.colleges || [];
-        const managementColleges = allColleges.filter(c => 
-          c.name.toLowerCase().includes('management') || 
-          c.name.toLowerCase().includes('business') ||
-          c.name.toLowerCase().includes('iim') ||
-          c.name.toLowerCase().includes('mba') ||
-          (c.degrees && c.degrees.some(d => d.toLowerCase().includes('mba') || d.toLowerCase().includes('bba') || d.toLowerCase().includes('pgdm')))
-        );
-        setColleges(managementColleges);
+        const res: any = await api.getColleges({ course: 'Management', limit: 12, sortBy: 'rating' });
+        setColleges(res?.data || res?.colleges || []);
         setError(null);
       } catch (err) {
         console.error('Failed to load management colleges:', err);
