@@ -73,7 +73,8 @@ function getMockReviews(college: College) {
 }
 
 export default function CollegeDetails() {
-  const { slug } = useParams();
+  const params = useParams();
+  const slug = params?.slug as string | undefined;
   const [college, setCollege] = useState<College | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('Overview');

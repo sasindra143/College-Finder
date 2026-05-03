@@ -254,7 +254,7 @@ export function Navbar() {
             <Link 
               key={cat.path} 
               href={cat.path}
-              className={`${styles.navItem} ${pathname === cat.path || (cat.path !== '/' && pathname.startsWith(cat.path)) ? styles.navItemActive : ''}`}
+              className={`${styles.navItem} ${pathname === cat.path || (cat.path !== '/' && pathname?.startsWith(cat.path)) ? styles.navItemActive : ''}`}
             >
               {cat.name}
               {cat.name === 'Compare' && compareList.length > 0 && (

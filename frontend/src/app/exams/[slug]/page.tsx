@@ -8,7 +8,8 @@ import { toast } from '@/components/ui/Toaster';
 import styles from './Exams.module.css';
 
 export default function ExamDetail() {
-  const { slug } = useParams();
+  const params = useParams();
+  const slug = params?.slug as string | undefined;
 
   const [exam, setExam] = useState<Exam | null>(null);
   const [loading, setLoading] = useState(true);
