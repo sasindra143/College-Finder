@@ -127,16 +127,16 @@ export const api = {
 
   // ===== SAVED COLLEGES =====
   getSavedColleges: () =>
-    request<ApiResponse<College[]>>(`/saved`),
+    request<ApiResponse<College[]>>(`/saved/colleges`),
 
   saveCollege: (collegeId: string) =>
-    request<ApiResponse<any>>(`/saved`, {
+    request<ApiResponse<any>>(`/saved/colleges`, {
       method: "POST",
       body: JSON.stringify({ collegeId }),
     }),
 
   unsaveCollege: (collegeId: string) =>
-    request<ApiResponse<any>>(`/saved/${collegeId}`, {
+    request<ApiResponse<any>>(`/saved/colleges/${collegeId}`, {
       method: "DELETE",
     }),
 
