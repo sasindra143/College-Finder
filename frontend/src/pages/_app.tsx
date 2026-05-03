@@ -1,7 +1,8 @@
-// This is the Pages Router _app.tsx. 
+import type { AppProps } from 'next/app';
+
+// This is the Pages Router _app.tsx.
 // It is completely separate from the App Router layout.
-// We keep it minimal to prevent any conflicts.
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }
 
