@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Providers } from './providers';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
+import { Navbar } from '../components/layout/Navbar';
+import { Footer } from '../components/layout/Footer';
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
   return (

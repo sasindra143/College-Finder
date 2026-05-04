@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { toast } from '@/components/ui/Toaster';
+import { toast } from '../../../components/ui/Toaster';
 import styles from '../Auth.module.css';
 
 export default function Login() {

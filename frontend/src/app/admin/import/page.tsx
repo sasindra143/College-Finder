@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
 import { api } from '@/lib/api';
-import { toast } from '@/components/ui/Toaster';
+import { toast } from '../../../components/ui/Toaster';
 
 export default function AdminImport() {
   const [data, setData] = useState<any[]>([]);

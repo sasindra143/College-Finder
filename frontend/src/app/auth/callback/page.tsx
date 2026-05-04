@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { toast } from '@/components/ui/Toaster';
+import { toast } from '../../../components/ui/Toaster';
 
 function CallbackHandler() {
   const router = useRouter();
