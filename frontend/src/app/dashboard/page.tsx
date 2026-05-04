@@ -6,6 +6,7 @@ import type { College } from '@/lib/types';
 import CollegeCard from '@/components/CollegeCard';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -49,29 +50,29 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className={styles.dashboardContainer}>
+      <div className={styles.contentWrapper}>
         
-        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 mb-8 fade-in-up">
-          <div className="flex items-center gap-4 mb-2">
-            <div className="w-16 h-16 bg-brand-100 text-brand-700 rounded-2xl flex items-center justify-center font-bold text-2xl">
-              {user?.name?.charAt(0).toUpperCase()}
+        <div className={styles.welcomeCard}>
+          <div className={styles.welcomeContent}>
+            <div className={styles.avatar}>
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-gray-900">Welcome, {user?.name}</h1>
-              <p className="text-gray-500 font-medium">{user?.email}</p>
+            <div className={styles.welcomeText}>
+              <h1>Welcome, {user?.name || 'User'}</h1>
+              <p>{user?.email || 'user@example.com'}</p>
             </div>
           </div>
         </div>
 
-        <div className="mb-12 fade-in-up" style={{animationDelay: '0.1s'}}>
-          <div className="flex justify-between items-end mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Saved Colleges ({savedColleges.length})</h2>
-            <Link href="/colleges" className="text-brand-600 font-bold hover:text-brand-700">Browse more →</Link>
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Saved Colleges ({savedColleges.length})</h2>
+            <Link href="/colleges" className={styles.browseLink}>Browse more →</Link>
           </div>
           
           {savedColleges.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={styles.grid}>
               {savedColleges.map(({ college }) => (
                 <CollegeCard key={college.id} college={college} isSaved={true} onSaveToggle={() => {
                   setSavedColleges(prev => prev.filter(c => c.college.id !== college.id));
@@ -79,31 +80,33 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <div className="bg-white p-12 rounded-3xl text-center border border-gray-100 shadow-sm">
-              <div className="text-5xl mb-4">🏫</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No saved colleges</h3>
-              <p className="text-gray-500 font-medium mb-6">Save colleges you are interested in to view them later.</p>
-              <Link href="/colleges" className="px-6 py-3 rounded-xl bg-brand-600 text-white font-bold transition-all hover:shadow-md">Browse Colleges</Link>
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>🏫</div>
+              <h3>No saved colleges</h3>
+              <p>Save colleges you are interested in to view them later.</p>
+              <Link href="/colleges" className={styles.emptyAction}>Browse Colleges</Link>
             </div>
           )}
         </div>
 
-        <div className="fade-in-up" style={{animationDelay: '0.2s'}}>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Saved Comparisons ({comparisons.length})</h2>
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Saved Comparisons ({comparisons.length})</h2>
+          </div>
           
           {comparisons.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className={styles.grid}>
               {comparisons.map(comp => (
-                <div key={comp.id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex justify-between items-center group">
-                  <div>
-                    <h3 className="font-bold text-lg text-gray-900 mb-1">{comp.name}</h3>
-                    <p className="text-sm text-gray-500 font-medium">{comp.collegeIds.length} colleges • {new Date(comp.createdAt).toLocaleDateString()}</p>
+                <div key={comp.id} className={styles.comparisonCard}>
+                  <div className={styles.comparisonInfo}>
+                    <h3>{comp.name}</h3>
+                    <p>{comp.collegeIds.length} colleges • {new Date(comp.createdAt).toLocaleDateString()}</p>
                   </div>
-                  <div className="flex gap-2">
-                    <Link href={`/compare?ids=${comp.collegeIds.join(',')}`} className="px-4 py-2 bg-brand-50 text-brand-700 rounded-lg font-bold text-sm hover:bg-brand-100 transition-colors">
+                  <div className={styles.comparisonActions}>
+                    <Link href={`/compare?ids=${comp.collegeIds.join(',')}`} className={styles.viewBtn}>
                       View
                     </Link>
-                    <button onClick={() => deleteComparison(comp.id)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                    <button onClick={() => deleteComparison(comp.id)} className={styles.deleteBtn}>
                       ✕
                     </button>
                   </div>
@@ -111,11 +114,11 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <div className="bg-white p-12 rounded-3xl text-center border border-gray-100 shadow-sm">
-              <div className="text-5xl mb-4">⚖️</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">No comparisons saved</h3>
-              <p className="text-gray-500 font-medium mb-6">Compare colleges and save the list to access it anytime.</p>
-              <Link href="/compare" className="px-6 py-3 rounded-xl bg-brand-600 text-white font-bold transition-all hover:shadow-md">Go to Compare</Link>
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>⚖️</div>
+              <h3>No comparisons saved</h3>
+              <p>Compare colleges and save the list to access it anytime.</p>
+              <Link href="/compare" className={styles.emptyAction}>Go to Compare</Link>
             </div>
           )}
         </div>
