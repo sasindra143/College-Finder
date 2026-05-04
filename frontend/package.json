@@ -9,7 +9,6 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@netlify/plugin-nextjs": "^5.15.10",
     "@types/papaparse": "^5.5.2",
     "next": "^14.2.16",
     "papaparse": "^5.5.3",
