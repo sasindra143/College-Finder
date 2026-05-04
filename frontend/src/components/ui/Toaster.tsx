@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import styles from './Toaster.module.css';
 
 interface Toast {
   id: string;
@@ -68,20 +69,19 @@ export function Toaster() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
+    <div className={styles.toasterContainer}>
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`px-5 py-3 rounded-xl text-sm font-medium shadow-xl flex items-center gap-2 transition-all duration-300
-            ${
-              t.type === 'success'
-                ? 'bg-emerald-600 text-white'
-                : t.type === 'error'
-                ? 'bg-red-600 text-white'
-                : 'bg-blue-600 text-white'
-            }`}
+          className={`${styles.toast} ${
+            t.type === 'success'
+              ? styles.success
+              : t.type === 'error'
+              ? styles.error
+              : styles.info
+          }`}
         >
-          <span>
+          <span className={styles.icon}>
             {t.type === 'success' ? '✓' : t.type === 'error' ? '✕' : 'ℹ'}
           </span>
           <span>{t.message}</span>

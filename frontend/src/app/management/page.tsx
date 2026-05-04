@@ -39,30 +39,30 @@ export default function ManagementPage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div className={styles.gridContainer}>
           {[1,2,3,4,5,6].map(i => (
-            <div key={i} className="h-[400px] bg-gray-100 rounded-3xl animate-pulse"></div>
+            <div key={i} className={styles.skeletonCard}></div>
           ))}
         </div>
       ) : error ? (
-        <div className="bg-white p-12 rounded-3xl text-center border border-gray-100 shadow-sm mt-12">
-          <div className="text-5xl mb-4">⚠️</div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">Connection Error</h3>
-          <p className="text-gray-500 font-medium mb-6">{error}</p>
-          <button onClick={() => window.location.reload()} className="px-6 py-3 rounded-xl bg-brand-600 text-white font-bold transition-all hover:shadow-md">
+        <div className={styles.errorState}>
+          <div className={styles.errorIcon}>⚠️</div>
+          <h3 className={styles.errorTitle}>Connection Error</h3>
+          <p className={styles.errorText}>{error}</p>
+          <button onClick={() => window.location.reload()} className={styles.tryAgainBtn}>
             Try Again
           </button>
         </div>
       ) : colleges.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div className={styles.gridContainer}>
           {colleges.map(college => (
             <CollegeCard key={college.id} college={college} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-20">
-          <h3 className="text-xl font-bold text-gray-900">No management colleges found.</h3>
-          <Link href="/colleges" className="text-brand-600 font-bold hover:underline mt-4 inline-block">View all colleges instead</Link>
+        <div className={styles.emptyState}>
+          <h3 className={styles.emptyTitle}>No management colleges found.</h3>
+          <Link href="/colleges" className={styles.emptyLink}>View all colleges instead</Link>
         </div>
       )}
     </div>

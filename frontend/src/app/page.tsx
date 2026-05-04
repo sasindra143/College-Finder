@@ -130,7 +130,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className={styles.pageContainer}>
 
       {/* HERO */}
       {/* HERO SECTION */}
@@ -179,17 +179,17 @@ export default function Home() {
             </form>
 
             {showDropdown && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white shadow-lg z-50 rounded-2xl overflow-hidden text-left">
-                {isSearching && <div className="p-4 text-center text-gray-500">Searching...</div>}
-                {!isSearching && suggestions.length === 0 && <div className="p-4 text-center text-gray-400">No results found</div>}
+              <div className={styles.searchDropdown}>
+                {isSearching && <div className={styles.searchMessage}>Searching...</div>}
+                {!isSearching && suggestions.length === 0 && <div className={styles.searchMessage}>No results found</div>}
                 {!isSearching && suggestions.map((college) => (
                   <div
                     key={college.id}
-                    className="p-4 border-b border-gray-50 cursor-pointer hover:bg-orange-50 transition-colors"
+                    className={styles.searchResultItem}
                     onClick={() => handleSuggestionClick(college.slug || college.id)}
                   >
-                    <div className="font-bold text-gray-900">{college.name}</div>
-                    <div className="text-sm text-gray-500">{college.city}, {college.state}</div>
+                    <div className={styles.searchResultName}>{college.name}</div>
+                    <div className={styles.searchResultLocation}>{college.city}, {college.state}</div>
                   </div>
                 ))}
               </div>
@@ -200,8 +200,8 @@ export default function Home() {
 
       {/* STREAMS SECTION */}
       <section className={styles.streamsSection}>
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
+        <div className={styles.sectionWrapper}>
+          <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Explore by <span className={styles.highlightText}>Stream</span></h2>
             <p className={styles.sectionSubtitle}>Choose your career path from top academic disciplines</p>
           </div>
@@ -241,10 +241,10 @@ export default function Home() {
               className={styles.counsellingImage}
             />
             <div className={styles.counsellingBadge}>
-              <div className="text-3xl">🎯</div>
+              <div className={styles.counsellingBadgeIcon}>🎯</div>
               <div>
-                <div className="font-bold text-gray-900">10k+ Students</div>
-                <div className="text-sm text-gray-500">Counselled Successfully</div>
+                <div className={styles.counsellingBadgeValue}>10k+ Students</div>
+                <div className={styles.counsellingBadgeLabel}>Counselled Successfully</div>
               </div>
             </div>
           </div>
@@ -253,7 +253,7 @@ export default function Home() {
 
       {/* FEATURES SECTION */}
       <section className={styles.featuresSection}>
-        <div className="max-w-7xl mx-auto px-4">
+        <div className={styles.sectionWrapper}>
           <h2 className={styles.sectionTitle}>Everything You Need in <span className={styles.highlightText}>One Place</span></h2>
           <p className={styles.sectionSubtitle}>We help you make the most important decision of your academic life.</p>
           
@@ -279,7 +279,7 @@ export default function Home() {
 
       {/* TESTIMONIALS SECTION */}
       <section className={styles.testimonialsSection}>
-        <div className="text-center mb-8">
+        <div className={styles.testimonialsHeader}>
           <h2 className={styles.sectionTitle}>What <span className={styles.highlightText}>Students</span> Say</h2>
         </div>
         

@@ -45,16 +45,16 @@ export default function Signup() {
           <p className={styles.heroSubtitle}>
             Create your free account to save colleges, track comparisons, and get personalized recommendations.
           </p>
-          <div className="grid grid-cols-2 gap-4">
+          <div className={styles.statsGrid}>
             {[
               { value: '37,000+', label: 'Colleges' },
               { value: '2M+', label: 'Students' },
               { value: '200+', label: 'Exams' },
               { value: '36', label: 'States' },
             ].map((stat, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur rounded-2xl p-4 text-center">
-                <div className="text-2xl font-black">{stat.value}</div>
-                <div className="text-xs font-bold text-brand-200 uppercase tracking-widest">{stat.label}</div>
+              <div key={i} className={styles.statCard}>
+                <div className={styles.statValue}>{stat.value}</div>
+                <div className={styles.statLabel}>{stat.label}</div>
               </div>
             ))}
           </div>
@@ -137,7 +137,7 @@ export default function Signup() {
             >
               {loading ? (
                 <span className={styles.loadingSpinner}>
-                  <svg className={styles.spinnerIcon} fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                  <svg className={styles.spinnerIcon} fill="none" viewBox="0 0 24 24"><circle style={{opacity: 0.25}} cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path style={{opacity: 0.75}} fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
                   Creating account...
                 </span>
               ) : 'Create Free Account'}
@@ -152,7 +152,7 @@ export default function Signup() {
             onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/auth/google`}
             className={styles.googleBtn}
           >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
+            <svg viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/>
@@ -161,7 +161,7 @@ export default function Signup() {
             <span>Sign up with Google</span>
           </button>
 
-          <p className="mt-4 text-xs text-gray-400 text-center font-medium">
+          <p className={styles.termsText}>
             By signing up, you agree to our Terms of Service and Privacy Policy.
           </p>
 

@@ -426,3 +426,80 @@
     width: 260px;
   }
 }
+
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.searchDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.5rem;
+  background-color: white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  border-radius: 1rem;
+  overflow: hidden;
+  text-align: left;
+}
+
+.searchMessage {
+  padding: 1rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.searchResultItem {
+  padding: 1rem;
+  border-bottom: 1px solid #f9fafb;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.searchResultItem:hover {
+  background-color: #fff7ed;
+}
+
+.searchResultName {
+  font-weight: 700;
+  color: #111827;
+}
+
+.searchResultLocation {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.sectionWrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.counsellingBadgeIcon {
+  font-size: 1.875rem;
+}
+
+.counsellingBadgeValue {
+  font-weight: 700;
+  color: #111827;
+}
+
+.counsellingBadgeLabel {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.testimonialsHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}

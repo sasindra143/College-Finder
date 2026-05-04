@@ -140,7 +140,7 @@ export default function QAPage() {
               rows={3}
               className={styles.inputField}
             />
-            <div className="flex justify-end">
+            <div className={styles.formActions}>
               <button 
                 type="submit"
                 disabled={asking || !title.trim() || !body.trim()}
@@ -154,66 +154,66 @@ export default function QAPage() {
 
         <div className={styles.questionsList}>
           {loading ? (
-            <div className="text-center py-20 text-gray-500">Loading questions...</div>
+            <div className={styles.emptyState}>Loading questions...</div>
           ) : questions.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-3xl border border-gray-100 text-gray-500 w-full">
+            <div className={styles.emptyState}>
               No questions yet. Be the first to ask!
             </div>
           ) : (
             questions.map((q, index) => (
-              <div key={q.id} className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden w-full">
-                <div className="p-6 md:p-8 cursor-pointer hover:bg-gray-50 transition-colors" onClick={() => loadAnswers(q.id, index)}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-8 h-8 bg-brand-100 text-brand-700 rounded-full flex items-center justify-center font-bold text-sm">
+              <div key={q.id} className={styles.questionCard}>
+                <div className={styles.questionHeader} onClick={() => loadAnswers(q.id, index)}>
+                  <div className={styles.authorMeta}>
+                    <div className={styles.authorAvatar}>
                       {q.author?.name?.charAt(0)?.toUpperCase() || 'U'}
                     </div>
-                    <div className="text-sm font-bold text-gray-900">{q.author?.name || 'Anonymous'}</div>
-                    <div className="text-xs font-medium text-gray-500">• {formatDate(q.createdAt)}</div>
+                    <div className={styles.authorName}>{q.author?.name || 'Anonymous'}</div>
+                    <div className={styles.postDate}>• {formatDate(q.createdAt)}</div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{q.title}</h3>
-                  <p className="text-gray-600 font-medium mb-4">{q.body}</p>
+                  <h3 className={styles.questionTitle}>{q.title}</h3>
+                  <p className={styles.questionBody}>{q.body}</p>
                   
-                  <div className="flex items-center gap-2 text-sm font-bold text-brand-600">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                  <div className={styles.answerCount}>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                     {q._count?.answers || 0} {(q._count?.answers || 0) === 1 ? 'Answer' : 'Answers'}
                   </div>
                 </div>
 
                 {q.expanded && (
-                  <div className="bg-gray-50 border-t border-gray-100 p-6 md:p-8">
-                    <div className="space-y-6 mb-8">
+                  <div className={styles.answersSection}>
+                    <div className={styles.answersList}>
                       {q.answers && q.answers.length > 0 ? (
                         q.answers.map(ans => (
-                          <div key={ans.id} className="flex gap-4">
-                            <div className="w-8 h-8 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-sm shrink-0">
+                          <div key={ans.id} className={styles.answerItem}>
+                            <div className={styles.answerAvatar}>
                               {ans.author?.name?.charAt(0)?.toUpperCase() || 'U'}
                             </div>
-                            <div className="bg-white p-4 rounded-2xl rounded-tl-none border border-gray-100 shadow-sm flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className="font-bold text-gray-900 text-sm">{ans.author?.name || 'Anonymous'}</span>
-                                <span className="text-xs font-medium text-gray-500">{formatDate(ans.createdAt)}</span>
+                            <div className={styles.answerContent}>
+                              <div className={styles.answerAuthor}>
+                                <span className={styles.answerAuthorName}>{ans.author?.name || 'Anonymous'}</span>
+                                <span className={styles.postDate}>{formatDate(ans.createdAt)}</span>
                               </div>
-                              <p className="text-gray-700 font-medium text-sm">{ans.body}</p>
+                              <p className={styles.answerBodyText}>{ans.body}</p>
                             </div>
                           </div>
                         ))
                       ) : (
-                        <div className="text-gray-500 text-sm italic">No answers yet.</div>
+                        <div className={styles.noAnswers}>No answers yet.</div>
                       )}
                     </div>
 
-                    <form onSubmit={(e) => handleAnswerSubmit(e, q.id, index)} className="flex gap-3">
+                    <form onSubmit={(e) => handleAnswerSubmit(e, q.id, index)} className={styles.answerForm}>
                       <input 
                         type="text" 
                         placeholder="Write your answer..."
                         value={answerBody[q.id] || ''}
                         onChange={e => setAnswerBody(prev => ({ ...prev, [q.id]: e.target.value }))}
-                        className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500"
+                        className={styles.answerInput}
                       />
                       <button 
                         type="submit"
                         disabled={!answerBody[q.id]?.trim()}
-                        className="bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white font-bold py-2 px-6 rounded-xl transition-colors text-sm"
+                        className={styles.answerSubmitBtn}
                       >
                         Post
                       </button>

@@ -121,3 +121,85 @@
   display: flex;
   gap: 32px;
 }
+
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.logoText {
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: -0.025em;
+  color: white;
+  text-transform: uppercase;
+}
+
+.logoHighlight {
+  color: #9ca3af;
+  font-weight: 300;
+}
+
+.horizontalLink {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.horizontalLink:hover {
+  color: #d1d5db;
+}
+
+.socialIconBtn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.socialIconBtn:hover {
+  opacity: 0.9;
+}
+
+.socialInsta {
+  background: linear-gradient(to top right, #eab308, #ec4899, #9333ea);
+}
+
+.socialYoutube {
+  background-color: #ef4444;
+}
+
+.socialFacebook {
+  background-color: #1877f2;
+}
+
+.socialLinkedin {
+  background-color: #0a66c2;
+}
+
+.socialX {
+  background-color: black;
+  border: 1px solid #374151;
+}
+
+.socialIconBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.bottomLink {
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.bottomLink:hover {
+  color: white;
+}

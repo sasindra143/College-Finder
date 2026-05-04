@@ -106,7 +106,7 @@ export function Navbar() {
       {/* Top Utility Bar */}
       <div className={styles.topBar}>
         <div className={styles.topBarContent}>
-          <div className="hidden sm:block">📞 Support: 9959732476</div>
+          <div className={styles.topBarSupport}>📞 Support: 9959732476</div>
           <div className={styles.topBarLinks}>
             <Link href="/about" className={styles.topBarLink}>About</Link>
             <Link href="/contact" className={styles.topBarLink}>Contact</Link>
@@ -212,17 +212,17 @@ export function Navbar() {
         {/* Desktop Auth */}
         <div className={styles.authContainer}>
           {isAuthenticated ? (
-             <div className="flex items-center gap-4">
-               <Link href="/dashboard" className="flex items-center gap-2 group p-1.5 pr-3 rounded-full hover:bg-gray-50 border border-transparent hover:border-gray-200 transition-all">
-                 <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-sm">
+             <div className={styles.userProfileContainer}>
+               <Link href="/dashboard" className={styles.userProfileBtn}>
+                 <div className={styles.userAvatar}>
                    {user?.name?.charAt(0).toUpperCase() || 'U'}
                  </div>
-                 <div className="hidden lg:block text-left">
-                   <div className="text-xs font-bold text-gray-900 group-hover:text-brand-600 transition-colors">{user?.name}</div>
-                   <div className="text-[10px] font-medium text-gray-500 leading-tight">{user?.email}</div>
+                 <div className={styles.userInfo}>
+                   <div className={styles.userName}>{user?.name}</div>
+                   <div className={styles.userEmail}>{user?.email}</div>
                  </div>
                </Link>
-               <button onClick={logout} className="text-xs font-bold text-red-500 hover:text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-colors border border-transparent hover:border-red-100">
+               <button onClick={logout} className={styles.logoutBtn}>
                  Logout
                </button>
              </div>
@@ -258,7 +258,7 @@ export function Navbar() {
             >
               {cat.name}
               {cat.name === 'Compare' && compareList.length > 0 && (
-                <span className="ml-2 bg-brand-600 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+                <span className={styles.compareBadge}>
                   {compareList.length}
                 </span>
               )}
@@ -298,7 +298,7 @@ export function Navbar() {
               className={`${styles.mobileNavItem} ${pathname === cat.path ? styles.mobileNavItemActive : ''}`}
             >
               <span>{cat.name}</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" /></svg>
+              <svg className={styles.mobileArrowIcon} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" /></svg>
             </Link>
           ))}
         </div>
@@ -306,11 +306,11 @@ export function Navbar() {
         {/* Mobile Auth Actions */}
         <div className={styles.mobileAuth}>
           {isAuthenticated ? (
-            <button onClick={() => { logout(); toggleMobile(); }} className="w-full py-4 bg-red-50 text-red-600 rounded-2xl font-bold text-sm">Logout</button>
+            <button onClick={() => { logout(); toggleMobile(); }} className={styles.mobileLogoutBtn}>Logout</button>
           ) : (
             <>
-              <Link href="/auth/login" className="w-full py-4 bg-gray-50 text-gray-700 rounded-2xl font-bold text-center text-sm">Sign In</Link>
-              <Link href="/auth/signup" className="w-full py-4 bg-brand-600 text-white rounded-2xl font-bold text-center text-sm shadow-lg shadow-brand-200">Create Account</Link>
+              <Link href="/auth/login" className={styles.mobileLoginBtn}>Sign In</Link>
+              <Link href="/auth/signup" className={styles.mobileSignupBtn}>Create Account</Link>
             </>
           )}
         </div>
