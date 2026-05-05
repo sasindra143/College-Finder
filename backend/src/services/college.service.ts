@@ -44,7 +44,6 @@ export const getColleges = async (filters: CollegeFilters) => {
         { name: { contains: search, mode: 'insensitive' } },
         { city: { contains: search, mode: 'insensitive' } },
         { state: { contains: search, mode: 'insensitive' } },
-        { courses: { some: { name: { contains: search, mode: 'insensitive' } } } },
         { degrees: { hasSome: [search] } },
       ]
     });
@@ -113,8 +112,6 @@ export const getColleges = async (filters: CollegeFilters) => {
         courseKeywords.forEach(kw => {
           courseOrs.push({ degrees: { hasSome: [kw] } });
           courseOrs.push({ name: { contains: kw, mode: 'insensitive' } });
-          courseOrs.push({ description: { contains: kw, mode: 'insensitive' } });
-          courseOrs.push({ courses: { some: { name: { contains: kw, mode: 'insensitive' } } } });
         });
       });
       (where.AND as Prisma.CollegeWhereInput[]).push({ OR: courseOrs });

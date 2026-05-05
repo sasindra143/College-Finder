@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback, Suspense, useRef } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
@@ -7,7 +7,6 @@ import CollegeCard from '@/components/CollegeCard';
 import Link from 'next/link';
 import styles from './CollegesPage.module.css';
 
-// ✅ ADD THIS
 interface PaginationInfo {
   page: number;
   limit: number;
@@ -40,10 +39,13 @@ const POPULAR_COURSES = [
 function CollegesList() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  
   const [colleges, setColleges] = useState<College[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  
+  // Pending state (UI)
   const [search, setSearch] = useState(searchParams?.get('search') || '');
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState<{
@@ -66,42 +68,56 @@ function CollegesList() {
     page: 1,
   });
 
+  // Active state (API query)
+  const [activeFilters, setActiveFilters] = useState(filters);
+  const [activeSearch, setActiveSearch] = useState(search);
+
+  // Apply button handler
+  const applyFilters = useCallback((pageOverride?: number) => {
+    setActiveFilters({
+      ...filters,
+      page: pageOverride ?? 1
+    });
+    if (pageOverride === undefined) {
+      setFilters(prev => ({ ...prev, page: 1 }));
+    }
+    setActiveSearch(search);
+    setMobileFiltersOpen(false);
+  }, [filters, search]);
+
   const fetchColleges = useCallback(async () => {
     setLoading(true);
     try {
       const res: any = await api.getColleges({
-        search,
-        location: filters.location.join(','),
-        ownership: filters.ownership.join(','),
-        course: filters.course.join(','),
-        minRating: filters.minRating ? Number(filters.minRating) : undefined,
-        maxFees: filters.maxFees ? Number(filters.maxFees) : undefined,
-        sortBy: filters.sortBy,
-        sortOrder: filters.sortOrder,
-        page: filters.page,
+        search: activeSearch,
+        location: activeFilters.location.join(','),
+        ownership: activeFilters.ownership.join(','),
+        course: activeFilters.course.join(','),
+        minRating: activeFilters.minRating ? Number(activeFilters.minRating) : undefined,
+        maxFees: activeFilters.maxFees ? Number(activeFilters.maxFees) : undefined,
+        sortBy: activeFilters.sortBy,
+        sortOrder: activeFilters.sortOrder,
+        page: activeFilters.page,
         limit: 12,
       });
-
-      console.log("🔥 API DATA:", res);
 
       setColleges(res?.data || res?.colleges || []);
       setPagination(res?.pagination || null);
       setError(null);
     } catch (err) {
-      console.error("❌ Failed:", err);
       setError("Backend not reachable");
     } finally {
       setLoading(false);
     }
-  }, [search, filters]);
+  }, [activeSearch, activeFilters]);
 
+  // Fetch only when activeFilters change
   useEffect(() => {
-    const timer = setTimeout(fetchColleges, 350);
-    return () => clearTimeout(timer);
+    fetchColleges();
   }, [fetchColleges]);
 
   const updateFilter = (key: string, value: any) => {
-    setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
+    setFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const toggleArrayFilter = (key: 'location' | 'ownership' | 'course', value: string) => {
@@ -110,31 +126,52 @@ function CollegesList() {
       const updated = current.includes(value) 
         ? current.filter(item => item !== value)
         : [...current, value];
-      return { ...prev, [key]: updated, page: 1 };
+      return { ...prev, [key]: updated };
     });
   };
 
   const clearAll = () => {
+    const empty = { location: [], ownership: [], course: [], minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc' as const, page: 1 };
     setSearch('');
-    setFilters({ location: [], ownership: [], course: [], minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc', page: 1 });
+    setFilters(empty);
+    setActiveSearch('');
+    setActiveFilters(empty);
   };
-
-  const hasFilters = search || filters.location.length > 0 || filters.ownership.length > 0 || filters.course.length > 0 || filters.minRating || filters.maxFees;
-
-  const activeChips = [
-    ...(search ? [{ label: `"${search}"`, type: 'search', value: search }] : []),
-    ...(filters.location.map(loc => ({ label: loc, type: 'location', value: loc }))),
-    ...(filters.ownership.map(own => ({ label: own, type: 'ownership', value: own }))),
-    ...(filters.course.map(c => ({ label: POPULAR_COURSES.find(pc => pc.value === c)?.label || c, type: 'course', value: c }))),
-    ...(filters.minRating ? [{ label: `${filters.minRating}★+`, type: 'minRating', value: filters.minRating }] : []),
-    ...(filters.maxFees && Number(filters.maxFees) < 3000000 ? [{ label: `Up to ₹${(Number(filters.maxFees) / 100000).toFixed(0)}L`, type: 'maxFees', value: filters.maxFees }] : []),
-  ];
 
   const removeChip = (chip: any) => {
-    if (chip.type === 'search') setSearch('');
-    else if (['location', 'ownership', 'course'].includes(chip.type)) toggleArrayFilter(chip.type as any, chip.value);
-    else updateFilter(chip.type, '');
+    let newFilters = { ...activeFilters };
+    let newSearch = activeSearch;
+    if (chip.type === 'search') newSearch = '';
+    else if (['location', 'ownership', 'course'].includes(chip.type)) {
+      newFilters[chip.type as 'location'|'ownership'|'course'] = newFilters[chip.type as 'location'|'ownership'|'course'].filter(v => v !== chip.value);
+    }
+    else newFilters[chip.type as 'minRating'|'maxFees'] = '';
+
+    newFilters.page = 1;
+    setFilters(newFilters);
+    setSearch(newSearch);
+    setActiveFilters(newFilters);
+    setActiveSearch(newSearch);
   };
+
+  const activeChips = [
+    ...(activeSearch ? [{ label: `"${activeSearch}"`, type: 'search', value: activeSearch }] : []),
+    ...(activeFilters.location.map(loc => ({ label: loc, type: 'location', value: loc }))),
+    ...(activeFilters.ownership.map(own => ({ label: own, type: 'ownership', value: own }))),
+    ...(activeFilters.course.map(c => ({ label: POPULAR_COURSES.find(pc => pc.value === c)?.label || c, type: 'course', value: c }))),
+    ...(activeFilters.minRating ? [{ label: `${activeFilters.minRating}★+`, type: 'minRating', value: activeFilters.minRating }] : []),
+    ...(activeFilters.maxFees && Number(activeFilters.maxFees) < 3000000 ? [{ label: `Up to ₹${(Number(activeFilters.maxFees) / 100000).toFixed(0)}L`, type: 'maxFees', value: activeFilters.maxFees }] : []),
+  ];
+
+  const hasPendingChanges = 
+    search !== activeSearch ||
+    JSON.stringify(filters.location) !== JSON.stringify(activeFilters.location) ||
+    JSON.stringify(filters.ownership) !== JSON.stringify(activeFilters.ownership) ||
+    JSON.stringify(filters.course) !== JSON.stringify(activeFilters.course) ||
+    filters.minRating !== activeFilters.minRating ||
+    filters.maxFees !== activeFilters.maxFees ||
+    filters.sortBy !== activeFilters.sortBy ||
+    filters.sortOrder !== activeFilters.sortOrder;
 
   const filterContent = (
     <div className={styles.filterBody}>
@@ -148,7 +185,8 @@ function CollegesList() {
           <input
             type="text"
             value={search}
-            onChange={e => { setSearch(e.target.value); setFilters(f => ({ ...f, page: 1 })); }}
+            onChange={e => setSearch(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && applyFilters()}
             placeholder="College name, city..."
             className={styles.filterInputWithIcon}
             suppressHydrationWarning
@@ -161,7 +199,7 @@ function CollegesList() {
         <label className={styles.filterLabel}>Course / Stream</label>
         <div className={styles.courseChips}>
           {POPULAR_COURSES.map(c => (
-            <button
+            <button suppressHydrationWarning
               key={c.value}
               onClick={() => toggleArrayFilter('course', c.value)}
               className={`${styles.courseChip} ${filters.course.includes(c.value) ? styles.courseChipActive : ''}`}
@@ -189,7 +227,7 @@ function CollegesList() {
         </select>
         <div className={styles.courseChips} style={{marginTop: '8px'}}>
           {filters.location.map(loc => (
-            <button key={loc} onClick={() => toggleArrayFilter('location', loc)} className={`${styles.courseChip} ${styles.courseChipActive}`}>
+            <button suppressHydrationWarning key={loc} onClick={() => toggleArrayFilter('location', loc)} className={`${styles.courseChip} ${styles.courseChipActive}`}>
               {loc} ×
             </button>
           ))}
@@ -201,7 +239,7 @@ function CollegesList() {
         <label className={styles.filterLabel}>College Type</label>
         <div className={styles.typeButtonGroup}>
           {['Government', 'Private', 'Deemed'].map(type => (
-            <button
+            <button suppressHydrationWarning
               key={type}
               onClick={() => toggleArrayFilter('ownership', type)}
               className={`${styles.typeBtn} ${
@@ -211,22 +249,6 @@ function CollegesList() {
               }`}
             >
               {type}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Rating */}
-      <div className={styles.filterGroup}>
-        <label className={styles.filterLabel}>Min Rating</label>
-        <div className={styles.ratingButtons}>
-          {['', '4.5', '4.0', '3.5', '3.0'].map(r => (
-            <button
-              key={r}
-              onClick={() => updateFilter('minRating', r)}
-              className={`${styles.ratingBtn} ${filters.minRating === r ? styles.ratingBtnActive : ''}`}
-            >
-              {r ? `${r}★+` : 'Any'}
             </button>
           ))}
         </div>
@@ -250,42 +272,41 @@ function CollegesList() {
           className={styles.rangeInput}
           suppressHydrationWarning
         />
-        <div className={styles.rangeLabels}>
-          <span>₹50K</span><span>₹30L</span>
-        </div>
       </div>
+
+      {/* APPLY FILTERS BUTTON */}
+      <div style={{ marginTop: '2rem' }}>
+        <button 
+          onClick={() => applyFilters()} 
+          className={hasPendingChanges ? styles.applyFiltersBtn : styles.applyFiltersBtnDisabled}
+          suppressHydrationWarning
+          disabled={!hasPendingChanges}
+        >
+          {hasPendingChanges ? 'Apply Filters' : 'Filters Applied'}
+        </button>
+      </div>
+
     </div>
   );
 
   return (
     <div className={styles.pageContainer}>
       <div className={styles.contentWrapper}>
-
-        {/* Page Header */}
         <div className={styles.pageHeader}>
           <div className={styles.breadcrumb}>
             <Link href="/" className={styles.breadcrumbLink}>Home</Link>
             <span className={styles.breadcrumbSep}>›</span>
             <span className={styles.breadcrumbCurrent}>Colleges</span>
           </div>
-          <h1 className={styles.pageTitle}>
-            {search
-              ? <>Results for <span className={styles.pageTitleHighlight}>"{search}"</span></>
-              : filters.location.length > 0
-              ? <>Colleges in <span className={styles.pageTitleHighlight}>{filters.location.join(', ')}</span></>
-              : filters.course.length > 0
-              ? <><span className={styles.pageTitleHighlight}>{filters.course.map(course => POPULAR_COURSES.find(c => c.value === course)?.label || course).join(', ')}</span> Colleges in India</>
-              : 'Top Colleges in India 2025'}
-          </h1>
+          <h1 className={styles.pageTitle}>Top Colleges in India 2025</h1>
           <p className={styles.pageSubtitle}>
             Explore {pagination?.total?.toLocaleString() || '37,701+'} verified institutions across India
           </p>
 
-          {/* Active Filter Chips */}
           {activeChips.length > 0 && (
             <div className={styles.activeChips}>
               {activeChips.map((chip, idx) => (
-                <button
+                <button suppressHydrationWarning
                   key={`${chip.type}-${chip.value}-${idx}`}
                   onClick={() => removeChip(chip)}
                   className={styles.activeChip}
@@ -294,85 +315,45 @@ function CollegesList() {
                   <span className={styles.chipRemove}>×</span>
                 </button>
               ))}
-              <button onClick={clearAll} className={styles.clearAllChip}>
+              <button suppressHydrationWarning onClick={clearAll} className={styles.clearAllChip}>
                 Clear All ×
               </button>
             </div>
           )}
         </div>
 
-        {/* Mobile Filter Button */}
         <div className={styles.mobileFilterBar}>
-          <button
-            onClick={() => setMobileFiltersOpen(true)}
-            className={styles.mobileFilterBtn}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
-            </svg>
-            Filters {hasFilters && <span className={styles.filterBadge}>{activeChips.length}</span>}
+          <button suppressHydrationWarning onClick={() => setMobileFiltersOpen(true)} className={styles.mobileFilterBtn}>
+            Filters {activeChips.length > 0 && <span className={styles.filterBadge}>{activeChips.length}</span>}
           </button>
-          <select
-            value={`${filters.sortBy}:${filters.sortOrder}`}
-            onChange={e => {
-              const [sortBy, sortOrder] = e.target.value.split(':');
-              setFilters(f => ({ ...f, sortBy, sortOrder: sortOrder as 'asc' | 'desc', page: 1 }));
-            }}
-            className={styles.sortSelect}
-          >
-            <option value="rating:desc">Top Rated</option>
-            <option value="fees:asc">Fees: Low → High</option>
-            <option value="fees:desc">Fees: High → Low</option>
-            <option value="placementPercent:desc">Best Placements</option>
-            <option value="name:asc">Name: A → Z</option>
-            <option value="established:asc">Oldest First</option>
-          </select>
         </div>
 
-        {/* Mobile Filter Drawer */}
         {mobileFiltersOpen && (
           <div className={styles.mobileDrawerOverlay} onClick={() => setMobileFiltersOpen(false)}>
             <div className={styles.mobileDrawer} onClick={e => e.stopPropagation()}>
               <div className={styles.mobileDrawerHeader}>
                 <h3>Filters</h3>
-                <button onClick={() => setMobileFiltersOpen(false)} className={styles.mobileDrawerClose}>✕</button>
+                <button suppressHydrationWarning onClick={() => setMobileFiltersOpen(false)} className={styles.mobileDrawerClose}>✕</button>
               </div>
               {filterContent}
-              <div className={styles.mobileDrawerActions}>
-                <button onClick={clearAll} className={styles.mobileDrawerClear}>Clear All</button>
-                <button onClick={() => setMobileFiltersOpen(false)} className={styles.mobileDrawerApply}>
-                  View {pagination?.total?.toLocaleString() || ''} Results
-                </button>
-              </div>
             </div>
           </div>
         )}
 
         <div className={styles.layoutGrid}>
-
-          {/* ── Sidebar Filters ── */}
           <aside className={styles.sidebar}>
             <div className={styles.filterCard}>
               <div className={styles.filterHeader}>
-                <h2 className={styles.filterTitle}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{display:'inline',marginRight:'6px',verticalAlign:'middle'}}>
-                    <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
-                  </svg>
-                  Filters
-                </h2>
-                {hasFilters && (
-                  <button onClick={clearAll} className={styles.clearBtn}>
-                    Clear All
-                  </button>
+                <h2 className={styles.filterTitle}>Filters</h2>
+                {(activeChips.length > 0 || hasPendingChanges) && (
+                  <button suppressHydrationWarning onClick={clearAll} className={styles.clearBtn}>Clear All</button>
                 )}
               </div>
               {filterContent}
             </div>
           </aside>
 
-          {/* ── Main Content ── */}
           <main className={styles.mainContent}>
-            {/* Count + Sort bar */}
             <div className={styles.topBar}>
               <p className={styles.resultCount}>
                 <span className={styles.resultCountHighlight}>{pagination?.total?.toLocaleString() || 0}</span> Institutions Found
@@ -381,22 +362,22 @@ function CollegesList() {
                 value={`${filters.sortBy}:${filters.sortOrder}`}
                 onChange={e => {
                   const [sortBy, sortOrder] = e.target.value.split(':');
-                  setFilters(f => ({ ...f, sortBy, sortOrder: sortOrder as 'asc' | 'desc', page: 1 }));
+                  setFilters(f => ({ ...f, sortBy, sortOrder: sortOrder as 'asc' | 'desc' }));
+                  setActiveFilters(f => ({ ...f, sortBy, sortOrder: sortOrder as 'asc' | 'desc', page: 1 }));
                 }}
                 className={styles.sortSelect}
               >
-                <option value="rating:desc">Sort: Top Rated</option>
-                <option value="fees:asc">Sort: Fees (Low → High)</option>
-                <option value="fees:desc">Sort: Fees (High → Low)</option>
-                <option value="placementPercent:desc">Sort: Best Placements</option>
-                <option value="name:asc">Sort: Name (A → Z)</option>
-                <option value="established:asc">Sort: Oldest First</option>
+                <option value="rating:desc">Top Rated</option>
+                <option value="fees:asc">Fees: Low → High</option>
+                <option value="fees:desc">Fees: High → Low</option>
+                <option value="placementPercent:desc">Best Placements</option>
+                <option value="name:asc">Name: A → Z</option>
               </select>
             </div>
 
             {loading ? (
               <div className={styles.gridContainer}>
-                {[1,2,3,4,5,6,7,8,9].map(i => (
+                {[1,2,3,4,5,6].map(i => (
                   <div key={i} className={styles.skeletonCard}>
                     <div className={styles.skeletonImg} />
                     <div className={styles.skeletonBody}>
@@ -412,14 +393,7 @@ function CollegesList() {
                 <div className={styles.emptyIcon} style={{color: '#ef4444'}}>⚠️</div>
                 <h3 className={styles.emptyTitle}>Connection Error</h3>
                 <p className={styles.emptyText}>{error}</p>
-                <div className="flex gap-4 mt-6">
-                  <button onClick={fetchColleges} className={styles.emptyBtn}>
-                    Try Again
-                  </button>
-                  <button onClick={clearAll} className={styles.emptyBtn} style={{backgroundColor:'#f1f5f9', color:'#64748b', border:'1px solid #e2e8f0'}}>
-                    Reset Filters
-                  </button>
-                </div>
+                <button suppressHydrationWarning onClick={fetchColleges} className={styles.emptyBtn}>Try Again</button>
               </div>
             ) : colleges.length > 0 ? (
               <>
@@ -429,13 +403,12 @@ function CollegesList() {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {pagination && pagination.totalPages > 1 && (
                   <div className={styles.paginationWrapper}>
                     <div className={styles.pagination}>
-                      <button
+                      <button suppressHydrationWarning
                         disabled={!pagination.hasPrev}
-                        onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))}
+                        onClick={() => applyFilters(activeFilters.page - 1)}
                         className={styles.navBtn}
                       >
                         ← Prev
@@ -451,9 +424,9 @@ function CollegesList() {
                           return pages.map((p, i) => p === -1
                             ? <span key={`ellipsis-${i}`} className={styles.ellipsis}>…</span>
                             : (
-                              <button
+                              <button suppressHydrationWarning
                                 key={p}
-                                onClick={() => setFilters(f => ({ ...f, page: p }))}
+                                onClick={() => applyFilters(p)}
                                 className={`${styles.pageBtn} ${p === current ? styles.pageBtnActive : styles.pageBtnDefault}`}
                               >
                                 {p}
@@ -462,9 +435,9 @@ function CollegesList() {
                           );
                         })()}
                       </div>
-                      <button
+                      <button suppressHydrationWarning
                         disabled={!pagination.hasNext}
-                        onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}
+                        onClick={() => applyFilters(activeFilters.page + 1)}
                         className={styles.navBtn}
                       >
                         Next →
@@ -481,9 +454,7 @@ function CollegesList() {
                 <div className={styles.emptyIcon}>🔍</div>
                 <h3 className={styles.emptyTitle}>No colleges found</h3>
                 <p className={styles.emptyText}>Try removing some filters or searching for something else.</p>
-                <button onClick={clearAll} className={styles.emptyBtn}>
-                  Clear All Filters
-                </button>
+                <button suppressHydrationWarning onClick={clearAll} className={styles.emptyBtn}>Clear All Filters</button>
               </div>
             )}
           </main>

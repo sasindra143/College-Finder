@@ -104,7 +104,7 @@ export default function CollegeCard({ college, isSaved = false, onSaveToggle }: 
     <Link href={`/colleges/${college.slug}`} className={styles.cardLink}>
       <div className={styles.cardContainer}>
         {/* Save Button */}
-        <button onClick={handleSave} disabled={saving} title={saved ? 'Unsave' : 'Save'} className={styles.saveBtn}>
+        <button suppressHydrationWarning onClick={handleSave} disabled={saving} title={saved ? 'Unsave' : 'Save'} className={styles.saveBtn}>
           <svg className={saved ? styles.iconSaved : styles.iconUnsaved} fill={saved ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
@@ -173,10 +173,10 @@ export default function CollegeCard({ college, isSaved = false, onSaveToggle }: 
           )}
 
           <div className={styles.actionRow} onClick={e => e.preventDefault()}>
-            <button onClick={handleCompare} className={`${styles.btnAction} ${inCompare ? styles.btnCompareActive : styles.btnCompare}`}>
+            <button suppressHydrationWarning onClick={handleCompare} className={`${styles.btnAction} ${inCompare ? styles.btnCompareActive : styles.btnCompare}`}>
               {inCompare ? '&#10003; Added' : '+ Compare'}
             </button>
-            <button onClick={handleVisitWebsite} className={`${styles.btnAction} ${styles.btnPrimary}`}>
+            <button suppressHydrationWarning onClick={handleVisitWebsite} className={`${styles.btnAction} ${styles.btnPrimary}`}>
               Visit &#8599;
             </button>
           </div>
