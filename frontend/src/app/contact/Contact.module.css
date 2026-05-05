@@ -97,19 +97,24 @@
 }
 
 .submitBtn {
+  display: block;
   width: 100%;
-  background-color: #2563eb;
+  background-color: #25d366;
   color: #ffffff;
   font-weight: 800;
   padding: 1rem;
   border-radius: 0.75rem;
   transition: all 0.2s;
   cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: 1rem;
 }
 
 .submitBtn:hover {
-  background-color: #1d4ed8;
+  background-color: #1ebe57;
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
 }
 
 .infoCard {

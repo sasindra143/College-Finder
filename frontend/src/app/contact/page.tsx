@@ -28,9 +28,14 @@ export default function ContactPage() {
                 <label className={styles.label}>Message</label>
                 <textarea rows={4} className={styles.textarea} placeholder="How can we help you?"></textarea>
               </div>
-              <button type="button" className={styles.submitBtn}>
+              <a
+                href="https://wa.me/919959732476"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.submitBtn}
+              >
                 Send Message
-              </button>
+              </a>
             </form>
           </div>
 
