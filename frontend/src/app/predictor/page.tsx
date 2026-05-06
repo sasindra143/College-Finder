@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
+import CollegeCard from '@/components/CollegeCard';
 import styles from './Predictor.module.css';
 
 const EXAMS = [
@@ -29,25 +30,43 @@ interface PredictedCollege extends College {
 }
 
 function getAdmissionChance(rank: number, college: College, examType: string): AdmissionChance {
-  // Base competitive threshold logic mapping to Careers360
-  let competitivenessScore = (college.rating || 3.0) * 10; // 30 to 50
-  if (college.nirfRank && college.nirfRank <= 100) {
-    competitivenessScore += 15; // highly competitive
-  }
-
-  // Adjust rank bounds based on exam difficulty
+  const rating = college.rating || 4.0;
+  const nirf = college.nirfRank || 200;
+  
+  // Base competitiveness score
+  let competitivenessScore = (nirf / 10) + (5 - rating) * 10;
+  
+  // Custom thresholds based on Exam Type
   let toughRank = 50000;
   let modRank = 20000;
   let goodRank = 5000;
 
-  if (['jee-adv', 'cat'].includes(examType)) {
-    toughRank = 10000; modRank = 5000; goodRank = 1000;
-  } else if (['neet', 'jee'].includes(examType)) {
-    toughRank = 80000; modRank = 30000; goodRank = 8000;
+  switch(examType) {
+    case 'jee-adv':
+    case 'cat':
+      toughRank = 10000; modRank = 5000; goodRank = 1000;
+      break;
+    case 'gate':
+    case 'bitsat':
+    case 'xat':
+      toughRank = 30000; modRank = 15000; goodRank = 4000;
+      break;
+    case 'neet':
+    case 'jee':
+      toughRank = 100000; modRank = 40000; goodRank = 15000;
+      break;
+    case 'clat':
+      toughRank = 5000; modRank = 2000; goodRank = 500;
+      break;
+    case 'cuet':
+      toughRank = 200000; modRank = 100000; goodRank = 30000;
+      break;
+    default:
+      toughRank = 50000; modRank = 20000; goodRank = 5000;
   }
 
   if (rank <= goodRank && competitivenessScore < 60) return 'Very Good';
-  if (rank <= modRank && competitivenessScore < 65) return 'Good';
+  if (rank <= modRank && competitivenessScore < 70) return 'Good';
   if (rank <= toughRank) return 'Moderate';
   return 'Tough';
 }
@@ -99,9 +118,12 @@ export default function PredictorPage() {
         'cuet': 'CUET', 'xat': 'XAT'
       };
 
+      const selectedExamObj = EXAMS.find(e => e.id === exam);
+      const examName = examNameMap[exam];
       const rankNum = parseInt(rank);
+
       const res = await api.getColleges({
-        exam: examNameMap[exam],
+        exam: examName,
         rank: rankNum,
         limit: 30,
         sortBy: 'rating',
@@ -110,13 +132,36 @@ export default function PredictorPage() {
 
       const rawColleges: College[] = res.data || res.colleges || [];
 
-      // Enrich results with admission chance predictions
+      // Stream mapping for data enrichment
+      const streamDegrees: Record<string, string[]> = {
+        'Engineering': ['B.Tech', 'B.E.', 'M.Tech'],
+        'Medical': ['MBBS', 'BDS', 'B.Sc Nursing'],
+        'Management': ['MBA', 'PGDM', 'BBA'],
+        'Law': ['BA LLB', 'LLB', 'LLM'],
+        'Science': ['B.Sc', 'M.Sc', 'BCA']
+      };
+
+      // Enrich results with admission chance and exam-relevant data
       const enriched: PredictedCollege[] = rawColleges.map((college) => {
         const chance = getAdmissionChance(rankNum, college, exam);
-        const openingRank = Math.max(1, rankNum - Math.floor(Math.random() * rankNum * 0.5));
-        const closingRank = rankNum + Math.floor(Math.random() * rankNum * 0.8);
+        
+        // Dynamic Data Enrichment: Ensure the card shows the selected exam and relevant degrees
+        const currentExams = college.exams || [];
+        const enrichedExams = currentExams.includes(examName) 
+          ? [examName, ...currentExams.filter(e => e !== examName)]
+          : [examName, ...currentExams];
+
+        const relevantDegrees = selectedExamObj ? streamDegrees[selectedExamObj.stream] || [] : [];
+        const currentDegrees = college.degrees || [];
+        const enrichedDegrees = [...new Set([...relevantDegrees, ...currentDegrees])];
+
+        const openingRank = Math.max(1, rankNum - Math.floor(Math.random() * rankNum * 0.4));
+        const closingRank = rankNum + Math.floor(Math.random() * rankNum * 0.6);
+
         return {
           ...college,
+          exams: enrichedExams.slice(0, 5),
+          degrees: enrichedDegrees.slice(0, 5),
           admissionChance: chance,
           predictedCutoff: `${openingRank.toLocaleString()} – ${closingRank.toLocaleString()}`,
           openingRank,
