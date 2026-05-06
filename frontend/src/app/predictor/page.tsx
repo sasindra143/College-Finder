@@ -115,7 +115,7 @@ export default function PredictorPage() {
         {hasSearched && (
           <div className={styles.resultsSection}>
             <h2 className={styles.resultsTitle}>
-              {loading ? loadingMessage : `Your Recommended Colleges (${results.length})`}
+              {loading ? loadingMessage : `Your Recommended Colleges (${results?.length || 0})`}
             </h2>
             
             {loading ? (
