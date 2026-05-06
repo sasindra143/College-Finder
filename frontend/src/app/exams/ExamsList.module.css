@@ -110,6 +110,84 @@
   color: white;
 }
 
+.contentLayout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 2rem;
+}
+
+.leftCol {
+  flex: 1;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.sidebarCard {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.sidebarCard h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+  border-bottom: 2px solid #fff5eb;
+  padding-bottom: 0.5rem;
+}
+
+.resourceList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resourceList li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: #444;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.resourceList li:hover {
+  color: #f97316;
+}
+
+.miniCollegeList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.miniCollege {
+  padding: 0.75rem;
+  background: #fdf7f2;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #c2410c;
+}
+
+@media (max-width: 1024px) {
+  .contentLayout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+}
+
 .examsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));

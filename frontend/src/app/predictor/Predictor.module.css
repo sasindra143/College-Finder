@@ -65,10 +65,21 @@
 }
 
 .form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr auto;
-  gap: 2rem;
-  align-items: flex-end;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .formGroup {

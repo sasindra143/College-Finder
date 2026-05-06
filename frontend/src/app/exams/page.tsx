@@ -45,58 +45,79 @@ export default function ExamsList() {
       </div>
 
       <div className={styles.mainContainer}>
-        <div className={styles.categoriesNav}>
-          {['All Exams', 'Engineering', 'Medical', 'Management', 'Law', 'Design'].map((cat) => (
-            <button suppressHydrationWarning 
-              key={cat} 
-              onClick={() => setFilter(cat)}
-              className={`${styles.catBtn} ${filter === cat ? styles.catBtnActive : ''}`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+        <div className={styles.contentLayout}>
+          <div className={styles.leftCol}>
+            <div className={styles.categoriesNav}>
+              {['All Exams', 'Engineering', 'Medical', 'Management', 'Law'].map((cat) => (
+                <button suppressHydrationWarning 
+                  key={cat} 
+                  onClick={() => setFilter(cat)}
+                  className={`${styles.catBtn} ${filter === cat ? styles.catBtnActive : ''}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
-        {loading ? (
-          <div className="flex justify-center p-20">
-            <div className="w-10 h-10 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
-          </div>
-        ) : filteredExams.length === 0 ? (
-          <div className="text-center p-20">
-            <p className="text-gray-500 text-lg">No exams found for this category.</p>
-            <button suppressHydrationWarning onClick={() => api.seedExams().then(() => fetchExams())} className="mt-4 px-6 py-2 bg-orange-600 text-white rounded-lg font-bold">
-              Seed Default Exams
-            </button>
-          </div>
-        ) : (
-          <div className={styles.examsGrid}>
-            {filteredExams.map(exam => (
-              <div key={exam.id} className={styles.examCard}>
-                <div className={styles.examHeader}>
-                  <span className={styles.examCategory}>{(exam as any).category || 'General'}</span>
-                  <span className={styles.examStatus}>Open</span>
-                </div>
-                <h2 className={styles.examName}>{exam.name}</h2>
-                
-                <div className={styles.examDetails}>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Slug</span>
-                    <span className={styles.detailValue}>{exam.slug}</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.detailLabel}>Description</span>
-                    <span className={styles.detailValue} style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{exam.description}</span>
-                  </div>
-                </div>
-
-                <div className={styles.examActions}>
-                  <Link href={`/exams/${exam.slug}`} className={styles.viewBtn}>View Details</Link>
-                  <button suppressHydrationWarning className={styles.trackBtn}>+ Track Exam</button>
-                </div>
+            {loading ? (
+              <div className={styles.loaderContainer}>
+                <div className={styles.spinner}></div>
               </div>
-            ))}
+            ) : filteredExams.length === 0 ? (
+              <div className={styles.emptyState}>
+                <p>No exams found for this category.</p>
+                <button suppressHydrationWarning onClick={() => api.seedExams().then(() => fetchExams())} className={styles.seedBtn}>
+                  Seed Default Exams
+                </button>
+              </div>
+            ) : (
+              <div className={styles.examsGrid}>
+                {filteredExams.map(exam => (
+                  <div key={exam.id} className={styles.examCard}>
+                    <div className={styles.examHeader}>
+                      <span className={styles.examCategory}>{(exam as any).category || 'National'}</span>
+                      <span className={styles.examMode}>Online/Offline</span>
+                    </div>
+                    <h2 className={styles.examName}>{exam.name}</h2>
+                    <p className={styles.examDesc}>{exam.description}</p>
+                    
+                    <div className={styles.examMeta}>
+                      <div className={styles.metaItem}>
+                        <span className={styles.metaLabel}>Latest Update</span>
+                        <span className={styles.metaValue}>Registration Open</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.examActions}>
+                      <Link href={`/exams/${exam.slug}`} className={styles.viewBtn}>Full Details</Link>
+                      <button suppressHydrationWarning className={styles.syllabusBtn}>Syllabus</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarCard}>
+              <h3>Featured Resources</h3>
+              <ul className={styles.resourceList}>
+                <li><span>&#128203;</span> JEE Main Question Papers</li>
+                <li><span>&#128214;</span> NEET 2025 Study Plan</li>
+                <li><span>&#128200;</span> Rank Predictor Tool</li>
+                <li><span>&#128101;</span> Expert Counseling</li>
+              </ul>
+            </div>
+            <div className={styles.sidebarCard}>
+              <h3>Top Participating Colleges</h3>
+              <div className={styles.miniCollegeList}>
+                <div className={styles.miniCollege}>IIT Bombay</div>
+                <div className={styles.miniCollege}>AIIMS Delhi</div>
+                <div className={styles.miniCollege}>IIM Ahmedabad</div>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

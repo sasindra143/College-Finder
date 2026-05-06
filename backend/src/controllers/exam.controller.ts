@@ -152,6 +152,36 @@ async function performSeed() {
           { event: 'Exam Date', date: 'May 2025' }
         ]
       }
+    },
+    {
+      name: 'WBJEE 2025',
+      slug: 'wbjee-2025',
+      category: 'Engineering',
+      description: 'West Bengal Joint Entrance Examination is a state-level exam for admission to engineering and pharmacy colleges in West Bengal.',
+      content: '<p>WBJEE is conducted by the WBJEE Board for UG courses.',
+      eligibility: '10+2 with Physics, Mathematics, and Chemistry/Biology.',
+      syllabus: 'Physics, Chemistry, and Mathematics.',
+      dates: {
+        create: [
+          { event: 'Registration Start', date: 'December 2024' },
+          { event: 'Exam Date', date: 'April 2025' }
+        ]
+      }
+    },
+    {
+      name: 'MHT-CET 2025',
+      slug: 'mht-cet-2025',
+      category: 'Engineering',
+      description: 'Maharashtra Common Entrance Test for admission to engineering and technology courses in Maharashtra.',
+      content: '<p>MHT-CET is conducted by the State Common Entrance Test Cell, Maharashtra.',
+      eligibility: '10+2 pass with Physics and Mathematics.',
+      syllabus: 'Physics, Chemistry, and Mathematics/Biology.',
+      dates: {
+        create: [
+          { event: 'Registration Start', date: 'January 2025' },
+          { event: 'Exam Date', date: 'May 2025' }
+        ]
+      }
     }
   ];
 

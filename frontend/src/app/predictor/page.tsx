@@ -84,22 +84,45 @@ export default function PredictorPage() {
       <div className={styles.mainContent}>
         <div className={styles.formCard}>
           <form onSubmit={handlePredict} className={styles.form}>
-            <div className={styles.formGroup}>
-              <label>Select Entrance Exam</label>
-              <select value={exam} onChange={e => setExam(e.target.value)} required>
-                <option value="">-- Select Exam --</option>
-                {EXAMS.map(ex => <option key={ex.id} value={ex.id}>{ex.name}</option>)}
-              </select>
-            </div>
-            <div className={styles.formGroup}>
-              <label>Your All India Rank / Score</label>
-              <input 
-                type="number" 
-                placeholder="e.g. 5240" 
-                value={rank} 
-                onChange={e => setRank(e.target.value)} 
-                required 
-              />
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label>Entrance Exam</label>
+                <select value={exam} onChange={e => setExam(e.target.value)} required>
+                  <option value="">-- Select Exam --</option>
+                  {EXAMS.map(ex => <option key={ex.id} value={ex.id}>{ex.name}</option>)}
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label>Your Category</label>
+                <select defaultValue="General" required>
+                  <option value="General">General</option>
+                  <option value="OBC">OBC-NCL</option>
+                  <option value="SC">SC</option>
+                  <option value="ST">ST</option>
+                  <option value="EWS">EWS</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label>Home State</label>
+                <select defaultValue="Delhi">
+                  <option value="Delhi">Delhi</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Other">Other State</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label>All India Rank</label>
+                <input 
+                  type="number" 
+                  placeholder="e.g. 5240" 
+                  value={rank} 
+                  onChange={e => setRank(e.target.value)} 
+                  required 
+                />
+              </div>
             </div>
             <button type="submit" disabled={loading} className={styles.predictBtn}>
               {loading ? (
