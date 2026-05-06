@@ -80,9 +80,6 @@ function getChanceColor(chance: AdmissionChance) {
 
 export default function PredictorPage() {
   const [exam, setExam] = useState('');
-  const [category, setCategory] = useState('general');
-  const [state, setState] = useState('Delhi');
-  const [gender, setGender] = useState('male');
   const [rank, setRank] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
@@ -243,41 +240,6 @@ export default function PredictorPage() {
                   onChange={e => setRank(e.target.value)} required
                 />
                 {rank && <span className={styles.rankHint}>Rank: {parseInt(rank).toLocaleString()}</span>}
-              </div>
-
-              {/* Category */}
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  <span className={styles.labelIcon}>👤</span> Category
-                </label>
-                <select value={category} onChange={e => setCategory(e.target.value)} className={styles.formSelect}>
-                  {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-
-              {/* Home State */}
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  <span className={styles.labelIcon}>🗺️</span> Home State
-                </label>
-                <select value={state} onChange={e => setState(e.target.value)} className={styles.formSelect}>
-                  {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </div>
-
-              {/* Gender */}
-              <div className={styles.formGroup}>
-                <label className={styles.formLabel}>
-                  <span className={styles.labelIcon}>⚧</span> Gender
-                </label>
-                <div className={styles.radioGroup}>
-                  {['male', 'female', 'other'].map(g => (
-                    <label key={g} className={`${styles.radioLabel} ${gender === g ? styles.radioLabelActive : ''}`}>
-                      <input type="radio" name="gender" value={g} checked={gender === g} onChange={() => setGender(g)} className={styles.radioInput} />
-                      {g.charAt(0).toUpperCase() + g.slice(1)}
-                    </label>
-                  ))}
-                </div>
               </div>
             </div>
 
