@@ -30,6 +30,29 @@ async function main() {
         const cleanName = name.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase().replace(/-+/g, "-");
         const slug = `${cleanName}-${index}`;
 
+        // Generate realistic mock data for exams and degrees based on name heuristics
+        let exams: string[] = [];
+        let degrees: string[] = [];
+        const nameLower = name.toLowerCase();
+        
+        if (nameLower.includes('technolog') || nameLower.includes('engineering') || nameLower.includes('institute of tech')) {
+          exams = ['JEE Main', 'GATE', 'BITSAT', 'COMEDK', 'WBJEE'];
+          degrees = ['B.Tech', 'M.Tech', 'B.E.'];
+        } else if (nameLower.includes('medical') || nameLower.includes('health') || nameLower.includes('hospital')) {
+          exams = ['NEET', 'NEET PG', 'AIIMS'];
+          degrees = ['MBBS', 'BDS', 'B.Sc Nursing'];
+        } else if (nameLower.includes('management') || nameLower.includes('business')) {
+          exams = ['CAT', 'MAT', 'XAT', 'CMAT'];
+          degrees = ['MBA', 'BBA', 'PGDM'];
+        } else if (nameLower.includes('law') || nameLower.includes('legal')) {
+          exams = ['CLAT', 'LSAT India', 'AILET'];
+          degrees = ['LLB', 'BA LLB', 'LLM'];
+        } else {
+          // General colleges
+          exams = ['CUET', 'State CET'];
+          degrees = ['B.A', 'B.Sc', 'B.Com', 'M.A'];
+        }
+
         colleges.push({
           name: name,
           slug: slug,
@@ -43,6 +66,8 @@ async function main() {
           rating: Number((Math.random() * (5 - 3) + 3).toFixed(1)),
           description: `${name} is a renowned ${ownership} institution affiliated with ${affiliation}. Located in ${city}, ${state}, it offers excellent academic programs.`,
           imageUrl: "https://images.unsplash.com/photo-1562774053-701939374585?w=800",
+          exams: exams,
+          degrees: degrees
         });
       })
       .on("end", async () => {

@@ -47,10 +47,27 @@ interface PredictedCollege extends College {
   closingRank: number;
 }
 
-function getAdmissionChance(rank: number, collegeRating: number): AdmissionChance {
-  if (rank <= 1000 && collegeRating >= 4.5) return 'Very Good';
-  if (rank <= 5000 && collegeRating >= 4.0) return 'Good';
-  if (rank <= 20000 && collegeRating >= 3.5) return 'Moderate';
+function getAdmissionChance(rank: number, college: College, examType: string): AdmissionChance {
+  // Base competitive threshold logic mapping to Careers360
+  let competitivenessScore = (college.rating || 3.0) * 10; // 30 to 50
+  if (college.nirfRank && college.nirfRank <= 100) {
+    competitivenessScore += 15; // highly competitive
+  }
+
+  // Adjust rank bounds based on exam difficulty
+  let toughRank = 50000;
+  let modRank = 20000;
+  let goodRank = 5000;
+
+  if (['jee-adv', 'cat'].includes(examType)) {
+    toughRank = 10000; modRank = 5000; goodRank = 1000;
+  } else if (['neet', 'jee'].includes(examType)) {
+    toughRank = 80000; modRank = 30000; goodRank = 8000;
+  }
+
+  if (rank <= goodRank && competitivenessScore < 60) return 'Very Good';
+  if (rank <= modRank && competitivenessScore < 65) return 'Good';
+  if (rank <= toughRank) return 'Moderate';
   return 'Tough';
 }
 
@@ -116,8 +133,8 @@ export default function PredictorPage() {
       const rawColleges: College[] = res.data || [];
 
       // Enrich results with admission chance predictions
-      const enriched: PredictedCollege[] = rawColleges.map((college, idx) => {
-        const chance = getAdmissionChance(rankNum, college.rating || 3.5);
+      const enriched: PredictedCollege[] = rawColleges.map((college) => {
+        const chance = getAdmissionChance(rankNum, college, exam);
         const openingRank = Math.max(1, rankNum - Math.floor(Math.random() * rankNum * 0.5));
         const closingRank = rankNum + Math.floor(Math.random() * rankNum * 0.8);
         return {

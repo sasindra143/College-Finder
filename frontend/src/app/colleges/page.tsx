@@ -54,6 +54,7 @@ function CollegesList() {
     location: string[];
     ownership: string[];
     course: string[];
+    exam: string[];
     minRating: string;
     maxFees: string;
     sortBy: string;
@@ -63,6 +64,7 @@ function CollegesList() {
     location: searchParams?.get('location') ? searchParams.get('location')!.split(',') : [],
     ownership: searchParams?.get('ownership') ? searchParams.get('ownership')!.split(',') : [],
     course: [],
+    exam: searchParams?.get('exam') ? searchParams.get('exam')!.split(',') : [],
     minRating: '',
     maxFees: '',
     sortBy: 'rating',
@@ -95,6 +97,7 @@ function CollegesList() {
         location: activeFilters.location.join(','),
         ownership: activeFilters.ownership.join(','),
         course: activeFilters.course.join(','),
+        exam: activeFilters.exam.join(','),
         minRating: activeFilters.minRating ? Number(activeFilters.minRating) : undefined,
         maxFees: activeFilters.maxFees ? Number(activeFilters.maxFees) : undefined,
         sortBy: activeFilters.sortBy,
@@ -122,7 +125,7 @@ function CollegesList() {
     setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  const toggleArrayFilter = (key: 'location' | 'ownership' | 'course', value: string) => {
+  const toggleArrayFilter = (key: 'location' | 'ownership' | 'course' | 'exam', value: string) => {
     setFilters(prev => {
       const current = prev[key] as string[];
       const updated = current.includes(value) 
@@ -133,7 +136,7 @@ function CollegesList() {
   };
 
   const clearAll = () => {
-    const empty = { location: [], ownership: [], course: [], minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc' as const, page: 1 };
+    const empty = { location: [], ownership: [], course: [], exam: [], minRating: '', maxFees: '', sortBy: 'rating', sortOrder: 'desc' as const, page: 1 };
     setSearch('');
     setFilters(empty);
     setActiveSearch('');
@@ -145,8 +148,8 @@ function CollegesList() {
     const newFilters = { ...activeFilters };
     let newSearch = activeSearch;
     if (chip.type === 'search') newSearch = '';
-    else if (['location', 'ownership', 'course'].includes(chip.type)) {
-      newFilters[chip.type as 'location'|'ownership'|'course'] = newFilters[chip.type as 'location'|'ownership'|'course'].filter(v => v !== chip.value);
+    else if (['location', 'ownership', 'course', 'exam'].includes(chip.type)) {
+      newFilters[chip.type as 'location'|'ownership'|'course'|'exam'] = newFilters[chip.type as 'location'|'ownership'|'course'|'exam'].filter(v => v !== chip.value);
     }
     else newFilters[chip.type as 'minRating'|'maxFees'] = '';
 
@@ -162,6 +165,7 @@ function CollegesList() {
     ...(activeFilters.location.map(loc => ({ label: loc, type: 'location', value: loc }))),
     ...(activeFilters.ownership.map(own => ({ label: own, type: 'ownership', value: own }))),
     ...(activeFilters.course.map(c => ({ label: POPULAR_COURSES.find(pc => pc.value === c)?.label || c, type: 'course', value: c }))),
+    ...(activeFilters.exam.map(e => ({ label: e, type: 'exam', value: e }))),
     ...(activeFilters.minRating ? [{ label: `${activeFilters.minRating}★+`, type: 'minRating', value: activeFilters.minRating }] : []),
     ...(activeFilters.maxFees && Number(activeFilters.maxFees) < 3000000 ? [{ label: `Up to ₹${(Number(activeFilters.maxFees) / 100000).toFixed(0)}L`, type: 'maxFees', value: activeFilters.maxFees }] : []),
   ];
@@ -171,6 +175,7 @@ function CollegesList() {
     JSON.stringify(filters.location) !== JSON.stringify(activeFilters.location) ||
     JSON.stringify(filters.ownership) !== JSON.stringify(activeFilters.ownership) ||
     JSON.stringify(filters.course) !== JSON.stringify(activeFilters.course) ||
+    JSON.stringify(filters.exam) !== JSON.stringify(activeFilters.exam) ||
     filters.minRating !== activeFilters.minRating ||
     filters.maxFees !== activeFilters.maxFees ||
     filters.sortBy !== activeFilters.sortBy ||
@@ -208,6 +213,32 @@ function CollegesList() {
               className={`${styles.courseChip} ${filters.course.includes(c.value) ? styles.courseChipActive : ''}`}
             >
               {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Exam Filter */}
+      <div className={styles.filterGroup}>
+        <label className={styles.filterLabel}>Entrance Exam</label>
+        <select
+          value=""
+          onChange={e => {
+            if (e.target.value && !filters.exam.includes(e.target.value)) {
+              toggleArrayFilter('exam', e.target.value);
+            }
+          }}
+          className={styles.filterSelect}
+        >
+          <option value="">Select Exam...</option>
+          {['JEE Main', 'JEE Advanced', 'NEET', 'CAT', 'CLAT', 'GATE', 'BITSAT', 'COMEDK', 'WBJEE', 'CUET']
+            .filter(ex => !filters.exam.includes(ex))
+            .map(ex => <option key={ex} value={ex}>{ex}</option>)}
+        </select>
+        <div className={styles.courseChips} style={{marginTop: '8px'}}>
+          {filters.exam.map(ex => (
+            <button suppressHydrationWarning key={ex} onClick={() => toggleArrayFilter('exam', ex)} className={`${styles.courseChip} ${styles.courseChipActive}`}>
+              {ex} ×
             </button>
           ))}
         </div>
