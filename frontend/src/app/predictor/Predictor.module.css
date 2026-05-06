@@ -79,9 +79,6 @@
 .loadingSpinner { width: 50px; height: 50px; border: 4px solid #fde68a; border-top: 4px solid #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.5rem; }
 .loadingText { font-size: 1rem; color: #374151; font-weight: 600; margin-bottom: 1rem; }
 .loadingBar { height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
-.loadingBarFill { height: 100%; width: 60%; background: linear-gradient(90deg, #f97316, #fbbf24); border-radius: 10px; animation: loadingFill 2s ease-in-out infinite; }
-@keyframes loadingFill { 0% { width: 10%; } 50% { width: 80%; } 100% { width: 10%; } }
-
 .resultsHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
 .resultsTitle { font-size: 1.4rem; font-weight: 800; color: #111827; }
 .resultsSubtitle { font-size: 0.9rem; color: #6b7280; margin-top: 0.25rem; }
@@ -101,24 +98,56 @@
 .resultTab:hover { background: #e5e7eb; }
 .resultTabActive { background: #f97316; color: white; }
 
-/* Results Table */
-.resultsTableWrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #e5e7eb; }
-.resultsTable { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-.resultsTable thead { background: #f9fafb; }
-.resultsTable th { padding: 0.85rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
-.tableRow { border-bottom: 1px solid #f3f4f6; transition: background 0.15s; }
-.tableRow:hover { background: #fff7ed; }
-.tableRow:last-child { border-bottom: none; }
-.resultsTable td { padding: 0.85rem 1rem; vertical-align: middle; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
 
-.tableRank { font-weight: 800; color: #f97316; font-size: 1rem; }
-.tableCollegeName { font-weight: 700; color: #111827; }
-.tableCollegeName a { color: #111827; text-decoration: none; display: block; }
-.tableCollegeName a:hover { color: #f97316; }
-.nirfBadge { display: inline-block; background: #fef3c7; color: #d97706; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; margin-top: 0.2rem; }
-.tableLocation { color: #6b7280; font-size: 0.82rem; white-space: nowrap; }
-.tableRating { font-weight: 700; color: #111827; white-space: nowrap; }
-.tableCutoff { font-size: 0.82rem; color: #374151; font-weight: 600; white-space: nowrap; }
+.cardWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.chanceFloatingTag {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.cardFooterInfo {
+  background: white;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-top: none;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.cutoffInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.cutoffInfo span {
+  color: #6b7280;
+}
+
+.cutoffInfo strong {
+  color: #111827;
+  font-weight: 700;
+}
 
 .typeBadge { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
 .typeGovt { background: #dcfce7; color: #15803d; }

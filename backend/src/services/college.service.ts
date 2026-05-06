@@ -79,31 +79,69 @@ export const getColleges = async (filters: CollegeFilters) => {
   
   if (exam) {
     const examLower = exam.toLowerCase();
-    const examVariations = [exam];
+    // Instead of strict hasSome (most colleges have empty exams[]), 
+    // use exam to filter by relevant ownership/stream as a soft match
+    const examOrs: Prisma.CollegeWhereInput[] = [];
     
-    // Add common variations to increase match probability
-    if (examLower.includes('jee')) examVariations.push('JEE Main', 'JEE Advanced', 'JEE Main 2025', 'JEE Main 2024');
-    if (examLower.includes('neet')) examVariations.push('NEET UG', 'NEET 2025', 'NEET 2024');
-    if (examLower.includes('cat')) examVariations.push('CAT 2025', 'CAT 2024', 'IIM');
-    if (examLower.includes('clat')) examVariations.push('CLAT 2025', 'CLAT 2024');
-
-    (where.AND as Prisma.CollegeWhereInput[]).push({
-      exams: { hasSome: examVariations }
-    });
+    if (examLower.includes('jee') || examLower.includes('bitsat') || examLower.includes('gate') ||
+        examLower.includes('mht') || examLower.includes('wbjee')) {
+      // Engineering exams — match engineering colleges
+      examOrs.push(
+        { name: { contains: 'Engineering', mode: 'insensitive' } },
+        { name: { contains: 'Technology', mode: 'insensitive' } },
+        { name: { contains: 'Institute of Technology', mode: 'insensitive' } },
+        { degrees: { hasSome: ['B.Tech', 'B.E', 'Engineering', 'Technology'] } },
+        { exams: { hasSome: ['JEE Main', 'JEE', 'JEE Main 2025', 'JEE Advanced', 'BITSAT', 'GATE', 'MHT-CET', 'WBJEE'] } },
+      );
+    } else if (examLower.includes('neet') || examLower.includes('aiapget')) {
+      // Medical exams
+      examOrs.push(
+        { name: { contains: 'Medical', mode: 'insensitive' } },
+        { name: { contains: 'AIIMS', mode: 'insensitive' } },
+        { name: { contains: 'Health', mode: 'insensitive' } },
+        { degrees: { hasSome: ['MBBS', 'BDS', 'Medical', 'Pharmacy', 'Nursing'] } },
+        { exams: { hasSome: ['NEET', 'NEET UG', 'NEET 2025'] } },
+      );
+    } else if (examLower.includes('cat') || examLower.includes('xat') || examLower.includes('snap')) {
+      // Management exams
+      examOrs.push(
+        { name: { contains: 'Management', mode: 'insensitive' } },
+        { name: { contains: 'Business', mode: 'insensitive' } },
+        { name: { contains: 'IIM', mode: 'insensitive' } },
+        { degrees: { hasSome: ['MBA', 'PGDM', 'BBA', 'Management'] } },
+        { exams: { hasSome: ['CAT', 'XAT', 'SNAP', 'MAT'] } },
+      );
+    } else if (examLower.includes('clat')) {
+      // Law exams
+      examOrs.push(
+        { name: { contains: 'Law', mode: 'insensitive' } },
+        { name: { contains: 'Legal', mode: 'insensitive' } },
+        { degrees: { hasSome: ['LLB', 'LLM', 'Law'] } },
+        { exams: { hasSome: ['CLAT', 'AILET'] } },
+      );
+    }
+    
+    if (examOrs.length > 0) {
+      (where.AND as Prisma.CollegeWhereInput[]).push({ OR: examOrs });
+    }
+    // If no match (unknown exam), skip exam filter — return all colleges by rank
   }
 
   // Improved Rank-based filtering heuristic
   if (rank !== undefined && rank > 0) {
     if (rank <= 500) {
-      where.rating = { gte: 4.6 };
+      where.rating = { gte: 4.5 };
     } else if (rank <= 2000) {
-      where.rating = { gte: 4.2 }; // User rank 1998 falls here
+      where.rating = { gte: 4.0 };
     } else if (rank <= 10000) {
-      where.rating = { gte: 3.8 };
+      where.rating = { gte: 3.5 };
     } else if (rank <= 50000) {
-      where.rating = { gte: 3.2 };
+      where.rating = { gte: 3.0 };
+    } else if (rank <= 200000) {
+      where.rating = { gte: 2.5 };
     } else {
-      where.rating = { gte: 0 }; // Show all for very high ranks
+      // Very high rank — show all colleges (no rating filter)
+      delete where.rating;
     }
   }
 

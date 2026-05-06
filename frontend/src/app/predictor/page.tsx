@@ -307,7 +307,7 @@ export default function PredictorPage() {
 
                 {results.length > 0 && (
                   <>
-                    {/* Filter Tabs */}
+                    {/* Results Grid */}
                     <div className={styles.resultTabs}>
                       {[
                         { key: 'all', label: `All (${results.length})` },
@@ -323,49 +323,21 @@ export default function PredictorPage() {
                       ))}
                     </div>
 
-                    {/* Results Table */}
-                    <div className={styles.resultsTableWrapper}>
-                      <table className={styles.resultsTable}>
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>College Name</th>
-                            <th>Location</th>
-                            <th>Type</th>
-                            <th>Rating</th>
-                            <th>Predicted Cutoff</th>
-                            <th>Chance</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {filteredResults.map((college, idx) => (
-                            <tr key={college.id} className={styles.tableRow}>
-                              <td className={styles.tableRank}>{idx + 1}</td>
-                              <td className={styles.tableCollegeName}>
-                                <Link href={`/colleges/${college.slug}`}>{college.name}</Link>
-                                {college.nirfRank && <span className={styles.nirfBadge}>NIRF #{college.nirfRank}</span>}
-                              </td>
-                              <td className={styles.tableLocation}>{college.city}, {college.state}</td>
-                              <td>
-                                <span className={`${styles.typeBadge} ${college.ownership?.toLowerCase().includes('govt') || college.ownership?.toLowerCase().includes('gov') ? styles.typeGovt : styles.typePrivate}`}>
-                                  {college.ownership || 'Private'}
-                                </span>
-                              </td>
-                              <td className={styles.tableRating}>{(college.rating || 3.5).toFixed(1)} ⭐</td>
-                              <td className={styles.tableCutoff}>{college.predictedCutoff}</td>
-                              <td>
-                                <span className={`${styles.chanceTag} ${getChanceColor(college.admissionChance)}`}>
-                                  {college.admissionChance}
-                                </span>
-                              </td>
-                              <td>
-                                <Link href={`/colleges/${college.slug}`} className={styles.tableAction}>Details</Link>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                    <div className={styles.grid}>
+                      {filteredResults.map((college, idx) => (
+                        <div key={college.id} className={styles.cardWrapper}>
+                          <div className={`${styles.chanceFloatingTag} ${getChanceColor(college.admissionChance)}`}>
+                            {college.admissionChance} Chance
+                          </div>
+                          <CollegeCard college={college} />
+                          <div className={styles.cardFooterInfo}>
+                            <div className={styles.cutoffInfo}>
+                              <span>Predicted Cutoff:</span>
+                              <strong>{college.predictedCutoff}</strong>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </>
                 )}
