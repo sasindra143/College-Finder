@@ -77,25 +77,34 @@ export const getColleges = async (filters: CollegeFilters) => {
   }
   if (minRating !== undefined) where.rating = { gte: minRating };
   
-  // Rank-based filtering heuristic (since we lack actual cutoff data)
-  if (rank !== undefined && rank > 0) {
-    if (rank <= 1000) {
-      where.rating = { gte: 4.5 };
-    } else if (rank <= 5000) {
-      where.rating = { gte: 4.0, lte: 4.7 };
-    } else if (rank <= 20000) {
-      where.rating = { gte: 3.5, lte: 4.2 };
-    } else if (rank <= 50000) {
-      where.rating = { gte: 3.0, lte: 3.8 };
-    } else {
-      where.rating = { lte: 3.5 };
-    }
+  if (exam) {
+    const examLower = exam.toLowerCase();
+    const examVariations = [exam];
+    
+    // Add common variations to increase match probability
+    if (examLower.includes('jee')) examVariations.push('JEE Main', 'JEE Advanced', 'JEE Main 2025', 'JEE Main 2024');
+    if (examLower.includes('neet')) examVariations.push('NEET UG', 'NEET 2025', 'NEET 2024');
+    if (examLower.includes('cat')) examVariations.push('CAT 2025', 'CAT 2024', 'IIM');
+    if (examLower.includes('clat')) examVariations.push('CLAT 2025', 'CLAT 2024');
+
+    (where.AND as Prisma.CollegeWhereInput[]).push({
+      exams: { hasSome: examVariations }
+    });
   }
 
-  if (exam) {
-    (where.AND as Prisma.CollegeWhereInput[]).push({
-      exams: { hasSome: [exam] }
-    });
+  // Improved Rank-based filtering heuristic
+  if (rank !== undefined && rank > 0) {
+    if (rank <= 500) {
+      where.rating = { gte: 4.6 };
+    } else if (rank <= 2000) {
+      where.rating = { gte: 4.2 }; // User rank 1998 falls here
+    } else if (rank <= 10000) {
+      where.rating = { gte: 3.8 };
+    } else if (rank <= 50000) {
+      where.rating = { gte: 3.2 };
+    } else {
+      where.rating = { gte: 0 }; // Show all for very high ranks
+    }
   }
 
   if (course) {
