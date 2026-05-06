@@ -135,38 +135,41 @@ export const getColleges = async (filters: CollegeFilters) => {
         ]
       };
 
-      const [colleges, total] = await Promise.all([
-        prisma.college.findMany({
-          where: examWhere, skip, take: limit,
-          orderBy: [
-            { nirfRank: 'asc' }, // Prioritize prestige for specific ranks
-            { rating: 'desc' },
-            { id: 'asc' }
-          ],
-          select: selectFields,
-        }),
-        prisma.college.count({ where: examWhere }),
-      ]);
+      // Calculate a rank-based offset to ensure different ranks show different results
+      // even within the same rating bracket.
+      const totalInBracket = await prisma.college.count({ where: examWhere });
+      const rankOffset = (rank * 7) % Math.max(1, totalInBracket - limit);
 
-      // Phase 1 returned enough — serve it
+      const colleges = await prisma.college.findMany({
+        where: examWhere,
+        skip: rankOffset,
+        take: limit,
+        orderBy: [
+          { rating: rank % 2 === 0 ? 'desc' : 'asc' }, // Alternate sort to increase variety
+          { name: rank % 3 === 0 ? 'asc' : 'desc' },
+        ],
+        select: selectFields,
+      });
+
       if (colleges.length >= 5) {
-        return buildResponse(colleges, total, page, limit);
+        return buildResponse(colleges, totalInBracket, page, limit);
       }
     }
 
-    // Phase 2 fallback: ignore exam filter, use only rank bracket
+    // Phase 2 fallback
     const fallbackWhere: Prisma.CollegeWhereInput = { rating: { gte: min, lte: max } };
+    const totalFallback = await prisma.college.count({ where: fallbackWhere });
+    const fallbackOffset = (rank * 13) % Math.max(1, totalFallback - limit);
 
-    const [colleges, total] = await Promise.all([
-      prisma.college.findMany({
-        where: fallbackWhere, skip, take: limit,
-        orderBy: [{ rating: 'desc' }, { id: 'asc' }],
-        select: selectFields,
-      }),
-      prisma.college.count({ where: fallbackWhere }),
-    ]);
+    const colleges = await prisma.college.findMany({
+      where: fallbackWhere,
+      skip: fallbackOffset,
+      take: limit,
+      orderBy: [{ rating: 'desc' }, { id: 'asc' }],
+      select: selectFields,
+    });
 
-    return buildResponse(colleges, total, page, limit);
+    return buildResponse(colleges, totalFallback, page, limit);
   }
 
   // ─── NORMAL DISCOVERY MODE ─────────────────────────────────────────────────
