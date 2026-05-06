@@ -176,6 +176,17 @@ export default function CollegeCard({ college, isSaved = false, onSaveToggle }: 
             </div>
           )}
 
+          {/* Exams Section */}
+          <div className={styles.examsRow}>
+            <span className={styles.examsLabel}>Accepts:</span>
+            <span className={styles.examsList}>
+              {(college.exams && college.exams.length > 0) 
+                ? college.exams.slice(0, 3).join(', ') 
+                : 'Merit-Based'}
+              {(college.exams?.length || 0) > 3 && '...'}
+            </span>
+          </div>
+
           <div className={styles.statsRow}>
             <div className={styles.statItem}>
               <div className={styles.statValue}>{formatFees(college.fees)}</div>
