@@ -77,7 +77,6 @@ export function Navbar() {
     { name: 'Medical', path: '/medicine' },
     { name: 'Management', path: '/management' },
     { name: 'Law', path: '/law' },
-    { name: 'Exams', path: '/exams/jee-main-2025' },
     { name: 'All Colleges', path: '/colleges' },
     { name: 'Predictor', path: '/predictor' },
     { name: 'Compare', path: '/compare' },
