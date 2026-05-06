@@ -32,7 +32,7 @@ export const getExams = async (req: Request, res: Response, next: NextFunction) 
  */
 export const getExamBySlug = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { slug } = req.params;
+    const slug = String(req.params.slug);
     let exam = await prisma.exam.findUnique({
       where: { slug },
       include: { dates: { orderBy: { createdAt: 'asc' } } }
