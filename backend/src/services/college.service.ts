@@ -72,14 +72,15 @@ function getExamStreamKeywords(examLower: string): {
   return { nameKeywords: [], degreeKeywords: [], examKeywords: [] };
 }
 
-// Rank → minimum rating threshold (looser than before)
-function rankToMinRating(rank: number): number {
-  if (rank <= 1000) return 4.3;
-  if (rank <= 5000) return 4.0;
-  if (rank <= 15000) return 3.7;
-  if (rank <= 50000) return 3.3;
-  if (rank <= 150000) return 3.0;
-  return 0; // very high rank — show everything
+// Rank → Rating Bracket [min, max]
+function rankToRatingRange(rank: number): { min: number; max: number } {
+  if (rank <= 500) return { min: 4.6, max: 5.0 };
+  if (rank <= 2000) return { min: 4.3, max: 4.7 };
+  if (rank <= 10000) return { min: 3.9, max: 4.4 };
+  if (rank <= 30000) return { min: 3.5, max: 4.0 };
+  if (rank <= 60000) return { min: 3.1, max: 3.6 };
+  if (rank <= 120000) return { min: 2.7, max: 3.2 };
+  return { min: 0.0, max: 2.8 };
 }
 
 export const getColleges = async (filters: CollegeFilters) => {
@@ -117,7 +118,7 @@ export const getColleges = async (filters: CollegeFilters) => {
   if (exam && rank !== undefined && rank > 0) {
     const examLower = exam.toLowerCase();
     const { nameKeywords, degreeKeywords, examKeywords } = getExamStreamKeywords(examLower);
-    const minRating = rankToMinRating(rank);
+    const { min, max } = rankToRatingRange(rank);
 
     // Phase 1: strict exam-stream filtered query
     if (nameKeywords.length > 0) {
@@ -130,14 +131,18 @@ export const getColleges = async (filters: CollegeFilters) => {
               ...examKeywords.map(k => ({ exams: { hasSome: [k] } })),
             ]
           },
-          ...(minRating > 0 ? [{ rating: { gte: minRating } }] : []),
+          { rating: { gte: min, lte: max } },
         ]
       };
 
       const [colleges, total] = await Promise.all([
         prisma.college.findMany({
           where: examWhere, skip, take: limit,
-          orderBy: [{ [orderField]: sortOrder }, { id: 'asc' }],
+          orderBy: [
+            { nirfRank: 'asc' }, // Prioritize prestige for specific ranks
+            { rating: 'desc' },
+            { id: 'asc' }
+          ],
           select: selectFields,
         }),
         prisma.college.count({ where: examWhere }),
@@ -149,11 +154,8 @@ export const getColleges = async (filters: CollegeFilters) => {
       }
     }
 
-    // Phase 2 fallback: ignore exam filter, use only rank (rating) filter
-    // This guarantees the student always sees colleges
-    const fallbackWhere: Prisma.CollegeWhereInput = minRating > 0
-      ? { rating: { gte: minRating } }
-      : {};
+    // Phase 2 fallback: ignore exam filter, use only rank bracket
+    const fallbackWhere: Prisma.CollegeWhereInput = { rating: { gte: min, lte: max } };
 
     const [colleges, total] = await Promise.all([
       prisma.college.findMany({
