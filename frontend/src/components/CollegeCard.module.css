@@ -1,13 +1,15 @@
 .cardLink { text-decoration: none; color: inherit; display: block; height: 100%; }
-.cardContainer { background: white; border-radius: 1.5rem; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; height: 100%; display: flex; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+.cardContainer { background: white; border-radius: 1.5rem; border: 1px solid #e2e8f0; overflow: hidden; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; height: 100%; display: flex; flex-direction: column; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); content-visibility: auto; contain-intrinsic-size: 0 420px; }
 .cardContainer:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.15); border-color: rgba(249, 115, 22, 0.4); }
+
 
 .saveBtn { position: absolute; top: 1rem; right: 1rem; z-index: 20; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: none; width: 2.75rem; height: 2.75rem; border-radius: 99px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .saveBtn:hover { transform: scale(1.1); background: white; box-shadow: 0 8px 15px rgba(0,0,0,0.15); }
 .iconUnsaved { width: 1.25rem; height: 1.25rem; color: #64748b; }
 .iconSaved { width: 1.25rem; height: 1.25rem; color: #ef4444; }
 
-.imageSection { position: relative; height: 200px; overflow: hidden; background-color: #f8fafc; }
+.imageSection { position: relative; height: 200px; overflow: hidden; background: linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 100%); }
+
 .collegeImage { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
 .cardContainer:hover .collegeImage { transform: scale(1.08); }
 .imageOverlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%); }

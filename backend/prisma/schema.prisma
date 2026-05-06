@@ -54,6 +54,18 @@ model College {
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
+  // ── Indexes for fast filtering on 37K rows ───────────────────────────────
+  @@index([state])
+  @@index([city])
+  @@index([ownership])
+  @@index([rating])
+  @@index([fees])
+  @@index([placementPercent])
+  @@index([nirfRank])
+  @@index([state, ownership])           // common combined filter
+  @@index([state, rating])              // "top colleges in Maharashtra"
+  @@index([name])                       // name search performance
+
   @@map("colleges")
 }
 

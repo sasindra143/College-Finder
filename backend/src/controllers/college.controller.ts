@@ -60,6 +60,8 @@ export const listColleges = async (
       sortOrder: sortOrder === "asc" ? "asc" : "desc",
     });
 
+    // ─ Cache list results: 60s fresh, 300s stale-while-revalidate ─────────
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
     res.json({
       success: true,
       data: result.colleges,
@@ -89,24 +91,19 @@ export const getCollege = async (
       return;
     }
 
-    let college = await collegeService.getCollegeById(id);
+    // ─ Single-pass: try slug first (URLs always use slug), fall back to ID ─
+    const college =
+      (await collegeService.getCollegeBySlug(id)) ||
+      (await collegeService.getCollegeById(id));
 
     if (!college) {
-      college = await collegeService.getCollegeBySlug(id);
-    }
-
-    if (!college) {
-      res.status(404).json({
-        success: false,
-        message: "College not found",
-      });
+      res.status(404).json({ success: false, message: 'College not found' });
       return;
     }
 
-    res.json({
-      success: true,
-      data: college,
-    });
+    // ─ Cache individual college for 5 minutes ───────────────────────────
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    res.json({ success: true, data: college });
   } catch (err) {
     next(err);
   }

@@ -10,44 +10,64 @@ import styles from './CollegeCard.module.css';
 
 interface Props { college: College; isSaved?: boolean; onSaveToggle?: () => void; }
 
+// ── Optimized: smaller images = much faster card load ──────────────────────
 const CAMPUS_IMAGES = [
-  'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80',
-  'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80',
-  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80',
-  'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=800&q=80',
-  'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80',
-  'https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?w=800&q=80',
-  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&q=80',
-  'https://images.unsplash.com/photo-1588072432836-e10032774350?w=800&q=80',
-  'https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&q=80',
-  'https://images.unsplash.com/photo-1525921429624-479b6a29d84c?w=800&q=80',
-  'https://images.unsplash.com/photo-1562774053-701939374585?w=800&q=80',
-  'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',
-  'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?w=800&q=80',
-  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&q=80',
-  'https://images.unsplash.com/photo-1544148103-0773bf10d330?w=800&q=80',
-  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&q=80',
-  'https://images.unsplash.com/photo-1523580494863-6f30312245d4?w=800&q=80',
-  'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=80',
-  'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&q=80',
-  'https://images.unsplash.com/photo-1576495199011-eb94736d05d6?w=800&q=80',
-  'https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=800&q=80',
-  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80',
+  'https://images.unsplash.com/photo-1562774053-701939374585?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519452635265-7b1fbfd1e4e0?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1525921429624-479b6a29d84c?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1544148103-0773bf10d330?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1523580494863-6f30312245d4?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1576495199011-eb94736d05d6?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=400&q=70&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&q=70&auto=format&fit=crop',
 ];
 
-// deterministic image based on college name so it's consistent
-function getCollegeImage(college: College): string {
-  if (college.imageUrl && !college.imageUrl.includes('562774053')) return college.imageUrl;
-  const hash = college.name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  return CAMPUS_IMAGES[hash % CAMPUS_IMAGES.length];
+// ── Module-level memoization cache — computed once per college name ──────────
+const _imageCache = new Map<string, string>();
+const _ratingCache = new Map<string, number>();
+
+function nameHash(name: string, seed = 0): number {
+  let h = seed;
+  for (let i = 0; i < name.length; i++) h += name.charCodeAt(i);
+  return h;
 }
 
-// Deterministic realistic rating (3.0 – 4.8)
+function getCollegeImage(college: College): string {
+  const key = college.id || college.name;
+  if (_imageCache.has(key)) return _imageCache.get(key)!;
+  const img =
+    college.imageUrl && !college.imageUrl.includes('562774053')
+      ? college.imageUrl
+      : CAMPUS_IMAGES[nameHash(college.name) % CAMPUS_IMAGES.length];
+  _imageCache.set(key, img);
+  return img;
+}
+
 function getRealisticRating(college: College): number {
-  if (college.rating && college.rating !== 5 && college.rating < 5) return college.rating;
-  const hash = college.name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 17);
-  const base = (hash % 19) / 10; // 0.0 – 1.8
-  return Math.round((3.0 + base) * 10) / 10; // 3.0 – 4.8
+  const key = college.id || college.name;
+  if (_ratingCache.has(key)) return _ratingCache.get(key)!;
+  let rating: number;
+  if (college.rating && college.rating !== 5 && college.rating < 5) {
+    rating = college.rating;
+  } else {
+    const base = (nameHash(college.name, 17) % 19) / 10;
+    rating = Math.round((3.0 + base) * 10) / 10;
+  }
+  _ratingCache.set(key, rating);
+  return rating;
 }
 
 const getOwnershipClass = (type?: string) => {
@@ -112,17 +132,20 @@ export default function CollegeCard({ college, isSaved = false, onSaveToggle }: 
 
         {/* Image */}
         <div className={styles.imageSection}>
-          <img 
-            src={image} 
-            alt={college.name} 
+          <img
+            src={image}
+            alt={college.name}
             className={styles.collegeImage}
             loading="lazy"
-            onError={(e) => { 
+            decoding="async"
+            width={400}
+            height={200}
+            onError={(e) => {
               const target = e.target as HTMLImageElement;
               if (target.src !== CAMPUS_IMAGES[0]) {
                 target.src = CAMPUS_IMAGES[0];
               }
-            }} 
+            }}
           />
           <div className={styles.imageOverlay} />
           <div className={styles.badgeContainer}>

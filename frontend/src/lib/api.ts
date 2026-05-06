@@ -16,10 +16,26 @@ if (!BASE_URL.endsWith("/api")) {
 
 const API_URL = BASE_URL;
 
-// Debug
-if (typeof window !== "undefined") {
-  console.log("🚀 API URL:", API_URL);
+// ================= CLIENT-SIDE GET CACHE (60s TTL) =================
+// Prevents duplicate network calls for the same filters/page within a session
+const _cache = new Map<string, { data: any; ts: number }>();
+const CACHE_TTL = 60_000; // 60 seconds
+
+function getCached(key: string) {
+  const hit = _cache.get(key);
+  if (hit && Date.now() - hit.ts < CACHE_TTL) return hit.data;
+  _cache.delete(key);
+  return null;
 }
+function setCached(key: string, data: any) {
+  // Keep cache lean — evict oldest entry when >200 keys
+  if (_cache.size > 200) {
+    const firstKey = _cache.keys().next().value;
+    if (firstKey !== undefined) _cache.delete(firstKey);
+  }
+  _cache.set(key, { data, ts: Date.now() });
+}
+
 
 // ================= TYPES =================
 import type { College, Exam } from "@/lib/types";
@@ -54,7 +70,17 @@ async function request<T>(
       ? localStorage.getItem("token")
       : null;
 
-  const res = await fetch(`${API_URL}${path}`, {
+  const method = (options.method || 'GET').toUpperCase();
+  const url = `${API_URL}${path}`;
+
+  // ─ Cache GET requests ────────────────────────────────────────
+  const cacheKey = method === 'GET' ? url : null;
+  if (cacheKey) {
+    const cached = getCached(cacheKey);
+    if (cached) return cached as T;
+  }
+
+  const res = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -63,7 +89,6 @@ async function request<T>(
   });
 
   let data: any = null;
-
   try {
     data = await res.json();
   } catch {
@@ -73,6 +98,9 @@ async function request<T>(
   if (!res.ok) {
     throw new Error(data?.message || "API Error");
   }
+
+  // ─ Store successful GET responses in cache ─────────────────────
+  if (cacheKey) setCached(cacheKey, data);
 
   return data;
 }
