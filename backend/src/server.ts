@@ -30,6 +30,7 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://127.0.0.1:3001",
   "https://college-discovery-application.netlify.app",
+  "https://college-discovery-platform-finder.netlify.app",
   process.env.FRONTEND_URL, // extra env override
 ].filter(Boolean);
 
