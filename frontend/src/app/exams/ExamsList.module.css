@@ -1,323 +1,203 @@
-.pageContainer {
-  min-height: 100vh;
-  background-color: #f8fafc;
-  font-family: 'Inter', sans-serif;
-}
+/* EXAMS PAGE — Careers360 Style */
+.pageContainer { background: #f7f8fa; min-height: 100vh; font-family: 'Inter', sans-serif; }
 
+/* Hero */
 .heroSection {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  padding: 5rem 1.5rem;
-  text-align: center;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 3rem 2rem;
   color: white;
 }
-
-.heroContent {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.title {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-}
-
-.subtitle {
-  font-size: 1.15rem;
-  color: #cbd5e1;
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
-}
+.heroContent { max-width: 1200px; margin: 0 auto; }
+.heroBreadcrumb { font-size: 0.85rem; opacity: 0.7; margin-bottom: 1rem; }
+.heroBreadcrumb a { color: #f97316; text-decoration: none; }
+.title { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.75rem; }
+.subtitle { font-size: 1.05rem; opacity: 0.85; margin-bottom: 1.5rem; }
 
 .searchBox {
   display: flex;
-  background: white;
-  padding: 0.5rem;
-  border-radius: 99px;
-  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
-}
-
-.searchInput {
-  flex: 1;
-  border: none;
-  padding: 1rem 1.5rem;
-  border-radius: 99px;
-  font-size: 1.1rem;
-  outline: none;
-}
-
-.searchBtn {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  color: white;
-  border: none;
-  padding: 0 2.5rem;
-  border-radius: 99px;
-  font-weight: 800;
-  font-size: 1.05rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.searchBtn:hover {
-  transform: scale(1.02);
-  box-shadow: 0 5px 15px rgba(249, 115, 22, 0.4);
-}
-
-.mainContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
-}
-
-.categoriesNav {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-  margin-bottom: 2rem;
-  scrollbar-width: none;
-}
-
-.categoriesNav::-webkit-scrollbar {
-  display: none;
-}
-
-.catBtn {
-  white-space: nowrap;
-  padding: 0.75rem 1.5rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 99px;
-  font-weight: 700;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.catBtn:hover {
-  border-color: #cbd5e1;
-  color: #0f172a;
-}
-
-.catBtnActive {
-  background: #0f172a;
-  color: white;
-  border-color: #0f172a;
-}
-
-.catBtnActive:hover {
-  color: white;
-}
-
-.contentLayout {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 2rem;
-}
-
-.leftCol {
-  flex: 1;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.sidebarCard {
+  align-items: center;
+  gap: 0.75rem;
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  padding: 0.75rem 1.25rem;
+  max-width: 600px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
+.searchInput { flex: 1; border: none; outline: none; font-size: 1rem; color: #111; }
+.searchClear { background: none; border: none; cursor: pointer; color: #999; font-size: 1.1rem; }
 
-.sidebarCard h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #1a1a1a;
-  border-bottom: 2px solid #fff5eb;
-  padding-bottom: 0.5rem;
-}
+.heroStats { display: flex; gap: 2rem; margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.9; flex-wrap: wrap; }
+.heroStats span { display: flex; align-items: center; gap: 0.4rem; }
 
-.resourceList {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.resourceList li {
+/* Filter Bar */
+.filterBar {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 2rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 0.9rem;
-  color: #444;
-  cursor: pointer;
-  transition: color 0.2s;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
-
-.resourceList li:hover {
-  color: #f97316;
-}
-
-.miniCollegeList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.miniCollege {
-  padding: 0.75rem;
-  background: #fdf7f2;
-  border-radius: 8px;
+.filterGroup { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.filterLabel { font-size: 0.8rem; font-weight: 700; color: #6b7280; text-transform: uppercase; white-space: nowrap; }
+.filterTabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.filterTab {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  border: 1.5px solid #e5e7eb;
+  background: white;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #c2410c;
+  cursor: pointer;
+  color: #374151;
+  transition: all 0.2s;
+}
+.filterTab:hover { border-color: #f97316; color: #f97316; }
+.filterTabActive { background: #f97316 !important; color: white !important; border-color: #f97316 !important; }
+.filterRight { display: flex; gap: 0.75rem; }
+.filterSelect {
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  border: 1.5px solid #e5e7eb;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  background: white;
+  cursor: pointer;
 }
 
-@media (max-width: 1024px) {
-  .contentLayout {
-    grid-template-columns: 1fr;
-  }
-  .sidebar {
-    display: none;
-  }
-}
+/* Main Layout */
+.mainContainer { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+.contentLayout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start; }
 
-.examsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+/* Results Header */
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
+.resultsCount { font-size: 1rem; color: #374151; }
+.resultsCount strong { color: #f97316; }
+.clearFilters { font-size: 0.85rem; color: #f97316; background: none; border: none; cursor: pointer; font-weight: 600; }
+.leftCol {}
 
+/* Exam Card */
+.examsList { display: flex; flex-direction: column; gap: 1rem; }
 .examCard {
   background: white;
-  border-radius: 1.25rem;
-  padding: 2rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-  transition: all 0.3s;
-}
-
-.examCard:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05);
-  border-color: #cbd5e1;
-}
-
-.examHeader {
+  border-radius: 16px;
+  padding: 1.5rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+.examCard:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); transform: translateY(-2px); border-color: #f97316; }
+.examCardLeft { flex: 1; }
+.examCardRight { width: 180px; display: flex; flex-direction: column; gap: 1rem; align-items: flex-end; }
 
+.examTopRow { display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; }
 .examCategory {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: #2563eb;
-  background: #eff6ff;
-  padding: 0.3rem 0.8rem;
-  border-radius: 99px;
-  text-transform: uppercase;
+  padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700;
+  background: #eff6ff; color: #1d4ed8;
 }
+.catEngineering { background: #eff6ff; color: #1d4ed8; }
+.catMedical { background: #f0fdf4; color: #15803d; }
+.catManagement { background: #fff7ed; color: #c2410c; }
+.catLaw { background: #fef2f2; color: #dc2626; }
+.catDesign { background: #faf5ff; color: #7e22ce; }
+.catScience { background: #f0fdfa; color: #0f766e; }
 
-.examStatus {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 0.3rem 0.8rem;
-  border-radius: 99px;
-}
+.examStatus { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+.statusActive { background: #dcfce7; color: #16a34a; }
+.statusUpcoming { background: #fef3c7; color: #d97706; }
+.statusClosed { background: #fee2e2; color: #dc2626; }
+.examLevel { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: #f3f4f6; color: #6b7280; }
 
-.statusGreen {
-  color: #059669;
-  background: #d1fae5;
-}
+.examName { font-size: 1.2rem; font-weight: 800; color: #111827; margin-bottom: 0.5rem; }
+.examName a { color: #111827; text-decoration: none; }
+.examName a:hover { color: #f97316; }
+.examDesc { font-size: 0.9rem; color: #6b7280; line-height: 1.6; margin-bottom: 1rem; }
 
-.examName {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #0f172a;
-  margin-bottom: 1.5rem;
-}
+.examMetaGrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+.metaItem { display: flex; align-items: flex-start; gap: 0.5rem; }
+.metaIcon { font-size: 1rem; margin-top: 1px; }
+.metaLabel { font-size: 0.7rem; color: #9ca3af; font-weight: 600; text-transform: uppercase; }
+.metaValue { font-size: 0.85rem; color: #111827; font-weight: 700; }
 
-.examDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
+.eligibilityRow { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.5rem 0; border-top: 1px solid #f3f4f6; }
+.eligibilityLabel { font-size: 0.75rem; font-weight: 700; color: #9ca3af; text-transform: uppercase; white-space: nowrap; }
+.eligibilityText { font-size: 0.82rem; color: #374151; line-height: 1.5; }
 
-.detailItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px dashed #e2e8f0;
-}
+.conductedBy { text-align: right; }
+.conductedLabel { font-size: 0.7rem; color: #9ca3af; font-weight: 600; text-transform: uppercase; }
+.conductedValue { font-size: 0.85rem; color: #374151; font-weight: 700; }
 
-.detailItem:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.detailLabel {
-  color: #64748b;
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.detailValue {
-  color: #0f172a;
-  font-weight: 800;
-  font-size: 0.95rem;
-}
-
-.examActions {
-  display: flex;
-  gap: 1rem;
-}
-
+.examActions { display: flex; flex-direction: column; gap: 0.5rem; }
 .viewBtn {
-  flex: 1;
-  text-align: center;
-  padding: 0.8rem;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  color: white;
-  text-decoration: none;
-  font-weight: 800;
-  border-radius: 0.75rem;
-  transition: all 0.2s;
+  padding: 0.6rem 1rem; background: #f97316; color: white; border-radius: 8px;
+  text-decoration: none; font-size: 0.85rem; font-weight: 700; text-align: center; transition: background 0.2s;
 }
-
-.viewBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+.viewBtn:hover { background: #ea580c; }
+.predictBtn {
+  padding: 0.6rem 1rem; background: white; color: #f97316; border-radius: 8px;
+  text-decoration: none; font-size: 0.85rem; font-weight: 700; text-align: center;
+  border: 2px solid #f97316; transition: all 0.2s;
 }
+.predictBtn:hover { background: #fff7ed; }
 
-.trackBtn {
-  flex: 1;
-  background: white;
-  border: 1px solid #e2e8f0;
-  color: #0f172a;
-  font-weight: 800;
-  border-radius: 0.75rem;
-  cursor: pointer;
-  transition: all 0.2s;
+.examQuickLinks { display: flex; flex-direction: column; gap: 0.3rem; align-items: flex-end; }
+.examQuickLinks span { font-size: 0.78rem; color: #2563eb; cursor: pointer; }
+.examQuickLinks span:hover { text-decoration: underline; }
+
+/* Empty State */
+.emptyState { text-align: center; padding: 3rem; background: white; border-radius: 16px; }
+.emptyIcon { font-size: 3rem; margin-bottom: 1rem; }
+.seedBtn { margin-top: 1rem; padding: 0.6rem 1.5rem; background: #f97316; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+/* Loader */
+.loaderContainer { display: flex; justify-content: center; padding: 3rem; }
+.spinner { width: 40px; height: 40px; border: 4px solid #fde68a; border-top: 4px solid #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Sidebar */
+.sidebar { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 70px; }
+.sidebarCard {
+  background: white; border-radius: 16px; padding: 1.25rem;
+  border: 1px solid #e5e7eb; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
+.sidebarCard h3 { font-size: 1rem; font-weight: 800; color: #111827; margin-bottom: 1rem; }
 
-.trackBtn:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+.quickLinkList { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.6rem; }
+.quickLinkList li a { font-size: 0.9rem; color: #374151; text-decoration: none; font-weight: 600; transition: color 0.2s; display: block; }
+.quickLinkList li a:hover { color: #f97316; }
+
+.deadlineList { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.deadlineList li { display: flex; justify-content: space-between; align-items: center; }
+.deadlineExam { font-size: 0.85rem; font-weight: 700; color: #111827; }
+.deadlineDate { font-size: 0.8rem; color: #f97316; font-weight: 600; background: #fff7ed; padding: 0.15rem 0.5rem; border-radius: 6px; }
+
+.topCollegeList { display: flex; flex-direction: column; gap: 0.6rem; }
+.topCollegeItem { display: flex; align-items: center; gap: 0.75rem; }
+.topCollegeRank { font-size: 0.8rem; font-weight: 800; color: #f97316; width: 24px; text-align: center; }
+.topCollegeName { font-size: 0.85rem; font-weight: 600; color: #374151; }
+
+@media (max-width: 1024px) {
+  .contentLayout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
 }
-
 @media (max-width: 768px) {
-  .title { font-size: 2.25rem; }
-  .examsGrid { grid-template-columns: 1fr; }
+  .examCard { flex-direction: column; }
+  .examCardRight { width: 100%; flex-direction: row; align-items: center; flex-wrap: wrap; }
+  .examMetaGrid { grid-template-columns: repeat(2, 1fr); }
+  .filterBar { flex-direction: column; align-items: flex-start; }
+  .title { font-size: 1.6rem; }
 }
