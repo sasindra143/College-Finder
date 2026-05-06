@@ -150,8 +150,16 @@ export const api = {
     request<ApiResponse<string[]>>(`/colleges/locations`),
 
   // ===== EXAMS =====
+  getExams: () =>
+    request<ApiResponse<Exam[]>>(`/exams`),
+
   getExam: (slug: string) =>
     request<ApiResponse<Exam>>(`/exams/${slug}`),
+
+  seedExams: () =>
+    request<ApiResponse<any>>(`/exams/seed`, {
+      method: "POST",
+    }),
 
   // ===== SAVED COLLEGES =====
   getSavedColleges: () =>

@@ -44,7 +44,13 @@ export default function ExamDetail() {
   if (!exam) {
     return (
       <div className={styles.pageContainer}>
-        <div className="text-center p-20 font-bold text-2xl">Exam not found</div>
+        <div className="text-center p-20">
+          <h2 className="font-bold text-2xl mb-4">Exam Not Found</h2>
+          <p className="text-gray-500 mb-6">The exam you are looking for does not exist or has been moved.</p>
+          <Link href="/exams" className="px-6 py-2 bg-orange-600 text-white rounded-lg font-bold">
+            Back to All Exams
+          </Link>
+        </div>
       </div>
     );
   }

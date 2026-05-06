@@ -55,7 +55,7 @@ router.post('/seed', async (req, res, next) => {
         }
       },
       {
-        name: 'NEET 2025',
+        name: 'NEET UG 2025',
         slug: 'neet-2025',
         category: 'Medical',
         description: 'National Eligibility cum Entrance Test is for admission to MBBS/BDS courses across India.',
@@ -65,6 +65,66 @@ router.post('/seed', async (req, res, next) => {
         dates: {
           create: [
             { event: 'Registration Start', date: 'February 2025' },
+            { event: 'Exam Date', date: 'May 2025' }
+          ]
+        }
+      },
+      {
+        name: 'CAT 2025',
+        slug: 'cat-2025',
+        category: 'Management',
+        description: 'Common Admission Test is a premier management entrance exam for admission to IIMs and other top B-schools.',
+        content: '<p>CAT is a computer-based test conducted by IIMs.</p>',
+        eligibility: 'Bachelor\'s Degree with at least 50% marks or equivalent CGPA.',
+        syllabus: 'VARC, DILR, and Quantitative Aptitude.',
+        dates: {
+          create: [
+            { event: 'Registration Start', date: 'August 2025' },
+            { event: 'Exam Date', date: 'November 2025' }
+          ]
+        }
+      },
+      {
+        name: 'CLAT 2025',
+        slug: 'clat-2025',
+        category: 'Law',
+        description: 'Common Law Admission Test is for admission to 22 National Law Universities (NLUs) in India.',
+        content: '<p>CLAT is a national level entrance exam for UG and PG law courses.</p>',
+        eligibility: '10+2 or equivalent with 45% marks (40% for SC/ST).',
+        syllabus: 'English, Current Affairs, Legal Reasoning, Logical Reasoning, and Quantitative Techniques.',
+        dates: {
+          create: [
+            { event: 'Registration Start', date: 'July 2024' },
+            { event: 'Exam Date', date: 'December 2024' }
+          ]
+        }
+      },
+      {
+        name: 'GATE 2025',
+        slug: 'gate-2025',
+        category: 'Engineering',
+        description: 'Graduate Aptitude Test in Engineering is for admission to Master\'s programs and recruitment in PSUs.',
+        content: '<p>GATE is conducted jointly by IISc and seven IITs.</p>',
+        eligibility: 'A candidate who is currently studying in the 3rd or higher years of any undergraduate degree program.',
+        syllabus: 'General Aptitude and Candidate\'s chosen subject.',
+        dates: {
+          create: [
+            { event: 'Registration Start', date: 'August 2024' },
+            { event: 'Exam Date', date: 'February 2025' }
+          ]
+        }
+      },
+      {
+        name: 'BITSAT 2025',
+        slug: 'bitsat-2025',
+        category: 'Engineering',
+        description: 'Birla Institute of Technology and Science Admission Test is for admission to BITS campuses.',
+        content: '<p>BITSAT is a computer-based online test for admission to Integrated First Degree programs of BITS Pilani, Goa, and Hyderabad.</p>',
+        eligibility: '12th pass with Physics, Chemistry, and Mathematics/Biology with minimum 75% marks.',
+        syllabus: 'Physics, Chemistry, English Proficiency, Logical Reasoning, and Mathematics/Biology.',
+        dates: {
+          create: [
+            { event: 'Registration Start', date: 'January 2025' },
             { event: 'Exam Date', date: 'May 2025' }
           ]
         }

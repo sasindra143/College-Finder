@@ -1,17 +1,35 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
+import type { Exam } from '@/lib/types';
+import { toast } from '@/components/ui/Toaster';
 import styles from './ExamsList.module.css';
 
-const EXAMS_DATA = [
-  { id: 'jee-main', name: 'JEE Main 2025', category: 'Engineering', date: 'April 4, 2025', participants: '12 Lakhs+', mode: 'Online (CBT)', status: 'Registration Open' },
-  { id: 'neet', name: 'NEET UG 2025', category: 'Medical', date: 'May 5, 2025', participants: '20 Lakhs+', mode: 'Offline', status: 'Upcoming' },
-  { id: 'cat', name: 'CAT 2025', category: 'Management', date: 'Nov 24, 2025', participants: '3 Lakhs+', mode: 'Online', status: 'Announced' },
-  { id: 'clat', name: 'CLAT 2025', category: 'Law', date: 'Dec 1, 2025', participants: '60,000+', mode: 'Offline', status: 'Results Declared' },
-  { id: 'gate', name: 'GATE 2025', category: 'Engineering', date: 'Feb 1, 2025', participants: '8 Lakhs+', mode: 'Online (CBT)', status: 'Admit Card Released' },
-  { id: 'bitsat', name: 'BITSAT 2025', category: 'Engineering', date: 'May 19, 2025', participants: '3 Lakhs+', mode: 'Online (CBT)', status: 'Registration Open' },
-];
-
 export default function ExamsList() {
+  const [exams, setExams] = useState<Exam[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('All Exams');
+
+  useEffect(() => {
+    fetchExams();
+  }, []);
+
+  const fetchExams = async () => {
+    try {
+      const res = await api.getExams();
+      setExams(res.data);
+    } catch (err) {
+      toast.error('Failed to load exams');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredExams = filter === 'All Exams' 
+    ? exams 
+    : exams.filter(ex => (ex as any).category === filter);
+
   return (
     <div className={styles.pageContainer}>
       <div className={styles.heroSection}>
@@ -28,42 +46,57 @@ export default function ExamsList() {
 
       <div className={styles.mainContainer}>
         <div className={styles.categoriesNav}>
-          {['All Exams', 'Engineering', 'Medical', 'Management', 'Law', 'Design'].map((cat, i) => (
-            <button suppressHydrationWarning key={cat} className={`${styles.catBtn} ${i === 0 ? styles.catBtnActive : ''}`}>{cat}</button>
+          {['All Exams', 'Engineering', 'Medical', 'Management', 'Law', 'Design'].map((cat) => (
+            <button suppressHydrationWarning 
+              key={cat} 
+              onClick={() => setFilter(cat)}
+              className={`${styles.catBtn} ${filter === cat ? styles.catBtnActive : ''}`}
+            >
+              {cat}
+            </button>
           ))}
         </div>
 
-        <div className={styles.examsGrid}>
-          {EXAMS_DATA.map(exam => (
-            <div key={exam.id} className={styles.examCard}>
-              <div className={styles.examHeader}>
-                <span className={styles.examCategory}>{exam.category}</span>
-                <span className={`${styles.examStatus} ${exam.status.includes('Open') || exam.status.includes('Released') ? styles.statusGreen : ''}`}>{exam.status}</span>
-              </div>
-              <h2 className={styles.examName}>{exam.name}</h2>
-              
-              <div className={styles.examDetails}>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>Exam Date</span>
-                  <span className={styles.detailValue}>{exam.date}</span>
+        {loading ? (
+          <div className="flex justify-center p-20">
+            <div className="w-10 h-10 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin"></div>
+          </div>
+        ) : filteredExams.length === 0 ? (
+          <div className="text-center p-20">
+            <p className="text-gray-500 text-lg">No exams found for this category.</p>
+            <button suppressHydrationWarning onClick={() => api.seedExams().then(() => fetchExams())} className="mt-4 px-6 py-2 bg-orange-600 text-white rounded-lg font-bold">
+              Seed Default Exams
+            </button>
+          </div>
+        ) : (
+          <div className={styles.examsGrid}>
+            {filteredExams.map(exam => (
+              <div key={exam.id} className={styles.examCard}>
+                <div className={styles.examHeader}>
+                  <span className={styles.examCategory}>{(exam as any).category || 'General'}</span>
+                  <span className={styles.examStatus}>Open</span>
                 </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>Mode</span>
-                  <span className={styles.detailValue}>{exam.mode}</span>
+                <h2 className={styles.examName}>{exam.name}</h2>
+                
+                <div className={styles.examDetails}>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>Slug</span>
+                    <span className={styles.detailValue}>{exam.slug}</span>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <span className={styles.detailLabel}>Description</span>
+                    <span className={styles.detailValue} style={{display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden'}}>{exam.description}</span>
+                  </div>
                 </div>
-                <div className={styles.detailItem}>
-                  <span className={styles.detailLabel}>Participants</span>
-                  <span className={styles.detailValue}>{exam.participants}</span>
-                </div>
-              </div>
 
-              <div className={styles.examActions}>
-                <Link href={`/exams/${exam.id}`} className={styles.viewBtn}>View Details</Link>
-                <button suppressHydrationWarning className={styles.trackBtn}>+ Track Exam</button>
+                <div className={styles.examActions}>
+                  <Link href={`/exams/${exam.slug}`} className={styles.viewBtn}>View Details</Link>
+                  <button suppressHydrationWarning className={styles.trackBtn}>+ Track Exam</button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
