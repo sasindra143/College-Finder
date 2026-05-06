@@ -23,87 +23,70 @@ export default function Home() {
 
   const words = ['Dream College', 'Future Career', 'Top University'];
 
-  // Typing Effect Logic
+  // Typing Effect Logic - Optimized & Safe
   useEffect(() => {
+    let timeout: NodeJS.Timeout;
     const currentWord = words[wordIndex];
-    let typingSpeed = isDeleting ? 50 : 100;
+    let typingSpeed = isDeleting ? 40 : 80;
 
     if (!isDeleting && typingText === currentWord) {
-      typingSpeed = 2000; // Pause before deleting
-      setTimeout(() => setIsDeleting(true), typingSpeed);
-      return;
-    }
-
-    if (isDeleting && typingText === '') {
+      typingSpeed = 2000;
+      timeout = setTimeout(() => setIsDeleting(true), typingSpeed);
+    } else if (isDeleting && typingText === '') {
       setIsDeleting(false);
       setWordIndex((prev) => (prev + 1) % words.length);
-      typingSpeed = 500; // Pause before typing next word
-      return;
+      timeout = setTimeout(() => {}, 500);
+    } else {
+      timeout = setTimeout(() => {
+        setTypingText(prev => 
+          isDeleting
+            ? currentWord.substring(0, prev.length - 1)
+            : currentWord.substring(0, prev.length + 1)
+        );
+      }, typingSpeed);
     }
 
-    const timer = setTimeout(() => {
-      setTypingText(
-        isDeleting
-          ? currentWord.substring(0, typingText.length - 1)
-          : currentWord.substring(0, typingText.length + 1)
-      );
-    }, typingSpeed);
-
-    return () => clearTimeout(timer);
-  }, [typingText, isDeleting, wordIndex, words]);
+    return () => clearTimeout(timeout);
+  }, [typingText, isDeleting, wordIndex]);
 
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  // ✅ Close dropdown when clicking outside
+  // ✅ Debounced search with AbortController for speed
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () =>
-      document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // ✅ Debounced search
-  useEffect(() => {
-    if (searchType !== 'college') {
+    if (searchType !== 'college' || searchQuery.length <= 1) {
+      setSuggestions([]);
       setShowDropdown(false);
       return;
     }
 
     const timer = setTimeout(async () => {
-      if (searchQuery.length > 1) {
-        setIsSearching(true);
-
-        try {
-          const res: any = await api.getColleges({
-            search: searchQuery,
-            limit: 5,
-          });
-
-          setSuggestions(res?.data || res?.colleges || []);
-          setShowDropdown(true);
-        } catch (err) {
-          console.error('❌ Search failed:', err);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+      abortControllerRef.current = new AbortController();
+      
+      setIsSearching(true);
+      try {
+        const res: any = await api.getColleges({
+          search: searchQuery,
+          limit: 6,
+        });
+        setSuggestions(res?.data || res?.colleges || []);
+        setShowDropdown(true);
+      } catch (err: any) {
+        if (err.name !== 'AbortError') {
           setSuggestions([]);
           setShowDropdown(false);
-        } finally {
-          setIsSearching(false);
         }
-      } else {
-        setSuggestions([]);
-        setShowDropdown(false);
+      } finally {
+        setIsSearching(false);
       }
-    }, 300);
+    }, 250);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (abortControllerRef.current) abortControllerRef.current.abort();
+    };
   }, [searchQuery, searchType]);
 
   // ✅ Handle suggestion click
@@ -113,44 +96,28 @@ export default function Home() {
     setShowDropdown(false);
   };
 
-  // ✅ Handle search submit
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const query = searchQuery.trim().toLowerCase();
+    const query = searchQuery.trim();
     if (!query) return;
-
-    if (searchType === 'exam') {
-      router.push(`/exams/${encodeURIComponent(query.replace(/\s+/g, '-'))}`);
-    } else if (query.includes('engineering') && !query.includes('college')) {
-      router.push('/engineering-colleges');
-    } else {
-      router.push(`/colleges?search=${encodeURIComponent(searchQuery)}`);
-    }
+    router.push(`/colleges?search=${encodeURIComponent(query)}`);
   };
 
   return (
     <div className={styles.pageContainer}>
-
-      {/* HERO */}
-      {/* HERO SECTION */}
       <section className={styles.heroSection}>
         <div className={styles.heroBackground}>
-          <img
-            src="/images/hero_bg.png"
-            alt="Campus"
-            className={styles.heroBackgroundImage}
-          />
+          <img src="/images/hero_bg.png" alt="Campus" className={styles.heroBackgroundImage} loading="eager" />
           <div className={styles.heroOverlay}></div>
         </div>
 
         <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
+          <h1 className={styles.heroTitle} suppressHydrationWarning>
             Find Your <span className={styles.highlightText}>{typingText}</span><span className={styles.cursor}>|</span>
           </h1>
 
           <p className={styles.heroSubtitle}>
-            Explore top colleges across India with real data.
+            Explore 37,000+ verified colleges across India with real data.
           </p>
 
           <div ref={searchRef} className="relative w-full max-w-3xl mx-auto">
@@ -168,30 +135,32 @@ export default function Home() {
               <input
                 type="text"
                 className={styles.heroSearchInput}
-                placeholder="Search colleges..."
+                placeholder="Search colleges, exams, courses..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
 
-              <button type="submit" className={styles.searchBtn}>
-                Search
-              </button>
+              <button type="submit" className={styles.searchBtn}>Search</button>
             </form>
 
             {showDropdown && (
               <div className={styles.searchDropdown}>
-                {isSearching && <div className={styles.searchMessage}>Searching...</div>}
-                {!isSearching && suggestions.length === 0 && <div className={styles.searchMessage}>No results found</div>}
-                {!isSearching && suggestions.map((college) => (
-                  <div
-                    key={college.id}
-                    className={styles.searchResultItem}
-                    onClick={() => handleSuggestionClick(college.slug || college.id)}
-                  >
-                    <div className={styles.searchResultName}>{college.name}</div>
-                    <div className={styles.searchResultLocation}>{college.city}, {college.state}</div>
-                  </div>
-                ))}
+                {isSearching ? (
+                  <div className={styles.searchMessage}>Searching...</div>
+                ) : suggestions.length === 0 ? (
+                  <div className={styles.searchMessage}>No results found</div>
+                ) : (
+                  suggestions.map((college) => (
+                    <div
+                      key={college.id}
+                      className={styles.searchResultItem}
+                      onClick={() => handleSuggestionClick(college.slug || college.id)}
+                    >
+                      <div className={styles.searchResultName}>{college.name}</div>
+                      <div className={styles.searchResultLocation}>{college.city}, {college.state}</div>
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>

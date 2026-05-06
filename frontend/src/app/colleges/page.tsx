@@ -138,10 +138,11 @@ function CollegesList() {
     setFilters(empty);
     setActiveSearch('');
     setActiveFilters(empty);
+    router.push('/colleges');
   };
 
   const removeChip = (chip: any) => {
-    let newFilters = { ...activeFilters };
+    const newFilters = { ...activeFilters };
     let newSearch = activeSearch;
     if (chip.type === 'search') newSearch = '';
     else if (['location', 'ownership', 'course'].includes(chip.type)) {
