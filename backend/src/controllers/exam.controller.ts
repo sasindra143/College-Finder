@@ -38,17 +38,14 @@ export const getExamBySlug = async (req: Request, res: Response, next: NextFunct
       include: { dates: { orderBy: { createdAt: 'asc' } } }
     });
     
-    // AUTO-SEED: If specific exam not found, check if table is empty
+    // AUTO-SEED: If specific exam not found, ensure defaults are seeded
     if (!exam) {
-      const count = await prisma.exam.count();
-      if (count === 0) {
-        console.log('🚀 Exam not found and table empty. Auto-seeding...');
-        await performSeed();
-        exam = await prisma.exam.findUnique({
-          where: { slug },
-          include: { dates: { orderBy: { createdAt: 'asc' } } }
-        });
-      }
+      console.log(`🚀 Exam '${slug}' not found. Ensuring default exams are seeded...`);
+      await performSeed();
+      exam = await prisma.exam.findUnique({
+        where: { slug },
+        include: { dates: { orderBy: { createdAt: 'asc' } } }
+      });
     }
 
     if (!exam) {
