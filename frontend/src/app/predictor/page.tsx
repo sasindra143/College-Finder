@@ -5,16 +5,6 @@ import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
 import styles from './Predictor.module.css';
 
-const INDIAN_STATES = [
-  'Andaman and Nicobar Islands','Andhra Pradesh','Arunachal Pradesh','Assam','Bihar',
-  'Chandigarh','Chhattisgarh','Dadra and Nagar Haveli and Daman and Diu','Delhi',
-  'Goa','Gujarat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand',
-  'Karnataka','Kerala','Ladakh','Lakshadweep','Madhya Pradesh','Maharashtra',
-  'Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab',
-  'Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh',
-  'Uttarakhand','West Bengal'
-];
-
 const EXAMS = [
   { id: 'jee', name: 'JEE Main', full: 'JEE Main (Engineering — NIT/IIIT/CFTI)', stream: 'Engineering' },
   { id: 'jee-adv', name: 'JEE Advanced', full: 'JEE Advanced (IIT Admissions)', stream: 'Engineering' },
@@ -27,15 +17,6 @@ const EXAMS = [
   { id: 'wbjee', name: 'WBJEE', full: 'WBJEE (West Bengal Engineering)', stream: 'Engineering' },
   { id: 'cuet', name: 'CUET', full: 'CUET (Central Universities — UG)', stream: 'Science' },
   { id: 'xat', name: 'XAT', full: 'XAT (XLRI & 160+ B-Schools)', stream: 'Management' },
-];
-
-const CATEGORIES = [
-  { id: 'general', name: 'General (UR)' },
-  { id: 'obc', name: 'OBC-NCL' },
-  { id: 'sc', name: 'SC (Scheduled Caste)' },
-  { id: 'st', name: 'ST (Scheduled Tribe)' },
-  { id: 'ews', name: 'EWS (Economically Weaker Section)' },
-  { id: 'pwd', name: 'PwD (Person with Disability)' },
 ];
 
 type AdmissionChance = 'Very Good' | 'Good' | 'Moderate' | 'Tough';
@@ -122,12 +103,12 @@ export default function PredictorPage() {
       const res = await api.getColleges({
         exam: examNameMap[exam],
         rank: rankNum,
-        limit: 20,
+        limit: 30,
         sortBy: 'rating',
         sortOrder: 'desc'
       });
 
-      const rawColleges: College[] = res.data || [];
+      const rawColleges: College[] = res.data || res.colleges || [];
 
       // Enrich results with admission chance predictions
       const enriched: PredictedCollege[] = rawColleges.map((college) => {
@@ -271,7 +252,7 @@ export default function PredictorPage() {
                         ? `${results.length} Colleges Found for Rank ${parseInt(rank).toLocaleString()}`
                         : 'No colleges found for your criteria'}
                     </h2>
-                    {selectedExam && <p className={styles.resultsSubtitle}>Based on: {selectedExam.full} · {CATEGORIES.find(c=>c.id===category)?.name} · {state}</p>}
+                    {selectedExam && <p className={styles.resultsSubtitle}>Predicting based on: <strong>{selectedExam.full}</strong> · Rank <strong>{parseInt(rank).toLocaleString()}</strong></p>}
                   </div>
                   {results.length > 0 && (
                     <div className={styles.chanceSummary}>
