@@ -64,7 +64,7 @@ export default function PredictorPage() {
       });
 
       // The backend returns results in res.data
-      setResults(res.data);
+      setResults(res.data || []);
     } catch (err) {
       console.error('Prediction failed:', err);
       setResults([]);
@@ -122,9 +122,9 @@ export default function PredictorPage() {
               <div className={styles.grid}>
                 {[1,2,3,4,5,6].map(i => <div key={i} className={styles.skeleton} />)}
               </div>
-            ) : results.length > 0 ? (
+            ) : (results?.length || 0) > 0 ? (
               <div className={styles.grid}>
-                {results.map((college, idx) => (
+                {results?.map((college, idx) => (
                   <div key={college.id} className={styles.animateIn} style={{ animationDelay: `${idx * 0.1}s` }}>
                     <CollegeCard college={college} />
                   </div>
