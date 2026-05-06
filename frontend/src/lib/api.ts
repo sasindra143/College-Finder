@@ -19,7 +19,7 @@ const API_URL = BASE_URL;
 // ================= CLIENT-SIDE GET CACHE (60s TTL) =================
 // Prevents duplicate network calls for the same filters/page within a session
 const _cache = new Map<string, { data: any; ts: number }>();
-const CACHE_TTL = 60_000; // 60 seconds
+const CACHE_TTL = 300_000; // 5 minutes
 
 function getCached(key: string) {
   const hit = _cache.get(key);
@@ -80,13 +80,24 @@ async function request<T>(
     if (cached) return cached as T;
   }
 
-  const res = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...options,
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      ...options,
+    });
+  } catch (err: any) {
+    if (err.message === 'Failed to fetch' || err.code === 'ECONNREFUSED') {
+      const msg = url.includes('localhost') 
+        ? "Connection Refused: Is your local backend running on port 5000?"
+        : "Network Error: Could not connect to the server.";
+      throw new Error(msg);
+    }
+    throw err;
+  }
 
   let data: any = null;
   try {

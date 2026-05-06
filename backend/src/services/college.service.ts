@@ -187,11 +187,11 @@ export const getCollegesForComparison = async (ids: string[]) => {
 
 export const getUniqueLocations = async () => {
   const states = await prisma.college.findMany({
-    select: { state: true, city: true },
+    select: { state: true },
     distinct: ['state'],
     orderBy: { state: 'asc' },
   });
-  return states;
+  return states.map(s => s.state);
 };
 
 export const bulkCreateColleges = async (colleges: any[]) => {
