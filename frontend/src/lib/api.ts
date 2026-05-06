@@ -2,10 +2,7 @@ const IS_PROD = process.env.NODE_ENV === "production";
 
 // ================= BASE URL =================
 let BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (IS_PROD
-    ? "https://college-finder-hu2a.onrender.com/api"
-    : "http://localhost:5000/api");
+  process.env.NEXT_PUBLIC_API_URL || "https://college-finder-hu2a.onrender.com/api";
 
 // Ensure /api suffix
 if (!BASE_URL.endsWith("/api")) {
