@@ -251,6 +251,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* STATES SECTION */}
+      <section className={styles.statesSection}>
+        <div className={styles.sectionWrapper}>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.sectionTitle}>Explore Colleges by <span className={styles.highlightText}>State</span></h2>
+            <p className={styles.sectionSubtitle}>Discover 37,000+ colleges across all 28 states and 8 Union Territories</p>
+          </div>
+          
+          <div className={styles.statesGrid}>
+            {[
+              { name: 'Maharashtra', count: '4,500+', image: '/images/states/maharashtra.jpg', path: '/colleges?location=Maharashtra' },
+              { name: 'Delhi NCR', count: '2,200+', image: '/images/states/delhi.jpg', path: '/colleges?location=Delhi' },
+              { name: 'Karnataka', count: '3,100+', image: '/images/states/karnataka.jpg', path: '/colleges?location=Karnataka' },
+              { name: 'Tamil Nadu', count: '3,800+', image: '/images/states/tamilnadu.jpg', path: '/colleges?location=Tamil Nadu' },
+              { name: 'Uttar Pradesh', count: '4,200+', image: '/images/states/up.jpg', path: '/colleges?location=Uttar Pradesh' },
+              { name: 'West Bengal', count: '1,800+', image: '/images/states/westbengal.jpg', path: '/colleges?location=West Bengal' },
+              { name: 'Gujarat', count: '2,000+', image: '/images/states/gujarat.jpg', path: '/colleges?location=Gujarat' },
+              { name: 'Kerala', count: '1,500+', image: '/images/states/kerala.jpg', path: '/colleges?location=Kerala' },
+            ].map((state) => (
+              <a key={state.name} href={state.path} className={styles.stateCard}>
+                <div className={styles.stateImageWrapper}>
+                  <img src={state.image} alt={state.name} className={styles.stateImage} 
+                    onError={(e) => { (e.target as any).src = 'https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=80'; }} 
+                  />
+                  <div className={styles.stateOverlay}></div>
+                </div>
+                <div className={styles.stateInfo}>
+                  <h3 className={styles.stateName}>{state.name}</h3>
+                  <p className={styles.stateCount}>{state.count} Colleges</p>
+                </div>
+              </a>
+            ))}
+          </div>
+          
+          <div className={styles.viewAllWrapper}>
+            <a href="/colleges" className={styles.viewAllBtn}>View All 36 States & UTs →</a>
+          </div>
+        </div>
+      </section>
+
       {/* FEATURES SECTION */}
       <section className={styles.featuresSection}>
         <div className={styles.sectionWrapper}>
