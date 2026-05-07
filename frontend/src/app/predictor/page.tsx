@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { College } from '@/lib/types';
 import CollegeCard from '@/components/CollegeCard';
+import CollegeCardSkeleton from '@/components/CollegeCardSkeleton';
 import styles from './Predictor.module.css';
 
 const EXAMS = [
@@ -283,10 +284,16 @@ export default function PredictorPage() {
         {hasSearched && (
           <div className={styles.resultsSection}>
             {loading ? (
-              <div className={styles.loadingSection}>
-                <div className={styles.loadingSpinner}></div>
-                <p className={styles.loadingText}>{loadingMessage}</p>
-                <div className={styles.loadingBar}><div className={styles.loadingBarFill}></div></div>
+              <div className={styles.loadingContainer}>
+                <div className={styles.loadingInfo}>
+                  <div className={styles.loadingSpinner}></div>
+                  <p className={styles.loadingText}>{loadingMessage}</p>
+                </div>
+                <div className={styles.grid}>
+                  {[1, 2, 3, 4, 5, 6].map(i => (
+                    <CollegeCardSkeleton key={i} />
+                  ))}
+                </div>
               </div>
             ) : (
               <>

@@ -205,7 +205,7 @@ export default function Home() {
           </div>
           <div className={styles.counsellingImageWrapper}>
             <img 
-              src="/images/counselling.png" 
+              src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80" 
               alt="Counselling" 
               className={styles.counsellingImage}
             />
@@ -230,14 +230,14 @@ export default function Home() {
           
           <div className={styles.statesGrid}>
             {[
-              { name: 'Maharashtra', count: '4,500+', image: '/images/states/maharashtra.jpg', path: '/colleges?location=Maharashtra' },
-              { name: 'Delhi NCR', count: '2,200+', image: '/images/states/delhi.jpg', path: '/colleges?location=Delhi' },
-              { name: 'Karnataka', count: '3,100+', image: '/images/states/karnataka.jpg', path: '/colleges?location=Karnataka' },
-              { name: 'Tamil Nadu', count: '3,800+', image: '/images/states/tamilnadu.jpg', path: '/colleges?location=Tamil Nadu' },
-              { name: 'Uttar Pradesh', count: '4,200+', image: '/images/states/up.jpg', path: '/colleges?location=Uttar Pradesh' },
-              { name: 'West Bengal', count: '1,800+', image: '/images/states/westbengal.jpg', path: '/colleges?location=West Bengal' },
-              { name: 'Gujarat', count: '2,000+', image: '/images/states/gujarat.jpg', path: '/colleges?location=Gujarat' },
-              { name: 'Kerala', count: '1,500+', image: '/images/states/kerala.jpg', path: '/colleges?location=Kerala' },
+              { name: 'Maharashtra', count: '4,500+', image: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=400&q=80', path: '/colleges?location=Maharashtra' },
+              { name: 'Delhi NCR', count: '2,200+', image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?w=400&q=80', path: '/colleges?location=Delhi' },
+              { name: 'Karnataka', count: '3,100+', image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?w=400&q=80', path: '/colleges?location=Karnataka' },
+              { name: 'Tamil Nadu', count: '3,800+', image: 'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=400&q=80', path: '/colleges?location=Tamil Nadu' },
+              { name: 'Uttar Pradesh', count: '4,200+', image: 'https://images.unsplash.com/photo-1548013146-72479768bada?w=400&q=80', path: '/colleges?location=Uttar Pradesh' },
+              { name: 'West Bengal', count: '1,800+', image: 'https://images.unsplash.com/photo-1558431382-27e303142255?w=400&q=80', path: '/colleges?location=West Bengal' },
+              { name: 'Gujarat', count: '2,000+', image: 'https://images.unsplash.com/photo-1609948543911-7195b87ed9aa?w=400&q=80', path: '/colleges?location=Gujarat' },
+              { name: 'Kerala', count: '1,500+', image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=400&q=80', path: '/colleges?location=Kerala' },
             ].map((state) => (
               <a key={state.name} href={state.path} className={styles.stateCard}>
                 <div className={styles.stateImageWrapper}>

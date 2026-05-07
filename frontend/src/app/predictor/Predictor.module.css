@@ -76,8 +76,10 @@
 .resultsSection { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 24px rgba(0,0,0,0.08); margin-bottom: 2rem; }
 
 .loadingSection { text-align: center; padding: 3rem; }
+.loadingContainer { display: flex; flex-direction: column; gap: 2rem; }
+.loadingInfo { text-align: center; padding: 2rem 0; background: #fffbeb; border-radius: 12px; border: 1px dashed #fcd34d; }
 .loadingSpinner { width: 50px; height: 50px; border: 4px solid #fde68a; border-top: 4px solid #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.5rem; }
-.loadingText { font-size: 1rem; color: #374151; font-weight: 600; margin-bottom: 1rem; }
+.loadingText { font-size: 1.1rem; color: #92400e; font-weight: 700; margin-bottom: 0; }
 .loadingBar { height: 6px; background: #f3f4f6; border-radius: 10px; overflow: hidden; }
 .resultsHeader { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
 .resultsTitle { font-size: 1.4rem; font-weight: 800; color: #111827; }

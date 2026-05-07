@@ -1,0 +1,300 @@
+Platform,Page,Section,Data Point,Description
+CollegeDunia,Homepage,Hero,Search Bar,"Auto-suggest for colleges, exams, courses"
+CollegeDunia,Homepage,Hero,Stream Tabs,"B.Tech, MBA, MBBS, Law, etc."
+CollegeDunia,Homepage,Top Colleges,College Name,Institution name with link
+CollegeDunia,Homepage,Top Colleges,Location,"City, State"
+CollegeDunia,Homepage,Top Colleges,Fees,First-year fee amount
+CollegeDunia,Homepage,Top Colleges,Rating,User rating out of 10
+CollegeDunia,Homepage,Top Colleges,Ranking Badge,NIRF rank if available
+CollegeDunia,Homepage,Top Collections,Collection Title,"e.g. Top Engineering Colleges Under 5L"
+CollegeDunia,Homepage,Top Collections,Collection Count,Number of colleges in list
+CollegeDunia,Homepage,Exam Highlights,Exam Name,Name of upcoming exam
+CollegeDunia,Homepage,Exam Highlights,Application Date,Last date to apply
+CollegeDunia,Homepage,Exam Highlights,Exam Date,Scheduled exam date
+CollegeDunia,College Listing,Filter Sidebar,State Filter,Multi-select dropdown of Indian states
+CollegeDunia,College Listing,Filter Sidebar,City Filter,Specific city selection
+CollegeDunia,College Listing,Filter Sidebar,Course Filter,Stream/degree type selection
+CollegeDunia,College Listing,Filter Sidebar,Fees Range,Slider or range for annual fees
+CollegeDunia,College Listing,Filter Sidebar,Exam Accepted,Entrance exam filter
+CollegeDunia,College Listing,Filter Sidebar,College Type,"Government, Private, Deemed"
+CollegeDunia,College Listing,Filter Sidebar,Rating Filter,Minimum rating threshold
+CollegeDunia,College Listing,Filter Sidebar,NAAC Grade,Accreditation grade filter
+CollegeDunia,College Listing,Sort Controls,Sort By Rating,Descending rating sort
+CollegeDunia,College Listing,Sort Controls,Sort By Popularity,Most viewed/searched
+CollegeDunia,College Listing,Sort Controls,Sort By Fees,Ascending/descending fee sort
+CollegeDunia,College Listing,College Card,College Name,Full institution name
+CollegeDunia,College Listing,College Card,Location,"City, State"
+CollegeDunia,College Listing,College Card,Ownership Badge,"Govt / Private / Deemed"
+CollegeDunia,College Listing,College Card,NIRF Rank,Rank number if ranked
+CollegeDunia,College Listing,College Card,Rating,Aggregate user rating
+CollegeDunia,College Listing,College Card,Fees,Annual fee amount
+CollegeDunia,College Listing,College Card,Courses Offered,Top 2-3 degrees listed
+CollegeDunia,College Listing,College Card,Apply Now CTA,Button to apply/get brochure
+CollegeDunia,College Listing,College Card,Compare Checkbox,Add to comparison
+CollegeDunia,College Listing,Pagination,Page Number,Current page indicator
+CollegeDunia,College Listing,Pagination,Total Results,Total count of matching colleges
+CollegeDunia,College Detail,Overview,College Name,Full institution name
+CollegeDunia,College Detail,Overview,Cover Image,Banner/hero photo of campus
+CollegeDunia,College Detail,Overview,Logo,Institution logo/emblem
+CollegeDunia,College Detail,Overview,Location,"City, State, PIN"
+CollegeDunia,College Detail,Overview,Established Year,Year of foundation
+CollegeDunia,College Detail,Overview,Institute Type,"Private, Government, Autonomous"
+CollegeDunia,College Detail,Overview,Accreditations,"AICTE, UGC, NAAC Grade"
+CollegeDunia,College Detail,Overview,Affiliated University,Parent university name
+CollegeDunia,College Detail,Overview,User Rating,Aggregate score out of 10
+CollegeDunia,College Detail,Overview,Total Reviews Count,Number of student reviews
+CollegeDunia,College Detail,Overview,Campus Size,Area in acres
+CollegeDunia,College Detail,Overview,Website URL,Official college website link
+CollegeDunia,College Detail,Overview,Contact Phone,Admission office phone number
+CollegeDunia,College Detail,Overview,Contact Email,Admission email address
+CollegeDunia,College Detail,Overview,NIRF Rank,National ranking position
+CollegeDunia,College Detail,Overview,Brochure Download CTA,Lead-gated PDF download
+CollegeDunia,College Detail,Overview,Apply Now CTA,Application form trigger
+CollegeDunia,College Detail,Overview,Navigation Tabs,"Overview, Courses, Admissions, Placements, etc."
+CollegeDunia,College Detail,Courses & Fees,Course Name,"e.g. B.Tech Computer Science"
+CollegeDunia,College Detail,Courses & Fees,Degree Type,"UG, PG, Diploma, PhD"
+CollegeDunia,College Detail,Courses & Fees,Specialization,Branch or major name
+CollegeDunia,College Detail,Courses & Fees,Duration,Duration in years
+CollegeDunia,College Detail,Courses & Fees,First Year Fees,Numeric value in INR
+CollegeDunia,College Detail,Courses & Fees,Total Fees,Full program cost
+CollegeDunia,College Detail,Courses & Fees,Eligibility,"Min marks, subjects required"
+CollegeDunia,College Detail,Courses & Fees,Accepted Exams,"JEE, NEET, CAT, etc."
+CollegeDunia,College Detail,Courses & Fees,Seat Intake,Number of available seats
+CollegeDunia,College Detail,Courses & Fees,Application Mode,"Online, Offline, Both"
+CollegeDunia,College Detail,Courses & Fees,Application Link,Direct apply URL
+CollegeDunia,College Detail,Admissions,Admission Process,Step-by-step procedure text
+CollegeDunia,College Detail,Admissions,Important Dates,"Application open, close, result dates"
+CollegeDunia,College Detail,Admissions,Selection Criteria,"Merit, Entrance, Counselling"
+CollegeDunia,College Detail,Admissions,Application Fee,Cost to apply in INR
+CollegeDunia,College Detail,Admissions,Documents Required,List of required documents
+CollegeDunia,College Detail,Admissions,Counselling Schedule,Round-wise counselling dates
+CollegeDunia,College Detail,Placements,Highest Package,Maximum CTC offered in LPA
+CollegeDunia,College Detail,Placements,Average Package,Mean CTC offered in LPA
+CollegeDunia,College Detail,Placements,Median Package,Median salary offered
+CollegeDunia,College Detail,Placements,Lowest Package,Minimum CTC offered
+CollegeDunia,College Detail,Placements,Placement Percentage,Percentage of batch placed
+CollegeDunia,College Detail,Placements,Top Recruiters,Company logos and names
+CollegeDunia,College Detail,Placements,Sector-wise Split,"IT, Core, Consulting percentages"
+CollegeDunia,College Detail,Placements,Year-wise Trends,Historical placement data table
+CollegeDunia,College Detail,Cutoffs,Exam Name,"JEE Main, JEE Advanced, etc."
+CollegeDunia,College Detail,Cutoffs,Category,"General, OBC, SC, ST, EWS"
+CollegeDunia,College Detail,Cutoffs,Round Number,Counselling round (1-7)
+CollegeDunia,College Detail,Cutoffs,Opening Rank,First admitted rank
+CollegeDunia,College Detail,Cutoffs,Closing Rank,Last admitted rank
+CollegeDunia,College Detail,Cutoffs,Year,Academic year of cutoff
+CollegeDunia,College Detail,Cutoffs,Branch/Course,Specific specialization
+CollegeDunia,College Detail,Reviews,Reviewer Name,Student/alumni name
+CollegeDunia,College Detail,Reviews,Reviewer Course,Degree pursued
+CollegeDunia,College Detail,Reviews,Reviewer Batch,Graduation year
+CollegeDunia,College Detail,Reviews,Overall Rating,Numeric score
+CollegeDunia,College Detail,Reviews,Placement Rating,Sub-score for placements
+CollegeDunia,College Detail,Reviews,Faculty Rating,Sub-score for teaching quality
+CollegeDunia,College Detail,Reviews,Infrastructure Rating,Sub-score for facilities
+CollegeDunia,College Detail,Reviews,Campus Life Rating,Sub-score for social experience
+CollegeDunia,College Detail,Reviews,Value for Money Rating,Cost vs quality score
+CollegeDunia,College Detail,Reviews,Pros Text,What the reviewer liked
+CollegeDunia,College Detail,Reviews,Cons Text,What the reviewer disliked
+CollegeDunia,College Detail,Reviews,Verified Badge,Identity verification indicator
+CollegeDunia,College Detail,Reviews,Helpful Count,Upvote count on review
+CollegeDunia,College Detail,Reviews,Date Posted,When review was written
+CollegeDunia,College Detail,Rankings,Ranking Agency,"NIRF, The Week, India Today, Outlook"
+CollegeDunia,College Detail,Rankings,Rank Position,Numeric rank
+CollegeDunia,College Detail,Rankings,Year,Ranking year
+CollegeDunia,College Detail,Rankings,Score,Total score awarded
+CollegeDunia,College Detail,Rankings,Category,"Overall, Engineering, Management, etc."
+CollegeDunia,College Detail,Gallery,Photo,Campus/infrastructure images
+CollegeDunia,College Detail,Gallery,Video,Embedded campus tour videos
+CollegeDunia,College Detail,Gallery,Category,"Campus, Hostel, Lab, Library, etc."
+CollegeDunia,College Detail,Scholarships,Scholarship Name,Title of the scholarship
+CollegeDunia,College Detail,Scholarships,Eligibility,Who can apply
+CollegeDunia,College Detail,Scholarships,Amount,Scholarship value in INR
+CollegeDunia,College Detail,Scholarships,Deadline,Application deadline
+CollegeDunia,College Detail,Faculty,Faculty Name,Professor's name
+CollegeDunia,College Detail,Faculty,Designation,"Professor, HOD, Dean"
+CollegeDunia,College Detail,Faculty,Department,Academic department
+CollegeDunia,College Detail,Faculty,Qualification,"PhD, M.Tech, etc."
+CollegeDunia,College Detail,Hostel,Hostel Type,"Boys, Girls, Both"
+CollegeDunia,College Detail,Hostel,Room Type,"Single, Double, Triple"
+CollegeDunia,College Detail,Hostel,Annual Fees,Hostel fee per year
+CollegeDunia,College Detail,Hostel,Amenities,"WiFi, AC, Mess, Laundry"
+CollegeDunia,College Detail,Hostel,Capacity,Total number of beds
+CollegeDunia,College Detail,Q&A Forum,Question Text,User-submitted question
+CollegeDunia,College Detail,Q&A Forum,Answer Text,Counselor/alumni response
+CollegeDunia,College Detail,Q&A Forum,Answerer Role,"Counselor, Student, Alumni"
+CollegeDunia,College Detail,Q&A Forum,Date,When Q&A was posted
+CollegeDunia,College Detail,Q&A Forum,Upvote Count,Helpfulness votes
+CollegeDunia,Course Page,Overview,Course Name,"e.g. B.Tech, MBA"
+CollegeDunia,Course Page,Overview,Full Form,Expanded name of the degree
+CollegeDunia,Course Page,Overview,Duration,Standard program length
+CollegeDunia,Course Page,Overview,Average Fees,Typical fee range
+CollegeDunia,Course Page,Overview,Eligibility,General admission requirements
+CollegeDunia,Course Page,Overview,Top Colleges,List of best colleges for this course
+CollegeDunia,Course Page,Syllabus,Semester-wise Subjects,Subject list per semester
+CollegeDunia,Course Page,Syllabus,Electives,Optional subject choices
+CollegeDunia,Course Page,Career,Job Profiles,Roles after graduation
+CollegeDunia,Course Page,Career,Average Salary,Expected salary range
+CollegeDunia,Course Page,Career,Top Employers,Companies that hire graduates
+CollegeDunia,Exams Page,Exam Info,Exam Name,Official exam title
+CollegeDunia,Exams Page,Exam Info,Conducting Body,Organization running the exam
+CollegeDunia,Exams Page,Exam Info,Exam Level,"National, State, University"
+CollegeDunia,Exams Page,Exam Info,Frequency,"Annual, Bi-annual"
+CollegeDunia,Exams Page,Exam Info,Mode,"Online CBT, Offline, Hybrid"
+CollegeDunia,Exams Page,Exam Info,Total Applicants,Number of registered candidates
+CollegeDunia,Exams Page,Dates,Application Start,Form availability date
+CollegeDunia,Exams Page,Dates,Application Deadline,Last date to apply
+CollegeDunia,Exams Page,Dates,Admit Card Date,Hall ticket release date
+CollegeDunia,Exams Page,Dates,Exam Date,Actual test date(s)
+CollegeDunia,Exams Page,Dates,Result Date,Score/result announcement
+CollegeDunia,Exams Page,Dates,Counselling Start,Seat allotment begins
+CollegeDunia,Exams Page,Syllabus & Pattern,Total Questions,Number of questions
+CollegeDunia,Exams Page,Syllabus & Pattern,Total Marks,Maximum obtainable marks
+CollegeDunia,Exams Page,Syllabus & Pattern,Duration,Exam time in hours
+CollegeDunia,Exams Page,Syllabus & Pattern,Section Names,"Physics, Chemistry, Math, etc."
+CollegeDunia,Exams Page,Syllabus & Pattern,Marking Scheme,"Marks per correct, negative marking"
+CollegeDunia,Exams Page,Syllabus & Pattern,Topic Weightage,Percentage per topic
+CollegeDunia,Exams Page,Predictor,Input: Rank/Score,User enters their rank or score
+CollegeDunia,Exams Page,Predictor,Input: Category,"General, OBC, SC, ST, EWS"
+CollegeDunia,Exams Page,Predictor,Output: College List,Predicted colleges with probability
+CollegeDunia,Exams Page,Predictor,Output: Branch Options,Available specializations
+CollegeDunia,Compare Page,Comparison Table,College Names,Side-by-side headers (up to 4)
+CollegeDunia,Compare Page,Comparison Table,Location,City/State comparison
+CollegeDunia,Compare Page,Comparison Table,Fees Comparison,Annual fees side by side
+CollegeDunia,Compare Page,Comparison Table,Rating Comparison,User ratings compared
+CollegeDunia,Compare Page,Comparison Table,Placement Stats,"Highest, Average, Median packages"
+CollegeDunia,Compare Page,Comparison Table,Cutoff Comparison,Closing ranks compared
+CollegeDunia,Compare Page,Comparison Table,Ranking Comparison,NIRF/other ranks compared
+CollegeDunia,Compare Page,Comparison Table,Accreditation,NAAC grade comparison
+CollegeDunia,Compare Page,Comparison Table,Campus Size,Acres comparison
+Careers360,Homepage,Hero,Search Bar,"Auto-suggest for colleges, exams, courses"
+Careers360,Homepage,Hero,Predictor Tools,"JEE, NEET, CAT rank predictors"
+Careers360,Homepage,Hero,Companion CTA,Paid counselling subscription promo
+Careers360,Homepage,Top Colleges,State-wise Navigation,Map or list for state browsing
+Careers360,Homepage,Top Colleges,Stream Tabs,"Engineering, Medical, Management, etc."
+Careers360,Homepage,Trending,News Headlines,Latest admission/exam news
+Careers360,Homepage,Trending,Upcoming Exam Alerts,Exams with approaching deadlines
+Careers360,College Listing,Filter Sidebar,Ownership,"Public, Private, Deemed"
+Careers360,College Listing,Filter Sidebar,Level,"UG, PG, Diploma"
+Careers360,College Listing,Filter Sidebar,Stream,Academic discipline filter
+Careers360,College Listing,Filter Sidebar,Facilities,"Hostel, WiFi, Gym, etc."
+Careers360,College Listing,Filter Sidebar,State,Geographic location filter
+Careers360,College Listing,Filter Sidebar,Exam Accepted,Entrance exam filter
+Careers360,College Listing,College Card,College Name,Institution name
+Careers360,College Listing,College Card,Location,"City, State"
+Careers360,College Listing,College Card,NIRF Rank,National rank badge
+Careers360,College Listing,College Card,Ownership,Public/Private tag
+Careers360,College Listing,College Card,Campus Size,Area in acres
+Careers360,College Listing,College Card,Courses Count,Number of programs offered
+Careers360,College Detail,About,College Name,Full name and established year
+Careers360,College Detail,About,Location,"Full address with city/state"
+Careers360,College Detail,About,Campus Size,Area in acres
+Careers360,College Detail,About,Total Faculty,Number of teaching staff
+Careers360,College Detail,About,Student Count,Total enrolled students
+Careers360,College Detail,About,Student-Faculty Ratio,Computed ratio
+Careers360,College Detail,About,Ownership,"Government, Private, Deemed"
+Careers360,College Detail,About,Gender Policy,"Co-ed, Men, Women only"
+Careers360,College Detail,About,Accreditations,"NAAC, NBA, AICTE, UGC"
+Careers360,College Detail,About,Description,Long-form institutional overview
+Careers360,College Detail,Courses,Course Name,Degree and specialization
+Careers360,College Detail,Courses,Duration,Program length in years
+Careers360,College Detail,Courses,Fees,Annual or total fees
+Careers360,College Detail,Courses,Seat Intake,Available seats per course
+Careers360,College Detail,Courses,Eligibility,Academic requirements
+Careers360,College Detail,Courses,Mode,"Full-time, Part-time, Online"
+Careers360,College Detail,Reviews,Reviewer Info,"Name, Course, Year"
+Careers360,College Detail,Reviews,Overall Rating,Numeric score
+Careers360,College Detail,Reviews,Placement Rating,Sub-rating
+Careers360,College Detail,Reviews,Faculty Rating,Sub-rating
+Careers360,College Detail,Reviews,Infrastructure Rating,Sub-rating
+Careers360,College Detail,Reviews,Social Life Rating,Sub-rating
+Careers360,College Detail,Reviews,Review Text,Detailed written review
+Careers360,College Detail,Reviews,Verified Badge,Identity-verified indicator
+Careers360,College Detail,Facilities,Facility Name,"Hostel, Library, Gym, etc."
+Careers360,College Detail,Facilities,Facility Icon,Visual icon for each facility
+Careers360,College Detail,Facilities,Facility Description,Details about the facility
+Careers360,College Detail,Placements,Highest Package,Max salary in LPA
+Careers360,College Detail,Placements,Average Package,Mean salary in LPA
+Careers360,College Detail,Placements,Median Salary,Median package in LPA
+Careers360,College Detail,Placements,Placement Rate,Percentage placed
+Careers360,College Detail,Placements,Top Recruiters,Company names/logos
+Careers360,College Detail,Placements,Year-wise Data,Historical placement table
+Careers360,College Detail,Cutoff,Exam Name,Entrance exam
+Careers360,College Detail,Cutoff,Category,Reservation category
+Careers360,College Detail,Cutoff,Closing Rank,Last admitted rank
+Careers360,College Detail,Cutoff,Year,Academic year
+Careers360,College Detail,Cutoff,Trend Chart,Interactive historical graph
+Careers360,College Detail,QnA,Question,User-submitted question
+Careers360,College Detail,QnA,Answer,Expert/student response
+Careers360,College Detail,QnA,Answered By,Role of responder
+Careers360,Exams Page,Overview,Exam Name,Official title
+Careers360,Exams Page,Overview,Conducting Body,Organizing institution
+Careers360,Exams Page,Overview,Mode,Online or Offline
+Careers360,Exams Page,Overview,Frequency,Times per year
+Careers360,Exams Page,Dates,All Key Dates,"Application, Admit, Exam, Result"
+Careers360,Exams Page,Preparation,Mock Tests,Practice test links
+Careers360,Exams Page,Preparation,E-books,Downloadable study material
+Careers360,Exams Page,Preparation,Expert Tips,Strategy articles
+Careers360,Rankings,Table,College Name,Ranked institution
+Careers360,Rankings,Table,Rank,Position number
+Careers360,Rankings,Table,Score,Total score
+Careers360,Rankings,Table,Category,"Overall, Engineering, etc."
+Careers360,Rankings,Table,Year,Ranking year
+Careers360,Articles,News,Headline,Article title
+Careers360,Articles,News,Publish Date,When published
+Careers360,Articles,News,Category,"Admissions, Results, Counselling"
+Careers360,Articles,News,Summary,Short description
+CollegeDekho,Homepage,Hero,Search Bar,Auto-suggest search input
+CollegeDekho,Homepage,Hero,Counselling CTA,Toll-free number and callback form
+CollegeDekho,Homepage,Hero,WhatsApp CTA,Direct chat link
+CollegeDekho,Homepage,Trending Courses,Course Card,Popular degree with link
+CollegeDekho,Homepage,Trending Courses,College Count,Number of colleges offering course
+CollegeDekho,College Listing,Filter Sidebar,State,Location filter
+CollegeDekho,College Listing,Filter Sidebar,Course,Stream/degree filter
+CollegeDekho,College Listing,Filter Sidebar,Fees Range,Budget filter
+CollegeDekho,College Listing,Filter Sidebar,Exam,Entrance exam filter
+CollegeDekho,College Listing,College Card,College Name,Institution name
+CollegeDekho,College Listing,College Card,Location,"City, State"
+CollegeDekho,College Listing,College Card,Fees,Annual fees
+CollegeDekho,College Listing,College Card,Rating,User rating
+CollegeDekho,College Listing,College Card,Apply Now CTA,Application button
+CollegeDekho,College Listing,College Card,Download Brochure,Lead-gated PDF
+CollegeDekho,College Listing,College Card,Shortlist Button,Save for later icon
+CollegeDekho,College Detail,Overview,College Name,Full institution name
+CollegeDekho,College Detail,Overview,Location,"City, State"
+CollegeDekho,College Detail,Overview,Established Year,Year of foundation
+CollegeDekho,College Detail,Overview,Accreditations,"NAAC, AICTE, UGC"
+CollegeDekho,College Detail,Overview,Affiliated University,Parent university
+CollegeDekho,College Detail,Overview,Ownership,"Government, Private"
+CollegeDekho,College Detail,Overview,Video Tour,Embedded YouTube campus video
+CollegeDekho,College Detail,Overview,Highlights Table,"Key stats in table format"
+CollegeDekho,College Detail,Courses & Fees,Course Name,Degree and specialization
+CollegeDekho,College Detail,Courses & Fees,Duration,Program length
+CollegeDekho,College Detail,Courses & Fees,Fees,Fee by specialization
+CollegeDekho,College Detail,Courses & Fees,Eligibility,Requirements
+CollegeDekho,College Detail,Courses & Fees,Exams Accepted,Entrance exams
+CollegeDekho,College Detail,Admissions,Process Steps,Step-by-step guide
+CollegeDekho,College Detail,Admissions,Application Fee,Cost to apply
+CollegeDekho,College Detail,Admissions,Important Dates,Key deadlines
+CollegeDekho,College Detail,Admissions,Documents Required,Document checklist
+CollegeDekho,College Detail,Placements,Highest Package,Max CTC in LPA
+CollegeDekho,College Detail,Placements,Average Package,Mean CTC in LPA
+CollegeDekho,College Detail,Placements,Placement Rate,Percentage placed
+CollegeDekho,College Detail,Placements,Top Recruiters,Company names
+CollegeDekho,College Detail,Placements,Historical Data,Year-wise placement records
+CollegeDekho,College Detail,Cutoffs,Exam,Entrance exam name
+CollegeDekho,College Detail,Cutoffs,Category,Reservation category
+CollegeDekho,College Detail,Cutoffs,Closing Rank,Last admitted rank
+CollegeDekho,College Detail,Cutoffs,Year Trend,Previous years comparison
+CollegeDekho,College Detail,Reviews,Rating,Overall numeric score
+CollegeDekho,College Detail,Reviews,Review Text,Student testimonial
+CollegeDekho,College Detail,Reviews,Reviewer Course,Degree pursued
+CollegeDekho,Compare Page,Table,College Names,Side-by-side headers
+CollegeDekho,Compare Page,Table,Fees,Fee comparison
+CollegeDekho,Compare Page,Table,Rankings,NIRF rank comparison
+CollegeDekho,Compare Page,Table,Placements,Package comparison
+CollegeDekho,Compare Page,Table,Accreditation,NAAC comparison
+CollegeDekho,Admission/Forms,CAF,Partner Colleges,List of participating institutions
+CollegeDekho,Admission/Forms,CAF,Application Fee,Cost of common form
+CollegeDekho,Admission/Forms,CAF,Personal Details,Name/DOB/Contact fields
+CollegeDekho,Admission/Forms,CAF,Academic Details,10th/12th marks fields
+CollegeDekho,Admission/Forms,CAF,Course Selection,Choose programs to apply for
+CollegeDekho,Admission/Forms,CAF,Payment Gateway,Online payment integration
