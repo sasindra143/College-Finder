@@ -1,4 +1,4 @@
-Platform,Page Type,Sub-page,URL Pattern,Notes
+Platform,Page Type,Sub-page,URL,Notes
 CollegeDunia,Homepage,Hero Search & Navigation,/,"Global search with auto-suggest, stream tabs, voice search"
 CollegeDunia,Homepage,Top Colleges Section,/,Tabbed by stream (B.Tech / MBA / MBBS / Law)
 CollegeDunia,Homepage,Top Collections,/,"Curated SEO lists (e.g., Best ROI Colleges, Top Govt Colleges)"
@@ -86,3 +86,15 @@ CollegeDekho,Course Page,Course Overview,/courses/[slug],"Scope, syllabus, and t
 CollegeDekho,Exams Page,Exam Overview,/exams/[slug],"Details, dates, and preparation guides"
 CollegeDekho,Articles Page,Guides & News,/articles,"Admission guides and career advice"
 CollegeDekho,Auth,Login/Register,/login,"Simple phone/email registration"
+College-Finder,Homepage,Hero Search & Discovery,/,Global search with stream-wise navigation
+College-Finder,College Listing,Filter Sidebar,/colleges,"Filters: State, Ownership, Fees, Rating, Exam"
+College-Finder,College Listing,College Cards,/colleges,"Cards with NIRF rank, fees, rating, and compare toggle"
+College-Finder,College Detail,Overview,/colleges/[slug],"Key stats, accreditation, and description"
+College-Finder,College Detail,Courses,/colleges/[slug]#courses,"List of offered programs with fees and eligibility"
+College-Finder,College Detail,Reviews,/colleges/[slug]#reviews,"User-submitted reviews and ratings"
+College-Finder,Predictor,Rank Predictor,/predictor,"Entrance exam rank-based admission probability"
+College-Finder,Compare Page,Side-by-Side,/compare,"Compare up to 3 colleges on key metrics"
+College-Finder,Exams Page,Exam Directory,/exams,"List of major entrance exams with details and dates"
+College-Finder,User Dashboard,Saved Items,/dashboard,"Access to bookmarked colleges and comparisons"
+College-Finder,Auth,Login/Register,/auth/login,"Secure email-based authentication"
+College-Finder,Admin Panel,Data Management,/admin,Bulk CSV import and college data editing

@@ -4,7 +4,6 @@ import { ClientLayout } from './ClientLayout';
 
 import { Toaster } from '@/components/ui/Toaster';
 
-export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'CollegeFinder India – Discover Your Dream College',

@@ -96,3 +96,11 @@ CollegeDekho,College Detail,Reviews,Student Testimonial,Video or text feedback f
 CollegeDekho,Admission/Forms,CAF,Form Fields,"Personal, Academic, Document Upload, Course Selection"
 CollegeDekho,Admission/Forms,CAF,Partner List,Colleges where this form is accepted
 CollegeDekho,Admission/Forms,CAF,Payment Status,Tracking for application fee payment
+College-Finder,Homepage,Hero,Stream Navigation,Tabs for Engineering / Medicine / Law / Management
+College-Finder,College Listing,Sidebar,Ownership Filter,"Public, Private, and Deemed university toggle"
+College-Finder,College Listing,Card,NIRF Rank Badge,Official national ranking position
+College-Finder,College Listing,Card,Placement %,Percentage of students placed annually
+College-Finder,College Detail,Overview,NAAC Grade,Accreditation status (A++, etc.)
+College-Finder,College Detail,Overview,Realistic Rating,Weighted average of user reviews
+College-Finder,Predictor,Input,Rank/Percentile,User entrance exam performance metric
+College-Finder,Dashboard,Saved,Comparison Sets,Groups of colleges saved for side-by-side view

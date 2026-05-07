@@ -43,3 +43,10 @@ CollegeDekho,Media,Video Testimonials,Embedded video reviews from students,Colle
 CollegeDekho,Discovery,Shortlist Count,Social proof showing how many others saved the college,Listing Card
 CollegeDekho,Discovery,Explore by Stream,Icon-based stream navigation for quick discovery,Homepage
 CollegeDekho,Mobile,Native App Promo,Banners prompting download of Android/iOS app,Homepage
+College-Finder,Search,Predictive Global Search,Instant suggestions for colleges and streams,Header
+College-Finder,Filtering,Dynamic Filter Sidebar,Real-time filtering with count updates,College Listing
+College-Finder,Personalization,College Predictor,Rank-based admission chance engine,Predictor Page
+College-Finder,Comparison,Quick Comparison,Side-by-side metric analysis for 3 colleges,Compare Page
+College-Finder,Engagement,Bookmark System,Save colleges for later viewing,Global
+College-Finder,Data Management,Bulk CSV Importer,Admin tool for seeding 37k+ records,Admin Panel
+College-Finder,User Experience,Glassmorphic UI,Modern premium aesthetic with smooth transitions,Global
