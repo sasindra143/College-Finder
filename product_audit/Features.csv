@@ -1,113 +1,45 @@
 Platform,Feature,Sub-feature,Description,Page Location
-CollegeDunia,Search & Discovery,Global Auto-suggest,"Typeahead returning colleges, exams, courses, articles as user types",Header Navbar
-CollegeDunia,Search & Discovery,Search by Name,"Filter college listing by typing institution name",College Listing Sidebar
-CollegeDunia,Search & Discovery,Search by City,"Filter by city name within the search box",College Listing Sidebar
-CollegeDunia,Search & Discovery,Voice Search,Microphone icon for voice-based search input,Header Navbar
-CollegeDunia,Filtering,State Filter,"Multi-select dropdown of 36 Indian states/UTs",College Listing Sidebar
-CollegeDunia,Filtering,City Filter,"Nested city selection within chosen state",College Listing Sidebar
-CollegeDunia,Filtering,Course/Stream Filter,"Chip-based selection for Engineering, Medical, MBA, etc.",College Listing Sidebar
-CollegeDunia,Filtering,Fees Range Slider,"Continuous range slider for min-max annual fees",College Listing Sidebar
-CollegeDunia,Filtering,Ownership Type,"Toggle buttons for Government, Private, Deemed",College Listing Sidebar
-CollegeDunia,Filtering,Exam Accepted,"Dropdown to select entrance exams (JEE, NEET, CAT, etc.)",College Listing Sidebar
-CollegeDunia,Filtering,Rating Threshold,"Minimum rating buttons (3★+, 3.5★+, 4★+, 4.5★+)",College Listing Sidebar
-CollegeDunia,Filtering,NAAC Grade,"Filter by accreditation grade (A++, A+, A, B++, etc.)",College Listing Sidebar
-CollegeDunia,Filtering,Active Chip Tags,"Visual pills showing all active filters with × to remove",College Listing Top
-CollegeDunia,Filtering,Clear All Filters,"One-click reset of all active filters",College Listing Top
-CollegeDunia,Sorting,Sort by Rating,"Colleges ranked by user rating descending",College Listing Top Bar
-CollegeDunia,Sorting,Sort by Popularity,"Colleges ranked by view/search count",College Listing Top Bar
-CollegeDunia,Sorting,Sort by Fees (Low-High),"Ascending fee order for budget seekers",College Listing Top Bar
-CollegeDunia,Sorting,Sort by Fees (High-Low),"Descending fee order",College Listing Top Bar
-CollegeDunia,Sorting,Sort by Placements,"Ranked by placement percentage or avg package",College Listing Top Bar
-CollegeDunia,Pagination,Page Navigation,"Numbered buttons with prev/next and ellipsis for large sets",College Listing Bottom
-CollegeDunia,Pagination,Results Counter,"Shows total matching results and current page position",College Listing Bottom
-CollegeDunia,College Cards,Save/Shortlist,"Heart icon to save college to personal dashboard",College Card
-CollegeDunia,College Cards,Add to Compare,"Checkbox/button to add college to comparison tray",College Card
-CollegeDunia,College Cards,Visit Website,"Opens college official website in new tab",College Card
-CollegeDunia,College Cards,Download Brochure,"Lead-gated PDF download requiring phone/email",College Card
-CollegeDunia,College Cards,Apply Now CTA,"Triggers application form or redirects to apply page",College Card
-CollegeDunia,College Detail,Tab Navigation,"Horizontal tabs: Overview, Courses, Admissions, Placements, Cutoffs, Reviews, Rankings, Gallery, Scholarships, Faculty, Hostel, Q&A",College Detail Page
-CollegeDunia,College Detail,Sticky Header,"College name and key CTAs remain visible on scroll",College Detail Page
-CollegeDunia,College Detail,Share College,"Social share buttons (WhatsApp, Facebook, Twitter, Copy Link)",College Detail Page
-CollegeDunia,College Detail,Write a Review,"Form for students to submit rated reviews with pros/cons",College Detail - Reviews
-CollegeDunia,College Detail,Ask a Question,"Input field for submitting questions to Q&A forum",College Detail - Q&A
-CollegeDunia,Reviews,Rating Breakdown,"Visual bar chart showing distribution across 5 rating categories",Reviews Section
-CollegeDunia,Reviews,Verified Reviews Tag,"Badge indicating reviewer identity verified via LinkedIn/ID",Reviews Section
-CollegeDunia,Reviews,Sort Reviews,"Sort by Most Helpful, Most Recent, Rating High-Low",Reviews Section
-CollegeDunia,Reviews,Filter Reviews,"Filter by course, year, rating threshold",Reviews Section
-CollegeDunia,Reviews,Helpful Vote,"Thumbs-up button to mark a review as helpful",Reviews Section
-CollegeDunia,Reviews,Review Submission Flow,"Multi-step form: select course → rate categories → write pros/cons → submit",Reviews Section
-CollegeDunia,Comparison,Side-by-Side View,"Compare up to 4 colleges in a table layout",Compare Page
-CollegeDunia,Comparison,Add College Selector,"Search dropdown to add colleges to comparison",Compare Page
-CollegeDunia,Comparison,Remove College,"× button to remove a college from comparison",Compare Page
-CollegeDunia,Comparison,Highlight Differences,"Visual emphasis on metrics that differ significantly",Compare Page
-CollegeDunia,Comparison,Floating Compare Tray,"Bottom bar showing selected colleges with 'Compare Now' CTA",Global (all listing pages)
-CollegeDunia,Personalization,College Predictor,"Tool predicting admission chances based on rank/percentile",Exams Page / Tool Page
-CollegeDunia,Personalization,Rank Predictor,"Predicts likely rank based on expected score",Exams Page / Tool Page
-CollegeDunia,Personalization,User Dashboard,"Saved colleges, saved comparisons, profile settings",User Account Area
-CollegeDunia,Personalization,Recent Views,"List of recently viewed colleges",User Dashboard
-CollegeDunia,Lead Generation,Common Application Form (CAF),"Unified application to apply to multiple partner colleges",Landing Pages
-CollegeDunia,Lead Generation,Download Brochure Gate,"Requires phone/email to download PDF brochure",College Cards / Detail
-CollegeDunia,Lead Generation,Exit Intent Popup,"Popup offering counselling when cursor leaves viewport",Various Pages
-CollegeDunia,Lead Generation,Counsellor Chat Widget,"Live chat widget for admission queries",Floating Widget
-CollegeDunia,Content & SEO,Top Collections,"Curated SEO lists (e.g. Top 10 MBA Colleges Under 10L)",Homepage / Listings
-CollegeDunia,Content & SEO,Articles/Blog,"Editorial content about admissions, careers, tips",Articles Section
-CollegeDunia,Content & SEO,News Updates,"Latest admission announcements and policy changes",News Section
-CollegeDunia,Community,Q&A Forum,"User questions with expert/alumni answers, college-specific",College Detail / Standalone
-CollegeDunia,Community,Student Forums,"Discussion threads on college life and admissions",Community Section
-CollegeDunia,Notifications,Exam Alerts,"Email/push notifications for application deadlines, results",Exams / Dashboard
-CollegeDunia,Mobile,Responsive Layout,"Fully responsive with mobile filter drawer",All Pages
-CollegeDunia,Mobile,Mobile Filter Drawer,"Slide-in panel for filter controls on small screens",College Listing
-Careers360,Search & Discovery,Global Auto-suggest,"Typeahead for colleges, exams, courses",Header Navbar
-Careers360,Search & Discovery,Explore by State,"Map or list-based state-wise college discovery",Homepage
-Careers360,Filtering,Ownership Filter,"Public, Private, Deemed toggle",College Listing Sidebar
-Careers360,Filtering,Level Filter,"UG, PG, Diploma selection",College Listing Sidebar
-Careers360,Filtering,Stream Filter,"Engineering, Medical, Arts, Commerce, etc.",College Listing Sidebar
-Careers360,Filtering,Facilities Filter,"Hostel, WiFi, Gym, Sports checkboxes",College Listing Sidebar
-Careers360,Filtering,State Filter,"Geographic location multi-select",College Listing Sidebar
-Careers360,Filtering,Exam Filter,"Entrance exam accepted",College Listing Sidebar
-Careers360,Sorting,Sort by NIRF Rank,"Ranked by national ranking position",College Listing Top Bar
-Careers360,Sorting,Sort by Fees,"Ascending/descending fee order",College Listing Top Bar
-Careers360,Sorting,Sort by Rating,"User rating based ordering",College Listing Top Bar
-Careers360,Premium Tools,JEE Companion,"Paid subscription for JEE counselling, choice filling, webinars",Specialized Tool Page
-Careers360,Premium Tools,NEET Companion,"Paid subscription for medical admission guidance",Specialized Tool Page
-Careers360,Premium Tools,CAT Companion,"Paid MBA admission counselling",Specialized Tool Page
-Careers360,Premium Tools,Rank Predictor,"Predicts probable rank from expected score",Exams Tool Page
-Careers360,Premium Tools,College Predictor,"Predicts admission chances from rank/percentile",Exams Tool Page
-Careers360,Data Visualization,Cutoff Trends Chart,"Interactive line/bar charts showing historical cutoff movements",College Detail - Cutoff
-Careers360,Data Visualization,Placement Graphs,"Visual charts for salary trends and recruiter distribution",College Detail - Placements
-Careers360,E-Learning,Mock Tests,"Online practice tests for JEE, NEET, CAT, etc.",Exams Page
-Careers360,E-Learning,E-books,"Downloadable PDF study material and guides",Exams Page
-Careers360,E-Learning,Expert Strategy Articles,"Written tips from toppers and subject experts",Exams Page
-Careers360,Reviews,Rating Parameters,"Separate scores for Placement, Faculty, Infrastructure, Social Life",Reviews Section
-Careers360,Reviews,Verified Badge,"Identity verification for reviewer credibility",Reviews Section
-Careers360,Reviews,Filter by Course,"Filter reviews by specific degree/stream",Reviews Section
-Careers360,Community,Alumni Network,"Display of prominent alumni and their achievements",College Detail
-Careers360,Community,QnA Section,"College-specific Q&A with expert responses",College Detail
-Careers360,Rankings,NIRF Rankings Table,"Detailed table with scores, parameters, year-wise data",Rankings Page
-Careers360,Rankings,Internal Ratings,"Careers360 proprietary rating system (AAA+, AAA, etc.)",Rankings Page
-Careers360,Content,News & Updates,"Latest admission news, policy changes, exam notifications",News Section
-Careers360,Content,Expert Opinions,"Editorial columns from education experts",Articles Section
-Careers360,Comparison,Side-by-Side,"Compare colleges on key metrics in table layout",Compare Page
-Careers360,Notifications,Exam Alerts,"Push/email notifications for exam dates, results",Exams / Dashboard
-CollegeDekho,Search & Discovery,Global Search,"Auto-suggest search for colleges and courses",Header Navbar
-CollegeDekho,Search & Discovery,Explore by Stream,"Browse colleges by academic stream",Homepage
-CollegeDekho,Filtering,State Filter,"Location-based filtering",College Listing Sidebar
-CollegeDekho,Filtering,Course Filter,"Degree/stream selection",College Listing Sidebar
-CollegeDekho,Filtering,Fees Filter,"Budget range selection",College Listing Sidebar
-CollegeDekho,Filtering,Exam Filter,"Entrance exam accepted filter",College Listing Sidebar
-CollegeDekho,Support,WhatsApp Integration,"Direct chat link to admission counselor via WhatsApp",Floating Action Button
-CollegeDekho,Support,Toll-Free Call CTA,"Prominent phone numbers for immediate voice help",Header / Sticky Footer
-CollegeDekho,Support,Callback Request Form,"Submit phone number for counselor to call back",Homepage Hero
-CollegeDekho,Support,Live Chat,"Real-time chat with admission counselor",Floating Widget
-CollegeDekho,Media,Virtual Campus Tours,"High-quality video tours and 360° campus views",College Detail - Gallery
-CollegeDekho,Media,Student Testimonials,"Video testimonials from current students",College Detail
-CollegeDekho,Lead Generation,Apply Now CTA,"Prominent application button on every card",College Cards / Detail
-CollegeDekho,Lead Generation,Download Brochure,"Lead-captured PDF brochure download",College Cards / Detail
-CollegeDekho,Lead Generation,Common Application Form (CAF),"Unified multi-college application with single payment",CAF Landing Page
-CollegeDekho,Comparison,Head-to-Head,"Direct 1v1 comparison tool for two colleges",Compare Page
-CollegeDekho,Comparison,Multi-Compare,"Compare up to 3 colleges simultaneously",Compare Page
-CollegeDekho,Personalization,Shortlist,"Save colleges to personal shortlist for later review",College Cards
-CollegeDekho,Personalization,Recommendations,"Suggested colleges based on user profile and preferences",Dashboard
-CollegeDekho,Content,Articles & Guides,"Editorial content about admissions and career guidance",Articles Section
-CollegeDekho,Mobile,Responsive Design,"Mobile-optimized layout with touch-friendly interactions",All Pages
-CollegeDekho,Mobile,App Promotion,"Banner promoting native Android/iOS app download",Homepage / All Pages
+CollegeDunia,Search,Global Search,"Auto-suggest for colleges, courses, exams, and articles",Header Navbar
+CollegeDunia,Search,Voice Search,Speech-to-text input for searching,Header Navbar
+CollegeDunia,Filtering,Multi-parameter Sidebar,"Filter by state, city, degree, fees, exam, rating, and NAAC grade",College Listing
+CollegeDunia,Filtering,Active Filter Chips,Visual tags for applied filters with one-click removal,College Listing
+CollegeDunia,Filtering,Reset All,One-click clear of all active filters,College Listing
+CollegeDunia,Sorting,Multi-option Sort,"Sort results by Rating, Popularity, Fees, or Placements",College Listing
+CollegeDunia,College Card,Lead Gate,"Download Brochure button requiring phone/email verification",College Card
+CollegeDunia,College Card,Quick Apply,Apply Now button triggering application flow,College Card
+CollegeDunia,College Card,Compare Toggle,Checkbox to add institution to comparison tray,College Card
+CollegeDunia,College Detail,Tab Navigation,Horizontal menu for jumping between detail sections,College Detail
+CollegeDunia,College Detail,Sticky CTA Bar,Apply and Brochure buttons remain visible on scroll,College Detail
+CollegeDunia,College Detail,Share Functionality,"Social sharing via WhatsApp, Facebook, and Link Copy",College Detail
+CollegeDunia,Comparison,Multi-college Table,Side-by-side comparison of up to 4 colleges,Compare Page
+CollegeDunia,Comparison,Highlight Differences,Visual marker for significant differences in metrics,Compare Page
+CollegeDunia,Comparison,Add More Search,In-page search to add more colleges to comparison,Compare Page
+CollegeDunia,Personalization,College Predictor,Admission chance calculation based on entrance rank,Exams Page
+CollegeDunia,Personalization,Rank Predictor,Predicts entrance rank from user's expected score,Exams Page
+CollegeDunia,Personalization,Shortlist,Heart icon to save colleges to personal dashboard,Global
+CollegeDunia,Personalization,User Profile,Setting preferences for preferred streams and locations,Dashboard
+CollegeDunia,Lead Gen,Exit Intent Popup,Triggered when user moves cursor out of window to offer help,Listing/Detail
+CollegeDunia,Lead Gen,Counseling Chat,Floating widget for real-time admission assistance,Global
+CollegeDunia,Content,SEO Collections,Curated lists of top colleges based on specific criteria,Homepage/Listing
+CollegeDunia,Content,News Alerts,Real-time updates on exam dates and results,Homepage/Exams
+CollegeDunia,Community,Q&A Forum,Ask/Answer platform for student and expert interaction,College Detail
+Careers360,Search,Stream-based Search,Specialized search bars for different education streams,Homepage
+Careers360,Filtering,Ownership Filter,Specific toggle for Public/Private/Deemed colleges,Listing
+Careers360,Filtering,NIRF Rank Filter,Filter colleges by their national rank range,Listing
+Careers360,Sorting,NIRF Priority,Option to sort primarily by official NIRF ranking,Listing
+Careers360,Interactive Data,Cutoff Trends,Interactive line graphs for historical rank analysis,College Detail
+Careers360,Interactive Data,Placement Visuals,Pie/Bar charts for salary and recruiter distribution,College Detail
+Careers360,Premium,Counselling Companion,Paid guided support for specific exams (JEE/NEET),Premium Page
+Careers360,Premium,Advanced Predictors,Gated predictors with deeper analytics for paid users,Exams Page
+Careers360,Personalization,Dashboard,Track applications and predictor results,User Account
+Careers360,Content,Expert Columns,Editorial pieces from prominent educators,Articles
+CollegeDekho,Communication,WhatsApp Chat,Direct one-click link to chat with a counselor,Global
+CollegeDekho,Communication,Toll-Free Call,Prominent phone number for immediate voice support,Global
+CollegeDekho,Communication,Callback Request,Simple form to request a call from an expert,Homepage
+CollegeDekho,Application,CAF (Common Application Form),Apply to multiple partner colleges with a single form,CAF Page
+CollegeDekho,Application,Application Tracking,Real-time status updates for CAF submissions,Dashboard
+CollegeDekho,Media,Virtual Tour,360-degree campus images or video walkthroughs,College Detail
+CollegeDekho,Media,Video Testimonials,Embedded video reviews from students,College Detail
+CollegeDekho,Discovery,Shortlist Count,Social proof showing how many others saved the college,Listing Card
+CollegeDekho,Discovery,Explore by Stream,Icon-based stream navigation for quick discovery,Homepage
+CollegeDekho,Mobile,Native App Promo,Banners prompting download of Android/iOS app,Homepage

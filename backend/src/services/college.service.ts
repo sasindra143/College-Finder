@@ -83,6 +83,26 @@ function rankToRatingRange(rank: number): { min: number; max: number } {
   return { min: 0.0, max: 2.8 };
 }
 
+// ─── SIMPLE IN-MEMORY CACHE ────────────────────────────────────────────────
+const CACHE_TTL = 60 * 1000; // 1 minute
+const queryCache = new Map<string, { data: any; expiry: number }>();
+
+function getCached(key: string) {
+  const cached = queryCache.get(key);
+  if (cached && cached.expiry > Date.now()) return cached.data;
+  if (cached) queryCache.delete(key);
+  return null;
+}
+
+function setCache(key: string, data: any) {
+  queryCache.set(key, { data, expiry: Date.now() + CACHE_TTL });
+  // Limit cache size to 100 entries to prevent memory leaks
+  if (queryCache.size > 100) {
+    const firstKey = queryCache.keys().next().value;
+    if (firstKey) queryCache.delete(firstKey);
+  }
+}
+
 export const getColleges = async (filters: CollegeFilters) => {
   const {
     search,
@@ -99,6 +119,11 @@ export const getColleges = async (filters: CollegeFilters) => {
     sortBy = 'rating',
     sortOrder = 'desc',
   } = filters;
+
+  // Generate a unique cache key based on relevant filters
+  const cacheKey = JSON.stringify({ search, location, minFees, maxFees, ownership, minRating, course, exam, rank, page, limit, sortBy, sortOrder });
+  const cachedData = getCached(cacheKey);
+  if (cachedData) return cachedData;
 
   const validSortFields = ['rating', 'fees', 'nirfRank', 'name', 'established', 'placementPercent'];
   const orderField = validSortFields.includes(sortBy) ? sortBy : 'rating';
@@ -120,57 +145,50 @@ export const getColleges = async (filters: CollegeFilters) => {
     const { nameKeywords, degreeKeywords, examKeywords } = getExamStreamKeywords(examLower);
     const { min, max } = rankToRatingRange(rank);
 
-    // Phase 1: strict exam-stream filtered query
-    if (nameKeywords.length > 0) {
-      const examWhere: Prisma.CollegeWhereInput = {
-        AND: [
-          {
-            OR: [
-              ...nameKeywords.map(k => ({ name: { contains: k, mode: 'insensitive' as const } })),
-              ...degreeKeywords.map(k => ({ degrees: { hasSome: [k] } })),
-              ...examKeywords.map(k => ({ exams: { hasSome: [k] } })),
-            ]
-          },
-          { rating: { gte: min, lte: max } },
-        ]
-      };
+    const hasKeywords = nameKeywords.length > 0 || degreeKeywords.length > 0 || examKeywords.length > 0;
+    const whereClause: Prisma.CollegeWhereInput = hasKeywords
+      ? {
+          AND: [
+            {
+              OR: [
+                ...nameKeywords.map(k => ({ name: { contains: k, mode: 'insensitive' as const } })),
+                ...degreeKeywords.map(k => ({ degrees: { hasSome: [k] } })),
+                ...examKeywords.map(k => ({ exams: { hasSome: [k] } })),
+              ],
+            },
+            { rating: { gte: min, lte: max } },
+          ],
+        }
+      : { rating: { gte: min, lte: max } };
 
-      // Calculate a rank-based offset to ensure different ranks show different results
-      // even within the same rating bracket.
-      const totalInBracket = await prisma.college.count({ where: examWhere });
-      const rankOffset = (rank * 7) % Math.max(1, totalInBracket - limit);
+    // Parallelize count and search for speed
+    const totalCountPromise = prisma.college.count({ where: whereClause });
+    
+    // We still need total count to calculate offset, so we wait for count first
+    // but we can start the search immediately if we didn't need the total for offset logic.
+    // However, the current logic uses (rank * 13) % total for offset.
+    const total = await totalCountPromise;
+    const effectiveTotal = Math.max(1, total);
+    const offset = (rank * 13) % effectiveTotal;
 
-      const colleges = await prisma.college.findMany({
-        where: examWhere,
-        skip: rankOffset,
-        take: limit,
-        orderBy: [
-          { rating: rank % 2 === 0 ? 'desc' : 'asc' }, // Alternate sort to increase variety
-          { name: rank % 3 === 0 ? 'asc' : 'desc' },
-        ],
-        select: selectFields,
-      });
-
-      if (colleges.length >= 5) {
-        return buildResponse(colleges, totalInBracket, page, limit);
-      }
-    }
-
-    // Phase 2 fallback
-    const fallbackWhere: Prisma.CollegeWhereInput = { rating: { gte: min, lte: max } };
-    const totalFallback = await prisma.college.count({ where: fallbackWhere });
-    const fallbackOffset = (rank * 13) % Math.max(1, totalFallback - limit);
+    const order: any[] = [
+      { rating: rank % 2 === 0 ? 'desc' : 'asc' },
+      { name: rank % 3 === 0 ? 'asc' : 'desc' },
+    ];
 
     const colleges = await prisma.college.findMany({
-      where: fallbackWhere,
-      skip: fallbackOffset,
+      where: whereClause,
+      skip: offset,
       take: limit,
-      orderBy: [{ rating: 'desc' }, { id: 'asc' }],
+      orderBy: order,
       select: selectFields,
     });
 
-    return buildResponse(colleges, totalFallback, page, limit);
+    const response = buildResponse(colleges, total, page, limit);
+    setCache(cacheKey, response);
+    return response;
   }
+
 
   // ─── NORMAL DISCOVERY MODE ─────────────────────────────────────────────────
   const where: Prisma.CollegeWhereInput = { AND: [] };
